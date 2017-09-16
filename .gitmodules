@@ -1,4 +1,4 @@
 [submodule "gps"]
-	path = gps
+	path = algorithms/gps
 	url = https://github.com/erlerobot/gps
 	branch = gps_ur3
