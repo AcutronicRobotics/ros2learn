@@ -5,10 +5,17 @@ Modular SCARA environment built out of H-ROS modular components
 docker build -t scaraworld .
 ```
 
-### Launch it
+### Launch it, get a bash shell on it
 ```
 docker run -it -v="/tmp/.gazebo/:/root/.gazebo/" --name test scaraworld
 ```
+
+### Launch the simulation
+```
+roslaunch scara_e1_gazebo scara_e1_4joints.launch
+```
+TODO: No screen available, need to find the way to use gzserver instead
+
 
 ### Visualize it remotely (outside of the container)
 ```
