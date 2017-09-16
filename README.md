@@ -8,7 +8,7 @@ and Reinforcement Learning (RL) [algorithms](algorithms/) that run in selected [
 ```
 git clone http://github.com/erlerobot/ros_rl
 cd ros_rl
-git submodule update --init # update the submodules
+git submodule update --init --recursive # update the submodules
 ```
 
 ### More

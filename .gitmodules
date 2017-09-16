@@ -6,3 +6,6 @@
 	path = algorithms/gps
 	url = http://github.com/erlerobot/gps
 	branch = gps_ur3
+[submodule "environments/modular_scara/scara_e1"]
+	path = environments/modular_scara/scara_e1
+	url = https://github.com/erlerobot/scara_e1
