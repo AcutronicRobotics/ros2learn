@@ -1,10 +1,7 @@
 This repository contains a number of ROS/ROS 2 enabled Artificial Intelligence (AI)
-and Reinforcement Learning (RL) algorithms techniques.
+and Reinforcement Learning (RL) [algorithms](algorithms/) that run in selected [environments](environments/).
 
-- Guided Policy Search (GPS):
-  - [source](https://github.com/erlerobot/gps)
-  - [paper](https://arxiv.org/abs/1504.00702)
-- ...
+[Optimization](optimization/) techniques have been implemented to optimize results and tune hyperparams.
 
 ## HOWTO
 ### Get the code
