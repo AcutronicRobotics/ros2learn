@@ -9,3 +9,6 @@
 [submodule "environments/modular_scara/scara_e1"]
 	path = environments/modular_scara/scara_e1
 	url = https://github.com/erlerobot/scara_e1
+[submodule "algorithms/baselines"]
+	path = algorithms/baselines
+	url = https://github.com/erlerobot/baselines.git
