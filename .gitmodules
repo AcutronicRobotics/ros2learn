@@ -12,3 +12,7 @@
 [submodule "algorithms/baselines"]
 	path = algorithms/baselines
 	url = https://github.com/erlerobot/baselines.git
+[submodule "environments/gym-gazebo"]
+	path = environments/gym-gazebo
+	url = https://github.com/erlerobot/gym-gazebo
+	branch = master

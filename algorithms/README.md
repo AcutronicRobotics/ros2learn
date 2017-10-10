@@ -1,4 +1,6 @@
 - Guided Policy Search (GPS):
   - [source](https://github.com/erlerobot/gps)
   - [paper](https://arxiv.org/abs/1504.00702)
-- ...
+- Open AI baselines (ACKTR, A2C, etc.)
+  - [source](https://github.com/erlerobot/baselines)
+  - paper: various
