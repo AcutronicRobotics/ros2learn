@@ -1,9 +1,0 @@
-controller_list:
-  - name: ""
-    action_ns: follow_joint_trajectory
-    type: FollowJointTrajectory
-    default: true
-    joints:
-      - motor1
-      - motor2
-      - motor3

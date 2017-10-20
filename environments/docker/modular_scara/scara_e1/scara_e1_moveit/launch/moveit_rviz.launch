@@ -1,8 +1,0 @@
-<launch>
-  <arg name="command_args" value="-d $(find scara_e1_moveit)/launch/moveit.rviz" />
-
-  <node name="$(anon rviz)" pkg="rviz" type="rviz" respawn="false"
-        args="-d $(find scara_e1_moveit)/launch/moveit.rviz" output="screen">
-    <rosparam command="load" file="$(find scara_e1_moveit)/config/kinematics.yaml"/>
-  </node>
-</launch>
