@@ -1,0 +1,15 @@
+scara_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+     - motor1
+     - motor2
+     - motor3
+#  constraints:
+#      goal_time: 2.0
+#      stopped_velocity_tolerance: 0.05
+#      base_to_motor1_inside_support: {trajectory: 0.1, goal: 0.1}
+#      base_to_motor2_inside_support: {trajectory: 0.1, goal: 0.1}
+#      base_to_motor3_inside_support: {trajectory: 0.1, goal: 0.1}
+  stop_trajectory_duration: 0.5
+  state_publish_rate:  25
+  action_monitor_rate: 10

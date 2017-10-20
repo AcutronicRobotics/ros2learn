@@ -1,0 +1,20 @@
+<launch>
+
+  <!-- The name of the parameter under which the URDF is loaded -->
+  <arg name="robot_description" default="robot_description"/>
+
+  <!-- The semantic description that corresponds to the URDF -->
+  <param name="$(arg robot_description)_semantic" textfile="$(find scara_e1_moveit)/config/scara_e1.srdf" />
+
+  <!-- Load updated joint limits (override information from URDF) -->
+<!--
+  <group ns="$(arg robot_description)_planning">
+    <rosparam command="load" file="$(find scara_e1_moveit)/config/joint_limits.yaml"/>
+  </group>
+-->
+  <!-- Load default settings for kinematics; these settings are overridden by settings in a node's namespace -->
+  <group ns="$(arg robot_description)_kinematics">
+    <rosparam command="load" file="$(find scara_e1_moveit)/config/kinematics.yaml"/>
+  </group>
+
+</launch>

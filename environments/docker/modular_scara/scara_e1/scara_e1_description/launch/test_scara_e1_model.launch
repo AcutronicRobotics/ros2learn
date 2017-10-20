@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+
+<launch>
+  <arg name="gui" default="True" />
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find scara_e1_description)/urdf/scara_e1_model.xacro'" />
+
+  <param name="use_gui" value="$(arg gui)"/>
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find scara_e1_description)/visualize.rviz" required="true" />
+<!--
+  <node pkg="tf" type="static_transform_publisher" name="scara_e1_base_link" args="0 0 0 0 0 0 /world /scara_e1_base_link 100"/>
+-->
+</launch>
