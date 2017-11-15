@@ -1,1 +1,1 @@
-Environments whereto run the algorithms
+Environments where to run the algorithms
