@@ -16,9 +16,3 @@
 [submodule "environments/docker/scara_e1"]
 	path = environments/docker/scara_e1
 	url = https://github.com/erlerobot/scara_e1
-[submodule "Spearmint"]
-	path = Spearmint
-	url = /home/erle/ros_rl/optimization/Spearmint/
-[submodule "hyperopt"]
-	path = hyperopt
-	url = /home/erle/ros_rl/optimization/hyperopt/
