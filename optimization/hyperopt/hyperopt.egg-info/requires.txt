@@ -1,0 +1,7 @@
+numpy
+scipy
+nose
+pymongo
+six
+networkx
+future

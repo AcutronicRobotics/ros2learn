@@ -1,0 +1,10 @@
+Job launching after 0.08 seconds in submission.
+Running python job.
+Changed into dir /home/erle/ros_rl/optimization/Spearmint/examples/simple
+Importing branin.py
+Running branin.main()
+Got result 6.78672745014
+Completed successfully in 0.00 seconds. [{u'main': 6.786727450139307}]
+Anything printed here will end up in the output directory for job #6
+{u'y': array([ 0.78053569]), u'x': array([ 9.99002199])}
+Result = 6.786727
