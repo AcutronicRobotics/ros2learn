@@ -33,21 +33,26 @@ def train_setup(job_id, max_t, t_per_actorbatch, optim_ep, optim_st, gam, optim_
     t_per_actorbatch_i = list(map(int, t_per_actorbatch))
     optim_batchsize_i = list(map(int, optim_batchs))
 
-    #optim_metric = pposgd_simple.learn(env, policy_fn,
-                        #max_timesteps=int(max_t),
-                        #timesteps_per_actorbatch=t_per_actorbatch_i[0],
-                        #clip_param=0.2, entcoeff=0.0,
-                        #optim_epochs=int(optim_ep), optim_stepsize=float(optim_st), gamma=float(gam),
-                        #optim_batchsize=optim_batchsize_i, lam=float(l), schedule='linear', save_model_with_prefix='ros1_ppo1_test_O')
+    #print("t_per_actorbatch_i",t_per_actorbatch_i)
+    #print("optim_batchsize_i",optim_batchsize_i )
+    #print("type(t_per_actorbatch_i)",type(t_per_actorbatch_i))
+    #print("optim_batchsize_i",optim_batchsize_i )
 
     optim_metric = pposgd_simple.learn(env, policy_fn,
                         max_timesteps=int(max_t),
-                        timesteps_per_actorbatch=1024,
+                        timesteps_per_actorbatch=t_per_actorbatch_i[0],
                         clip_param=0.2, entcoeff=0.0,
                         optim_epochs=int(optim_ep), optim_stepsize=float(optim_st), gamma=float(gam),
-                        optim_batchsize=32, lam=float(l), schedule='linear', save_model_with_prefix='ros1_ppo1_test_O')
+                        optim_batchsize=optim_batchsize_i[0], lam=float(l), schedule='linear', save_model_with_prefix='ros1_ppo1_test_O')
 
-    
+    #optim_metric = pposgd_simple.learn(env, policy_fn,
+    #                    max_timesteps=int(max_t),
+    #                    timesteps_per_actorbatch=1024,
+    #                    clip_param=0.2, entcoeff=0.0,
+    #                    optim_epochs=int(optim_ep), optim_stepsize=float(optim_st), gamma=float(gam),
+    #                    optim_batchsize=32, lam=float(l), schedule='linear', save_model_with_prefix='ros1_ppo1_test_O')
+
+
     return optim_metric
 
 def main(job_id, params):
