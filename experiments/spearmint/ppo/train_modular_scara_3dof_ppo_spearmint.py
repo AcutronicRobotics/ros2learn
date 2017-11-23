@@ -29,12 +29,25 @@ def train_setup(job_id, max_t, t_per_actorbatch, optim_ep, optim_st, gam, optim_
         return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,
             hid_size=64, num_hid_layers=2)
 
+
+    t_per_actorbatch_i = list(map(int, t_per_actorbatch))
+    optim_batchsize_i = list(map(int, optim_batchs))
+
+    #optim_metric = pposgd_simple.learn(env, policy_fn,
+                        #max_timesteps=int(max_t),
+                        #timesteps_per_actorbatch=t_per_actorbatch_i[0],
+                        #clip_param=0.2, entcoeff=0.0,
+                        #optim_epochs=int(optim_ep), optim_stepsize=float(optim_st), gamma=float(gam),
+                        #optim_batchsize=optim_batchsize_i, lam=float(l), schedule='linear', save_model_with_prefix='ros1_ppo1_test_O')
+
     optim_metric = pposgd_simple.learn(env, policy_fn,
-                        max_timesteps=max_t,
-                        timesteps_per_actorbatch=t_per_actorbatch,
+                        max_timesteps=int(max_t),
+                        timesteps_per_actorbatch=1024,
                         clip_param=0.2, entcoeff=0.0,
-                        optim_epochs=optim_ep, optim_stepsize=optim_st, gamma=gam,
-                        optim_batchsize=optim_batchs, lam=l, schedule='linear', save_model_with_prefix='ros1_ppo1_test_O')
+                        optim_epochs=int(optim_ep), optim_stepsize=float(optim_st), gamma=float(gam),
+                        optim_batchsize=32, lam=float(l), schedule='linear', save_model_with_prefix='ros1_ppo1_test_O')
+
+    
     return optim_metric
 
 def main(job_id, params):
