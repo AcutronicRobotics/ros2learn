@@ -1,0 +1,4468 @@
+--------------------------------------------------------------------------
+[[6852,1],0]: A high-performance Open MPI point-to-point messaging module
+was unable to find any relevant network interfaces:
+
+Module: OpenFabrics (openib)
+  Host: erleserver
+
+Another transport will be used instead, although this may result in
+lower performance.
+--------------------------------------------------------------------------
+[31mroscore cannot run as another roscore/master is already running. 
+Please kill other roscore/master processes before relaunching.
+The ROS_MASTER_URI is http://erleserver:11311/[0m
+[31mThe traceback for the exception was written to the log file[0m
+... logging to /home/erle/.ros/log/da8dd57e-d115-11e7-9421-1866daf94540/roslaunch-erleserver-27825.log
+Checking log directory for disk usage. This may take awhile.
+Press Ctrl-C to interrupt
+Done checking log file disk usage. Usage is <1GB.
+]2;roscore
+[1mstarted roslaunch server http://erleserver:35975/[0m
+ros_comm version 1.12.7
+
+
+SUMMARY
+========
+
+PARAMETERS
+ * /rosdistro: kinetic
+ * /rosversion: 1.12.7
+
+NODES
+
+[0m[ INFO] [1511527787.313519022]: Finished loading Gazebo ROS API Plugin.[0m
+[0m[ INFO] [1511527787.314643272]: waitForService: Service [/gazebo/set_physics_properties] has not been advertised, waiting...[0m
+Error setting socket option (IP_ADD_MEMBERSHIP).
+Error setting socket option (IP_ADD_MEMBERSHIP).
+SpawnModel script started
+[INFO] [1511527787.728388, 0.000000]: Loading model XML from ros parameter
+[INFO] [1511527787.732489, 0.000000]: Waiting for service /gazebo/spawn_urdf_model
+[INFO] [1511527788.337293, 0.237000]: Calling service /gazebo/spawn_urdf_model
+[INFO] [1511527788.673489, 0.396000]: Spawn status: SpawnModel: Successfully spawned model
+Loaded scara_controller
+Started ['scara_controller'] successfully
+Loaded joint_state_controller
+Started ['joint_state_controller'] successfully
+2017-11-24 13:49:50.080922: I tensorflow/core/platform/cpu_feature_guard.cc:137] Your CPU supports instructions that this TensorFlow binary was not compiled to use: SSE4.1 SSE4.2 AVX AVX2 FMA
+pymongo client setup
+connectionId 23
+Roscore launched!
+Gazebo launched!
+Initial observation:  [ -3.11323908e-04   1.41977388e-05   6.19553943e-06   7.95893330e-02
+   9.87637714e-02   0.00000000e+00  -7.56295726e-07  -2.08238571e-04
+   0.00000000e+00]
+Use async eigen decomp
+updating 12 eigenvalue/vectors
+projecting 3 gradient matrices
+Use async eigen decomp
+updating 14 eigenvalue/vectors
+projecting 4 gradient matrices
+********** Iteration 0 ************
+kl too low
+---------------------------
+| EVAfter   | -64.7       |
+| EVBefore  | -173        |
+| EpLenMean | 50          |
+| EpRewMean | -4.13064    |
+| EpRewSEM  | 0.19        |
+| KL        | 1.55063e-06 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_0.model
+********** Iteration 1 ************
+kl too low
+---------------------------
+| EVAfter   | -3.43       |
+| EVBefore  | -24         |
+| EpLenMean | 50          |
+| EpRewMean | -4.40287    |
+| EpRewSEM  | 0.462       |
+| KL        | 4.74391e-06 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_1.model
+********** Iteration 2 ************
+kl too high
+--------------------------
+| EVAfter   | -0.826     |
+| EVBefore  | -1.54      |
+| EpLenMean | 50         |
+| EpRewMean | -5.68426   |
+| EpRewSEM  | 0.568      |
+| KL        | 0.00247103 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_2.model
+********** Iteration 3 ************
+kl just right!
+--------------------------
+| EVAfter   | -0.902     |
+| EVBefore  | -7.63      |
+| EpLenMean | 50         |
+| EpRewMean | -4.79914   |
+| EpRewSEM  | 0.556      |
+| KL        | 0.00137533 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_3.model
+********** Iteration 4 ************
+kl just right!
+---------------------------
+| EVAfter   | -1.85       |
+| EVBefore  | -4.86       |
+| EpLenMean | 50          |
+| EpRewMean | -5.02781    |
+| EpRewSEM  | 0.31        |
+| KL        | 0.000897407 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_4.model
+********** Iteration 5 ************
+kl just right!
+---------------------------
+| EVAfter   | -1.69       |
+| EVBefore  | -2.58       |
+| EpLenMean | 50          |
+| EpRewMean | -4.47064    |
+| EpRewSEM  | 0.284       |
+| KL        | 0.000993858 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_5.model
+********** Iteration 6 ************
+kl just right!
+---------------------------
+| EVAfter   | -1.65       |
+| EVBefore  | -6.66       |
+| EpLenMean | 50          |
+| EpRewMean | -4.1436     |
+| EpRewSEM  | 0.406       |
+| KL        | 0.000511463 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_6.model
+********** Iteration 7 ************
+kl too high
+--------------------------
+| EVAfter   | -1.12      |
+| EVBefore  | -1.34      |
+| EpLenMean | 50         |
+| EpRewMean | -3.95184   |
+| EpRewSEM  | 0.288      |
+| KL        | 0.00201521 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_7.model
+********** Iteration 8 ************
+kl just right!
+--------------------------
+| EVAfter   | -1.9       |
+| EVBefore  | -2.62      |
+| EpLenMean | 50         |
+| EpRewMean | -4.09327   |
+| EpRewSEM  | 0.242      |
+| KL        | 0.00108093 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_8.model
+********** Iteration 9 ************
+[31m[gazebo-1] process has died [pid 28065, exit code -9, cmd /opt/ros/kinetic/lib/gazebo_ros/gzserver -e ode /media/raid/RL/ros_rl/environments/gym-gazebo/gym_gazebo/envs/installation/../assets/worlds/scara_basic.world __name:=gazebo __log:=/home/erle/.ros/log/da8dd57e-d115-11e7-9421-1866daf94540/gazebo-1.log].
+log file: /home/erle/.ros/log/da8dd57e-d115-11e7-9421-1866daf94540/gazebo-1*.log[0m
+kl just right!
+--------------------------
+| EVAfter   | -0.85      |
+| EVBefore  | -1.03      |
+| EpLenMean | 50         |
+| EpRewMean | -4.54983   |
+| EpRewSEM  | 0.347      |
+| KL        | 0.00163534 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_9.model
+********** Iteration 10 ************
+kl just right!
+---------------------------
+| EVAfter   | -1.52e+03   |
+| EVBefore  | -1.75e+03   |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000974428 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_10.model
+********** Iteration 11 ************
+kl just right!
+---------------------------
+| EVAfter   | -1.16e+03   |
+| EVBefore  | -1.28e+03   |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000823604 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_11.model
+********** Iteration 12 ************
+kl just right!
+--------------------------
+| EVAfter   | -935       |
+| EVBefore  | -1.03e+03  |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00104081 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_12.model
+********** Iteration 13 ************
+kl just right!
+--------------------------
+| EVAfter   | -777       |
+| EVBefore  | -849       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00141064 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_13.model
+********** Iteration 14 ************
+kl just right!
+--------------------------
+| EVAfter   | -660       |
+| EVBefore  | -717       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00133219 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_14.model
+********** Iteration 15 ************
+kl just right!
+---------------------------
+| EVAfter   | -586        |
+| EVBefore  | -633        |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000935123 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_15.model
+********** Iteration 16 ************
+kl just right!
+--------------------------
+| EVAfter   | -523       |
+| EVBefore  | -563       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00176074 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_16.model
+********** Iteration 17 ************
+kl too low
+--------------------------
+| EVAfter   | -467       |
+| EVBefore  | -500       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00044496 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_17.model
+********** Iteration 18 ************
+kl just right!
+--------------------------
+| EVAfter   | -422       |
+| EVBefore  | -449       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00128779 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_18.model
+********** Iteration 19 ************
+kl just right!
+-------------------------
+| EVAfter   | -385      |
+| EVBefore  | -406      |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0016812 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_19.model
+********** Iteration 20 ************
+kl too high
+--------------------------
+| EVAfter   | -362       |
+| EVBefore  | -379       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00277436 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_20.model
+********** Iteration 21 ************
+kl just right!
+---------------------------
+| EVAfter   | -346        |
+| EVBefore  | -360        |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000551881 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_21.model
+********** Iteration 22 ************
+kl just right!
+---------------------------
+| EVAfter   | -332        |
+| EVBefore  | -343        |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000787361 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_22.model
+********** Iteration 23 ************
+kl just right!
+---------------------------
+| EVAfter   | -321        |
+| EVBefore  | -330        |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000768794 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_23.model
+********** Iteration 24 ************
+kl too low
+---------------------------
+| EVAfter   | -312        |
+| EVBefore  | -320        |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000260678 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_24.model
+********** Iteration 25 ************
+kl too low
+---------------------------
+| EVAfter   | -304        |
+| EVBefore  | -311        |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000456226 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_25.model
+********** Iteration 26 ************
+kl too low
+--------------------------
+| EVAfter   | -293       |
+| EVBefore  | -298       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00044441 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_26.model
+********** Iteration 27 ************
+kl too high
+--------------------------
+| EVAfter   | -282       |
+| EVBefore  | -287       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00708073 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_27.model
+********** Iteration 28 ************
+kl too high
+--------------------------
+| EVAfter   | -257       |
+| EVBefore  | -261       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00344712 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_28.model
+********** Iteration 29 ************
+kl just right!
+--------------------------
+| EVAfter   | -241       |
+| EVBefore  | -245       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00135317 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_29.model
+********** Iteration 30 ************
+kl just right!
+--------------------------
+| EVAfter   | -224       |
+| EVBefore  | -228       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00142306 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_30.model
+********** Iteration 31 ************
+kl just right!
+--------------------------
+| EVAfter   | -210       |
+| EVBefore  | -214       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00145862 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_31.model
+********** Iteration 32 ************
+kl just right!
+--------------------------
+| EVAfter   | -197       |
+| EVBefore  | -200       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00166748 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_32.model
+********** Iteration 33 ************
+kl too high
+--------------------------
+| EVAfter   | -184       |
+| EVBefore  | -188       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00252567 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_33.model
+********** Iteration 34 ************
+kl just right!
+--------------------------
+| EVAfter   | -172       |
+| EVBefore  | -176       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00187407 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_34.model
+********** Iteration 35 ************
+kl too high
+--------------------------
+| EVAfter   | -160       |
+| EVBefore  | -164       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00250656 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_35.model
+********** Iteration 36 ************
+kl just right!
+--------------------------
+| EVAfter   | -148       |
+| EVBefore  | -152       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00104121 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_36.model
+********** Iteration 37 ************
+kl just right!
+---------------------------
+| EVAfter   | -139        |
+| EVBefore  | -143        |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000863872 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_37.model
+********** Iteration 38 ************
+kl just right!
+---------------------------
+| EVAfter   | -131        |
+| EVBefore  | -134        |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000911439 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_38.model
+********** Iteration 39 ************
+kl too low
+---------------------------
+| EVAfter   | -123        |
+| EVBefore  | -126        |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000312055 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_39.model
+********** Iteration 40 ************
+kl just right!
+---------------------------
+| EVAfter   | -116        |
+| EVBefore  | -120        |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000871719 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_40.model
+********** Iteration 41 ************
+kl too high
+--------------------------
+| EVAfter   | -110       |
+| EVBefore  | -112       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00215347 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_41.model
+********** Iteration 42 ************
+kl just right!
+---------------------------
+| EVAfter   | -101        |
+| EVBefore  | -103        |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000932195 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_42.model
+********** Iteration 43 ************
+kl just right!
+--------------------------
+| EVAfter   | -95        |
+| EVBefore  | -97.6      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00105452 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_43.model
+********** Iteration 44 ************
+kl just right!
+---------------------------
+| EVAfter   | -90         |
+| EVBefore  | -92.5       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000684636 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_44.model
+********** Iteration 45 ************
+kl just right!
+---------------------------
+| EVAfter   | -86.7       |
+| EVBefore  | -89.1       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000715177 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_45.model
+********** Iteration 46 ************
+kl just right!
+---------------------------
+| EVAfter   | -82.8       |
+| EVBefore  | -85         |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000954724 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_46.model
+********** Iteration 47 ************
+kl just right!
+--------------------------
+| EVAfter   | -79.7      |
+| EVBefore  | -81.8      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00102201 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_47.model
+********** Iteration 48 ************
+kl just right!
+---------------------------
+| EVAfter   | -77.1       |
+| EVBefore  | -79.3       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000623783 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_48.model
+********** Iteration 49 ************
+kl just right!
+---------------------------
+| EVAfter   | -73.6       |
+| EVBefore  | -76         |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000803708 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_49.model
+********** Iteration 50 ************
+kl just right!
+---------------------------
+| EVAfter   | -69.5       |
+| EVBefore  | -72         |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000588748 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_50.model
+********** Iteration 51 ************
+kl just right!
+---------------------------
+| EVAfter   | -65.9       |
+| EVBefore  | -68.5       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000728818 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_51.model
+********** Iteration 52 ************
+kl too low
+---------------------------
+| EVAfter   | -61.3       |
+| EVBefore  | -64         |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000351329 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_52.model
+********** Iteration 53 ************
+kl just right!
+---------------------------
+| EVAfter   | -56.8       |
+| EVBefore  | -59.5       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000563675 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_53.model
+********** Iteration 54 ************
+kl just right!
+---------------------------
+| EVAfter   | -53.1       |
+| EVBefore  | -55.9       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000643303 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_54.model
+********** Iteration 55 ************
+kl just right!
+--------------------------
+| EVAfter   | -48        |
+| EVBefore  | -50.7      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00143455 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_55.model
+********** Iteration 56 ************
+kl just right!
+--------------------------
+| EVAfter   | -44.2      |
+| EVBefore  | -46.9      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00108807 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_56.model
+********** Iteration 57 ************
+kl just right!
+--------------------------
+| EVAfter   | -40.3      |
+| EVBefore  | -43        |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00104757 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_57.model
+********** Iteration 58 ************
+kl just right!
+---------------------------
+| EVAfter   | -37.6       |
+| EVBefore  | -40.3       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000865709 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_58.model
+********** Iteration 59 ************
+kl just right!
+--------------------------
+| EVAfter   | -34.6      |
+| EVBefore  | -37.2      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00105297 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_59.model
+********** Iteration 60 ************
+kl too high
+--------------------------
+| EVAfter   | -30.5      |
+| EVBefore  | -33        |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00233362 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_60.model
+********** Iteration 61 ************
+kl just right!
+---------------------------
+| EVAfter   | -25.4       |
+| EVBefore  | -27.5       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000962201 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_61.model
+********** Iteration 62 ************
+kl too low
+---------------------------
+| EVAfter   | -22         |
+| EVBefore  | -23.8       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000446491 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_62.model
+********** Iteration 63 ************
+kl just right!
+--------------------------
+| EVAfter   | -19.6      |
+| EVBefore  | -21.3      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00052556 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_63.model
+********** Iteration 64 ************
+kl too low
+---------------------------
+| EVAfter   | -17.9       |
+| EVBefore  | -19.5       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000372984 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_64.model
+********** Iteration 65 ************
+kl just right!
+--------------------------
+| EVAfter   | -16.2      |
+| EVBefore  | -17.7      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00192109 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_65.model
+********** Iteration 66 ************
+kl just right!
+--------------------------
+| EVAfter   | -14.7      |
+| EVBefore  | -16.2      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00149656 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_66.model
+********** Iteration 67 ************
+kl too high
+--------------------------
+| EVAfter   | -13.1      |
+| EVBefore  | -14.5      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00369052 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_67.model
+********** Iteration 68 ************
+kl too high
+--------------------------
+| EVAfter   | -11.6      |
+| EVBefore  | -12.9      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00256182 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_68.model
+********** Iteration 69 ************
+kl just right!
+--------------------------
+| EVAfter   | -9.85      |
+| EVBefore  | -10.9      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00114477 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_69.model
+********** Iteration 70 ************
+kl just right!
+---------------------------
+| EVAfter   | -8.54       |
+| EVBefore  | -9.43       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000805018 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_70.model
+********** Iteration 71 ************
+kl just right!
+---------------------------
+| EVAfter   | -7.57       |
+| EVBefore  | -8.32       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000919402 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_71.model
+********** Iteration 72 ************
+kl just right!
+---------------------------
+| EVAfter   | -7.06       |
+| EVBefore  | -7.71       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000704658 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_72.model
+********** Iteration 73 ************
+kl just right!
+---------------------------
+| EVAfter   | -7          |
+| EVBefore  | -7.62       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000610886 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_73.model
+********** Iteration 74 ************
+kl too low
+-------------------------
+| EVAfter   | -7.03     |
+| EVBefore  | -7.62     |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0004364 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_74.model
+********** Iteration 75 ************
+kl just right!
+--------------------------
+| EVAfter   | -6.85      |
+| EVBefore  | -7.4       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00114931 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_75.model
+********** Iteration 76 ************
+kl too low
+---------------------------
+| EVAfter   | -6.56       |
+| EVBefore  | -7.07       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000472802 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_76.model
+********** Iteration 77 ************
+kl too low
+---------------------------
+| EVAfter   | -6.08       |
+| EVBefore  | -6.5        |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000439474 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_77.model
+********** Iteration 78 ************
+kl just right!
+---------------------------
+| EVAfter   | -5.75       |
+| EVBefore  | -6.09       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000912457 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_78.model
+********** Iteration 79 ************
+kl just right!
+---------------------------
+| EVAfter   | -5.62       |
+| EVBefore  | -5.86       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000635326 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_79.model
+********** Iteration 80 ************
+kl just right!
+---------------------------
+| EVAfter   | -5.73       |
+| EVBefore  | -5.92       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000788245 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_80.model
+********** Iteration 81 ************
+kl just right!
+--------------------------
+| EVAfter   | -5.75      |
+| EVBefore  | -5.89      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00102585 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_81.model
+********** Iteration 82 ************
+kl too high
+--------------------------
+| EVAfter   | -5.6       |
+| EVBefore  | -5.62      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00280007 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_82.model
+********** Iteration 83 ************
+kl just right!
+--------------------------
+| EVAfter   | -5.92      |
+| EVBefore  | -5.83      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00126584 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_83.model
+********** Iteration 84 ************
+kl just right!
+--------------------------
+| EVAfter   | -6.61      |
+| EVBefore  | -6.55      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00150808 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_84.model
+********** Iteration 85 ************
+kl just right!
+--------------------------
+| EVAfter   | -7.59      |
+| EVBefore  | -7.63      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00155477 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_85.model
+********** Iteration 86 ************
+kl just right!
+--------------------------
+| EVAfter   | -8.06      |
+| EVBefore  | -8.22      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00154875 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_86.model
+********** Iteration 87 ************
+kl too high
+--------------------------
+| EVAfter   | -8.3       |
+| EVBefore  | -8.56      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00215409 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_87.model
+********** Iteration 88 ************
+kl just right!
+---------------------------
+| EVAfter   | -8.22       |
+| EVBefore  | -8.55       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000546032 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_88.model
+********** Iteration 89 ************
+kl too low
+---------------------------
+| EVAfter   | -7.61       |
+| EVBefore  | -7.94       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000364486 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_89.model
+********** Iteration 90 ************
+kl just right!
+--------------------------
+| EVAfter   | -7.17      |
+| EVBefore  | -7.45      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00144953 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_90.model
+********** Iteration 91 ************
+kl too high
+--------------------------
+| EVAfter   | -7.21      |
+| EVBefore  | -7.52      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00224939 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_91.model
+********** Iteration 92 ************
+kl just right!
+---------------------------
+| EVAfter   | -7.88       |
+| EVBefore  | -8.28       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000748069 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_92.model
+********** Iteration 93 ************
+kl too low
+---------------------------
+| EVAfter   | -7.89       |
+| EVBefore  | -8.36       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000384905 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_93.model
+********** Iteration 94 ************
+kl just right!
+--------------------------
+| EVAfter   | -7.5       |
+| EVBefore  | -7.99      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00144184 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_94.model
+********** Iteration 95 ************
+kl too high
+--------------------------
+| EVAfter   | -7.14      |
+| EVBefore  | -7.63      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00265087 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_95.model
+********** Iteration 96 ************
+kl just right!
+--------------------------
+| EVAfter   | -6.4       |
+| EVBefore  | -6.82      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00161495 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_96.model
+********** Iteration 97 ************
+kl just right!
+--------------------------
+| EVAfter   | -6.32      |
+| EVBefore  | -6.72      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00195494 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_97.model
+********** Iteration 98 ************
+kl just right!
+--------------------------
+| EVAfter   | -6.27      |
+| EVBefore  | -6.65      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00132235 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_98.model
+********** Iteration 99 ************
+kl just right!
+--------------------------
+| EVAfter   | -6.02      |
+| EVBefore  | -6.35      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00089374 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_99.model
+********** Iteration 100 ************
+kl just right!
+---------------------------
+| EVAfter   | -6.32       |
+| EVBefore  | -6.62       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000700238 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_100.model
+********** Iteration 101 ************
+kl just right!
+---------------------------
+| EVAfter   | -6.54       |
+| EVBefore  | -6.83       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000827049 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_101.model
+********** Iteration 102 ************
+kl just right!
+--------------------------
+| EVAfter   | -6.89      |
+| EVBefore  | -7.17      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00191086 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_102.model
+********** Iteration 103 ************
+kl just right!
+---------------------------
+| EVAfter   | -7.5        |
+| EVBefore  | -7.76       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000979372 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_103.model
+********** Iteration 104 ************
+kl just right!
+--------------------------
+| EVAfter   | -8.05      |
+| EVBefore  | -8.32      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00117272 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_104.model
+********** Iteration 105 ************
+kl just right!
+--------------------------
+| EVAfter   | -8.74      |
+| EVBefore  | -9.04      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00117337 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_105.model
+********** Iteration 106 ************
+kl just right!
+---------------------------
+| EVAfter   | -9.61       |
+| EVBefore  | -9.97       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000956065 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_106.model
+********** Iteration 107 ************
+kl just right!
+--------------------------
+| EVAfter   | -10.2      |
+| EVBefore  | -10.7      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00102516 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_107.model
+********** Iteration 108 ************
+kl just right!
+---------------------------
+| EVAfter   | -10.9       |
+| EVBefore  | -11.4       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000941431 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_108.model
+********** Iteration 109 ************
+kl just right!
+--------------------------
+| EVAfter   | -11.4      |
+| EVBefore  | -12        |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00089509 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_109.model
+********** Iteration 110 ************
+kl just right!
+-------------------------
+| EVAfter   | -12       |
+| EVBefore  | -12.6     |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0011526 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_110.model
+********** Iteration 111 ************
+kl too low
+---------------------------
+| EVAfter   | -12.7       |
+| EVBefore  | -13.4       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000468546 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_111.model
+********** Iteration 112 ************
+kl just right!
+--------------------------
+| EVAfter   | -12.7      |
+| EVBefore  | -13.4      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00118577 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_112.model
+********** Iteration 113 ************
+kl just right!
+--------------------------
+| EVAfter   | -13.2      |
+| EVBefore  | -13.9      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00100808 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_113.model
+********** Iteration 114 ************
+kl just right!
+--------------------------
+| EVAfter   | -13.6      |
+| EVBefore  | -14.4      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00159986 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_114.model
+********** Iteration 115 ************
+kl just right!
+--------------------------
+| EVAfter   | -13.6      |
+| EVBefore  | -14.6      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00130524 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_115.model
+********** Iteration 116 ************
+kl just right!
+---------------------------
+| EVAfter   | -14.1       |
+| EVBefore  | -15.1       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000578286 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_116.model
+********** Iteration 117 ************
+kl just right!
+--------------------------
+| EVAfter   | -12.8      |
+| EVBefore  | -13.7      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00104268 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_117.model
+********** Iteration 118 ************
+kl just right!
+--------------------------
+| EVAfter   | -12        |
+| EVBefore  | -12.8      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00116692 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_118.model
+********** Iteration 119 ************
+kl too high
+--------------------------
+| EVAfter   | -11.7      |
+| EVBefore  | -12.3      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00295949 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_119.model
+********** Iteration 120 ************
+kl just right!
+--------------------------
+| EVAfter   | -12.1      |
+| EVBefore  | -12.8      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00156769 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_120.model
+********** Iteration 121 ************
+kl just right!
+--------------------------
+| EVAfter   | -12.4      |
+| EVBefore  | -13        |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00126503 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_121.model
+********** Iteration 122 ************
+kl just right!
+------------------------
+| EVAfter   | -12.5    |
+| EVBefore  | -13.2    |
+| EpLenMean | 50       |
+| EpRewMean | -3.81927 |
+| EpRewSEM  | 0        |
+| KL        | 0.001396 |
+------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_122.model
+********** Iteration 123 ************
+kl too high
+--------------------------
+| EVAfter   | -12.7      |
+| EVBefore  | -13.3      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00219333 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_123.model
+********** Iteration 124 ************
+kl just right!
+---------------------------
+| EVAfter   | -13.2       |
+| EVBefore  | -13.9       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000832256 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_124.model
+********** Iteration 125 ************
+kl just right!
+---------------------------
+| EVAfter   | -13.1       |
+| EVBefore  | -13.7       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000736731 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_125.model
+********** Iteration 126 ************
+kl too low
+---------------------------
+| EVAfter   | -13         |
+| EVBefore  | -13.5       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000395743 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_126.model
+********** Iteration 127 ************
+kl just right!
+--------------------------
+| EVAfter   | -12.4      |
+| EVBefore  | -12.9      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00117471 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_127.model
+********** Iteration 128 ************
+kl just right!
+---------------------------
+| EVAfter   | -12.2       |
+| EVBefore  | -12.6       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000975976 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_128.model
+********** Iteration 129 ************
+kl just right!
+--------------------------
+| EVAfter   | -11.7      |
+| EVBefore  | -12        |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00112958 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_129.model
+********** Iteration 130 ************
+kl just right!
+--------------------------
+| EVAfter   | -11.5      |
+| EVBefore  | -11.8      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00146105 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_130.model
+********** Iteration 131 ************
+kl just right!
+--------------------------
+| EVAfter   | -10.7      |
+| EVBefore  | -11        |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00136468 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_131.model
+********** Iteration 132 ************
+kl just right!
+---------------------------
+| EVAfter   | -10         |
+| EVBefore  | -10.4       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000714411 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_132.model
+********** Iteration 133 ************
+kl too low
+--------------------------
+| EVAfter   | -9.66      |
+| EVBefore  | -9.97      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00042754 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_133.model
+********** Iteration 134 ************
+kl too high
+--------------------------
+| EVAfter   | -9.2       |
+| EVBefore  | -9.48      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00233258 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_134.model
+********** Iteration 135 ************
+kl just right!
+---------------------------
+| EVAfter   | -8.31       |
+| EVBefore  | -8.5        |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000625112 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_135.model
+********** Iteration 136 ************
+kl just right!
+---------------------------
+| EVAfter   | -8.09       |
+| EVBefore  | -8.25       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000647147 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_136.model
+********** Iteration 137 ************
+kl just right!
+---------------------------
+| EVAfter   | -7.69       |
+| EVBefore  | -7.8        |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000637986 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_137.model
+********** Iteration 138 ************
+kl just right!
+--------------------------
+| EVAfter   | -7.57      |
+| EVBefore  | -7.63      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00121575 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_138.model
+********** Iteration 139 ************
+kl too high
+--------------------------
+| EVAfter   | -7.74      |
+| EVBefore  | -7.75      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00213256 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_139.model
+********** Iteration 140 ************
+kl just right!
+---------------------------
+| EVAfter   | -7.88       |
+| EVBefore  | -7.87       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000699111 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_140.model
+********** Iteration 141 ************
+kl too low
+---------------------------
+| EVAfter   | -8          |
+| EVBefore  | -8          |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000498436 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_141.model
+********** Iteration 142 ************
+kl just right!
+-------------------------
+| EVAfter   | -8.05     |
+| EVBefore  | -8.06     |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0011513 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_142.model
+********** Iteration 143 ************
+kl just right!
+---------------------------
+| EVAfter   | -7.46       |
+| EVBefore  | -7.46       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000589149 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_143.model
+********** Iteration 144 ************
+kl just right!
+--------------------------
+| EVAfter   | -7.3       |
+| EVBefore  | -7.29      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00117226 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_144.model
+********** Iteration 145 ************
+kl just right!
+--------------------------
+| EVAfter   | -6.98      |
+| EVBefore  | -6.98      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00133045 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_145.model
+********** Iteration 146 ************
+kl just right!
+------------------------
+| EVAfter   | -6.49    |
+| EVBefore  | -6.49    |
+| EpLenMean | 50       |
+| EpRewMean | -3.81927 |
+| EpRewSEM  | 0        |
+| KL        | 0.001226 |
+------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_146.model
+********** Iteration 147 ************
+kl just right!
+--------------------------
+| EVAfter   | -6.26      |
+| EVBefore  | -6.27      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00114896 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_147.model
+********** Iteration 148 ************
+kl just right!
+---------------------------
+| EVAfter   | -6.55       |
+| EVBefore  | -6.58       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000512463 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_148.model
+********** Iteration 149 ************
+kl just right!
+---------------------------
+| EVAfter   | -7.11       |
+| EVBefore  | -7.16       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000979875 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_149.model
+********** Iteration 150 ************
+kl just right!
+--------------------------
+| EVAfter   | -8.24      |
+| EVBefore  | -8.35      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00130178 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_150.model
+********** Iteration 151 ************
+kl just right!
+--------------------------
+| EVAfter   | -10.1      |
+| EVBefore  | -10.4      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00111636 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_151.model
+********** Iteration 152 ************
+kl just right!
+--------------------------
+| EVAfter   | -12        |
+| EVBefore  | -12.3      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00168075 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_152.model
+********** Iteration 153 ************
+kl just right!
+--------------------------
+| EVAfter   | -14.2      |
+| EVBefore  | -14.6      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00106761 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_153.model
+********** Iteration 154 ************
+kl just right!
+--------------------------
+| EVAfter   | -15        |
+| EVBefore  | -15.6      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00147074 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_154.model
+********** Iteration 155 ************
+kl just right!
+--------------------------
+| EVAfter   | -15.9      |
+| EVBefore  | -16.6      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00106283 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_155.model
+********** Iteration 156 ************
+kl too low
+---------------------------
+| EVAfter   | -16.3       |
+| EVBefore  | -17         |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000274265 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_156.model
+********** Iteration 157 ************
+kl too low
+--------------------------
+| EVAfter   | -16        |
+| EVBefore  | -16.7      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00033988 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_157.model
+********** Iteration 158 ************
+kl just right!
+---------------------------
+| EVAfter   | -15.7       |
+| EVBefore  | -16.4       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000574865 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_158.model
+********** Iteration 159 ************
+kl just right!
+---------------------------
+| EVAfter   | -15.4       |
+| EVBefore  | -16         |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000976183 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_159.model
+********** Iteration 160 ************
+kl just right!
+--------------------------
+| EVAfter   | -14.3      |
+| EVBefore  | -14.9      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00083134 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_160.model
+********** Iteration 161 ************
+kl just right!
+--------------------------
+| EVAfter   | -12.8      |
+| EVBefore  | -13.3      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00112857 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_161.model
+********** Iteration 162 ************
+kl too high
+--------------------------
+| EVAfter   | -11.9      |
+| EVBefore  | -12.3      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00261123 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_162.model
+********** Iteration 163 ************
+kl too high
+-------------------------
+| EVAfter   | -11.6     |
+| EVBefore  | -11.9     |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0028789 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_163.model
+********** Iteration 164 ************
+kl just right!
+--------------------------
+| EVAfter   | -11.2      |
+| EVBefore  | -11.4      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00126884 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_164.model
+********** Iteration 165 ************
+kl just right!
+------------------------
+| EVAfter   | -11.7    |
+| EVBefore  | -12      |
+| EpLenMean | 50       |
+| EpRewMean | -3.81927 |
+| EpRewSEM  | 0        |
+| KL        | 0.001367 |
+------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_165.model
+********** Iteration 166 ************
+kl just right!
+---------------------------
+| EVAfter   | -12.2       |
+| EVBefore  | -12.6       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000640192 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_166.model
+********** Iteration 167 ************
+kl just right!
+---------------------------
+| EVAfter   | -12.8       |
+| EVBefore  | -13.3       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000557703 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_167.model
+********** Iteration 168 ************
+kl just right!
+---------------------------
+| EVAfter   | -13.6       |
+| EVBefore  | -14.1       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000539267 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_168.model
+********** Iteration 169 ************
+kl just right!
+--------------------------
+| EVAfter   | -14.3      |
+| EVBefore  | -14.9      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00105237 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_169.model
+********** Iteration 170 ************
+kl just right!
+---------------------------
+| EVAfter   | -15.4       |
+| EVBefore  | -16.1       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000748135 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_170.model
+********** Iteration 171 ************
+kl too low
+-------------------------
+| EVAfter   | -16.1     |
+| EVBefore  | -16.9     |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 6.134e-05 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_171.model
+********** Iteration 172 ************
+kl just right!
+---------------------------
+| EVAfter   | -15.6       |
+| EVBefore  | -16.4       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000912352 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_172.model
+********** Iteration 173 ************
+kl just right!
+-------------------------
+| EVAfter   | -16.5     |
+| EVBefore  | -17.3     |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0013449 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_173.model
+********** Iteration 174 ************
+kl just right!
+--------------------------
+| EVAfter   | -17.7      |
+| EVBefore  | -18.6      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00164059 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_174.model
+********** Iteration 175 ************
+kl too high
+--------------------------
+| EVAfter   | -18.9      |
+| EVBefore  | -20        |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00459125 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_175.model
+********** Iteration 176 ************
+kl just right!
+--------------------------
+| EVAfter   | -21.5      |
+| EVBefore  | -22.8      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00115205 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_176.model
+********** Iteration 177 ************
+kl just right!
+--------------------------
+| EVAfter   | -22.1      |
+| EVBefore  | -23.5      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00143581 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_177.model
+********** Iteration 178 ************
+kl just right!
+--------------------------
+| EVAfter   | -23        |
+| EVBefore  | -24.4      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00103932 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_178.model
+********** Iteration 179 ************
+kl too high
+--------------------------
+| EVAfter   | -23.3      |
+| EVBefore  | -24.8      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00262786 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_179.model
+********** Iteration 180 ************
+kl too low
+---------------------------
+| EVAfter   | -24.7       |
+| EVBefore  | -26.3       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000471476 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_180.model
+********** Iteration 181 ************
+kl just right!
+--------------------------
+| EVAfter   | -24.3      |
+| EVBefore  | -25.9      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00105051 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_181.model
+********** Iteration 182 ************
+kl just right!
+---------------------------
+| EVAfter   | -24.4       |
+| EVBefore  | -26         |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000529914 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_182.model
+********** Iteration 183 ************
+kl too low
+---------------------------
+| EVAfter   | -24         |
+| EVBefore  | -25.5       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000262225 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_183.model
+********** Iteration 184 ************
+kl just right!
+---------------------------
+| EVAfter   | -22.8       |
+| EVBefore  | -24.2       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000991557 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_184.model
+********** Iteration 185 ************
+kl too high
+-------------------------
+| EVAfter   | -20.6     |
+| EVBefore  | -21.9     |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0024941 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_185.model
+********** Iteration 186 ************
+kl too low
+---------------------------
+| EVAfter   | -18.1       |
+| EVBefore  | -19.1       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000424397 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_186.model
+********** Iteration 187 ************
+kl just right!
+--------------------------
+| EVAfter   | -16.9      |
+| EVBefore  | -17.7      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00140805 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_187.model
+********** Iteration 188 ************
+kl just right!
+---------------------------
+| EVAfter   | -15.4       |
+| EVBefore  | -16.1       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000941013 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_188.model
+********** Iteration 189 ************
+kl just right!
+--------------------------
+| EVAfter   | -14.3      |
+| EVBefore  | -14.8      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00164239 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_189.model
+********** Iteration 190 ************
+kl just right!
+--------------------------
+| EVAfter   | -12        |
+| EVBefore  | -12.4      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00106512 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_190.model
+********** Iteration 191 ************
+kl too high
+--------------------------
+| EVAfter   | -10.3      |
+| EVBefore  | -10.6      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00241092 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_191.model
+********** Iteration 192 ************
+kl just right!
+---------------------------
+| EVAfter   | -8.35       |
+| EVBefore  | -8.55       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000505507 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_192.model
+********** Iteration 193 ************
+kl just right!
+---------------------------
+| EVAfter   | -7.6        |
+| EVBefore  | -7.76       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000683464 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_193.model
+********** Iteration 194 ************
+kl just right!
+--------------------------
+| EVAfter   | -6.82      |
+| EVBefore  | -6.95      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00116901 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_194.model
+********** Iteration 195 ************
+kl too high
+--------------------------
+| EVAfter   | -5.95      |
+| EVBefore  | -6.05      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00228894 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_195.model
+********** Iteration 196 ************
+kl just right!
+--------------------------
+| EVAfter   | -5.48      |
+| EVBefore  | -5.58      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00083473 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_196.model
+********** Iteration 197 ************
+kl just right!
+---------------------------
+| EVAfter   | -5.22       |
+| EVBefore  | -5.33       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000521096 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_197.model
+********** Iteration 198 ************
+kl just right!
+---------------------------
+| EVAfter   | -4.98       |
+| EVBefore  | -5.09       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000683456 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_198.model
+********** Iteration 199 ************
+kl just right!
+---------------------------
+| EVAfter   | -4.83       |
+| EVBefore  | -4.95       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000656226 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_199.model
+********** Iteration 200 ************
+kl too low
+---------------------------
+| EVAfter   | -4.76       |
+| EVBefore  | -4.89       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000394897 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_200.model
+********** Iteration 201 ************
+kl just right!
+---------------------------
+| EVAfter   | -4.73       |
+| EVBefore  | -4.87       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000649608 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_201.model
+********** Iteration 202 ************
+kl just right!
+---------------------------
+| EVAfter   | -4.72       |
+| EVBefore  | -4.88       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000692515 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_202.model
+********** Iteration 203 ************
+kl just right!
+--------------------------
+| EVAfter   | -4.76      |
+| EVBefore  | -4.95      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00103863 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_203.model
+********** Iteration 204 ************
+kl just right!
+-------------------------
+| EVAfter   | -4.94     |
+| EVBefore  | -5.16     |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0011324 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_204.model
+********** Iteration 205 ************
+kl just right!
+--------------------------
+| EVAfter   | -5.23      |
+| EVBefore  | -5.52      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00171923 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_205.model
+********** Iteration 206 ************
+kl too high
+--------------------------
+| EVAfter   | -5.78      |
+| EVBefore  | -6.15      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00233505 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_206.model
+********** Iteration 207 ************
+kl just right!
+---------------------------
+| EVAfter   | -6.46       |
+| EVBefore  | -6.97       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000500838 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_207.model
+********** Iteration 208 ************
+kl too low
+---------------------------
+| EVAfter   | -6.48       |
+| EVBefore  | -7.01       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000291072 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_208.model
+********** Iteration 209 ************
+kl just right!
+---------------------------
+| EVAfter   | -6.28       |
+| EVBefore  | -6.79       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000633771 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_209.model
+********** Iteration 210 ************
+kl too low
+---------------------------
+| EVAfter   | -6.52       |
+| EVBefore  | -7.07       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000355956 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_210.model
+********** Iteration 211 ************
+kl just right!
+---------------------------
+| EVAfter   | -6.67       |
+| EVBefore  | -7.22       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000666351 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_211.model
+********** Iteration 212 ************
+kl just right!
+---------------------------
+| EVAfter   | -7.02       |
+| EVBefore  | -7.63       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000637806 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_212.model
+********** Iteration 213 ************
+kl too low
+---------------------------
+| EVAfter   | -7.43       |
+| EVBefore  | -8.09       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000332866 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_213.model
+********** Iteration 214 ************
+kl too low
+---------------------------
+| EVAfter   | -7.47       |
+| EVBefore  | -8.15       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000218924 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_214.model
+********** Iteration 215 ************
+kl just right!
+---------------------------
+| EVAfter   | -7.22       |
+| EVBefore  | -7.86       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000667703 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_215.model
+********** Iteration 216 ************
+kl too high
+-------------------------
+| EVAfter   | -7.57     |
+| EVBefore  | -8.23     |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0078671 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_216.model
+********** Iteration 217 ************
+kl too high
+-------------------------
+| EVAfter   | -5.48     |
+| EVBefore  | -5.74     |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0024671 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_217.model
+********** Iteration 218 ************
+kl too high
+--------------------------
+| EVAfter   | -4.31      |
+| EVBefore  | -4.45      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00201456 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_218.model
+********** Iteration 219 ************
+kl just right!
+---------------------------
+| EVAfter   | -3.48       |
+| EVBefore  | -3.56       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000991407 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_219.model
+********** Iteration 220 ************
+kl just right!
+---------------------------
+| EVAfter   | -3.04       |
+| EVBefore  | -3.07       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000997328 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_220.model
+********** Iteration 221 ************
+kl just right!
+---------------------------
+| EVAfter   | -2.9        |
+| EVBefore  | -2.88       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000829123 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_221.model
+********** Iteration 222 ************
+kl too low
+---------------------------
+| EVAfter   | -3.05       |
+| EVBefore  | -3.01       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000254023 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_222.model
+********** Iteration 223 ************
+kl just right!
+-------------------------
+| EVAfter   | -3.23     |
+| EVBefore  | -3.2      |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0016575 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_223.model
+********** Iteration 224 ************
+kl just right!
+--------------------------
+| EVAfter   | -3.81      |
+| EVBefore  | -3.78      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00179325 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_224.model
+********** Iteration 225 ************
+kl too high
+--------------------------
+| EVAfter   | -4.63      |
+| EVBefore  | -4.64      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00269312 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_225.model
+********** Iteration 226 ************
+kl just right!
+--------------------------
+| EVAfter   | -6.08      |
+| EVBefore  | -6.16      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00197153 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_226.model
+********** Iteration 227 ************
+kl just right!
+--------------------------
+| EVAfter   | -7.46      |
+| EVBefore  | -7.63      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00187188 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_227.model
+********** Iteration 228 ************
+kl just right!
+--------------------------
+| EVAfter   | -9.05      |
+| EVBefore  | -9.32      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00143551 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_228.model
+********** Iteration 229 ************
+kl just right!
+--------------------------
+| EVAfter   | -10.6      |
+| EVBefore  | -10.9      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00135241 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_229.model
+********** Iteration 230 ************
+kl just right!
+--------------------------
+| EVAfter   | -12        |
+| EVBefore  | -12.5      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00168713 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_230.model
+********** Iteration 231 ************
+kl just right!
+---------------------------
+| EVAfter   | -13.7       |
+| EVBefore  | -14.3       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000606886 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_231.model
+********** Iteration 232 ************
+kl too low
+---------------------------
+| EVAfter   | -14.4       |
+| EVBefore  | -15         |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000498741 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_232.model
+********** Iteration 233 ************
+kl just right!
+--------------------------
+| EVAfter   | -14.5      |
+| EVBefore  | -15.2      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00129865 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_233.model
+********** Iteration 234 ************
+kl just right!
+-------------------------
+| EVAfter   | -15.4     |
+| EVBefore  | -16.2     |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0018962 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_234.model
+********** Iteration 235 ************
+kl just right!
+--------------------------
+| EVAfter   | -16.6      |
+| EVBefore  | -17.5      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00139021 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_235.model
+********** Iteration 236 ************
+kl too low
+---------------------------
+| EVAfter   | -17.2       |
+| EVBefore  | -18.2       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000486705 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_236.model
+********** Iteration 237 ************
+kl just right!
+--------------------------
+| EVAfter   | -17.3      |
+| EVBefore  | -18.3      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00138693 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_237.model
+********** Iteration 238 ************
+kl just right!
+---------------------------
+| EVAfter   | -17.8       |
+| EVBefore  | -18.8       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000891793 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_238.model
+********** Iteration 239 ************
+kl just right!
+--------------------------
+| EVAfter   | -18.3      |
+| EVBefore  | -19.3      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00163801 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_239.model
+********** Iteration 240 ************
+kl too high
+--------------------------
+| EVAfter   | -19.3      |
+| EVBefore  | -20.4      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00218917 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_240.model
+********** Iteration 241 ************
+kl too high
+--------------------------
+| EVAfter   | -20.7      |
+| EVBefore  | -21.7      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00203203 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_241.model
+********** Iteration 242 ************
+kl just right!
+--------------------------
+| EVAfter   | -22.1      |
+| EVBefore  | -23.2      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00116791 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_242.model
+********** Iteration 243 ************
+kl just right!
+--------------------------
+| EVAfter   | -22.9      |
+| EVBefore  | -24        |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00136868 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_243.model
+********** Iteration 244 ************
+kl just right!
+---------------------------
+| EVAfter   | -23.8       |
+| EVBefore  | -25         |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000985183 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_244.model
+********** Iteration 245 ************
+kl just right!
+--------------------------
+| EVAfter   | -24.2      |
+| EVBefore  | -25.4      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00142379 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_245.model
+********** Iteration 246 ************
+kl just right!
+--------------------------
+| EVAfter   | -24.7      |
+| EVBefore  | -25.9      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00169276 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_246.model
+********** Iteration 247 ************
+kl too high
+--------------------------
+| EVAfter   | -25.2      |
+| EVBefore  | -26.4      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00216757 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_247.model
+********** Iteration 248 ************
+kl just right!
+--------------------------
+| EVAfter   | -25.5      |
+| EVBefore  | -26.7      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00153733 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_248.model
+********** Iteration 249 ************
+kl just right!
+--------------------------
+| EVAfter   | -25.4      |
+| EVBefore  | -26.7      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00107451 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_249.model
+********** Iteration 250 ************
+kl just right!
+---------------------------
+| EVAfter   | -24.9       |
+| EVBefore  | -26.1       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000804669 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_250.model
+********** Iteration 251 ************
+kl too low
+---------------------------
+| EVAfter   | -24.1       |
+| EVBefore  | -25.2       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000351135 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_251.model
+********** Iteration 252 ************
+kl just right!
+---------------------------
+| EVAfter   | -23.2       |
+| EVBefore  | -24.4       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000554463 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_252.model
+********** Iteration 253 ************
+kl just right!
+---------------------------
+| EVAfter   | -22.4       |
+| EVBefore  | -23.5       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000631949 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_253.model
+********** Iteration 254 ************
+kl just right!
+---------------------------
+| EVAfter   | -21.5       |
+| EVBefore  | -22.6       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000684705 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_254.model
+********** Iteration 255 ************
+kl too low
+--------------------------
+| EVAfter   | -20.2      |
+| EVBefore  | -21.3      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00038336 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_255.model
+********** Iteration 256 ************
+kl too low
+---------------------------
+| EVAfter   | -18.9       |
+| EVBefore  | -19.9       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000337757 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_256.model
+********** Iteration 257 ************
+kl too high
+--------------------------
+| EVAfter   | -17.6      |
+| EVBefore  | -18.5      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00314715 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_257.model
+********** Iteration 258 ************
+kl just right!
+--------------------------
+| EVAfter   | -16.4      |
+| EVBefore  | -17.4      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00121767 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_258.model
+********** Iteration 259 ************
+kl too high
+--------------------------
+| EVAfter   | -15.8      |
+| EVBefore  | -16.7      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00371831 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_259.model
+********** Iteration 260 ************
+kl too high
+--------------------------
+| EVAfter   | -15.6      |
+| EVBefore  | -16.5      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00220412 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_260.model
+********** Iteration 261 ************
+kl just right!
+-------------------------
+| EVAfter   | -15.2     |
+| EVBefore  | -16.1     |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0010418 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_261.model
+********** Iteration 262 ************
+kl just right!
+---------------------------
+| EVAfter   | -14.6       |
+| EVBefore  | -15.4       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000679842 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_262.model
+********** Iteration 263 ************
+kl just right!
+---------------------------
+| EVAfter   | -13.9       |
+| EVBefore  | -14.7       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000551542 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_263.model
+********** Iteration 264 ************
+kl just right!
+---------------------------
+| EVAfter   | -13.3       |
+| EVBefore  | -14.1       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000625876 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_264.model
+********** Iteration 265 ************
+kl just right!
+---------------------------
+| EVAfter   | -12.6       |
+| EVBefore  | -13.4       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000505105 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_265.model
+********** Iteration 266 ************
+kl too low
+---------------------------
+| EVAfter   | -12.1       |
+| EVBefore  | -12.8       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000362347 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_266.model
+********** Iteration 267 ************
+kl just right!
+---------------------------
+| EVAfter   | -11.5       |
+| EVBefore  | -12.2       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000542653 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_267.model
+********** Iteration 268 ************
+kl too low
+--------------------------
+| EVAfter   | -10.9      |
+| EVBefore  | -11.6      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00021323 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_268.model
+********** Iteration 269 ************
+kl too low
+---------------------------
+| EVAfter   | -10.4       |
+| EVBefore  | -11         |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 6.89209e-05 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_269.model
+********** Iteration 270 ************
+kl just right!
+-------------------------
+| EVAfter   | -9.73     |
+| EVBefore  | -10.4     |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0012698 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_270.model
+********** Iteration 271 ************
+kl too low
+---------------------------
+| EVAfter   | -8.97       |
+| EVBefore  | -9.5        |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 7.85994e-05 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_271.model
+********** Iteration 272 ************
+kl just right!
+-------------------------
+| EVAfter   | -8.43     |
+| EVBefore  | -8.9      |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0017789 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_272.model
+********** Iteration 273 ************
+kl too high
+--------------------------
+| EVAfter   | -7.99      |
+| EVBefore  | -8.48      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00322491 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_273.model
+********** Iteration 274 ************
+kl too high
+-------------------------
+| EVAfter   | -7.87     |
+| EVBefore  | -8.44     |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0021993 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_274.model
+********** Iteration 275 ************
+kl just right!
+--------------------------
+| EVAfter   | -7.99      |
+| EVBefore  | -8.64      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00138598 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_275.model
+********** Iteration 276 ************
+kl just right!
+--------------------------
+| EVAfter   | -7.95      |
+| EVBefore  | -8.67      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00182456 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_276.model
+********** Iteration 277 ************
+kl just right!
+--------------------------
+| EVAfter   | -8.16      |
+| EVBefore  | -8.94      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00184175 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_277.model
+********** Iteration 278 ************
+kl just right!
+--------------------------
+| EVAfter   | -8.49      |
+| EVBefore  | -9.33      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00131786 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_278.model
+********** Iteration 279 ************
+kl too low
+---------------------------
+| EVAfter   | -8.7        |
+| EVBefore  | -9.6        |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000359037 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_279.model
+********** Iteration 280 ************
+kl just right!
+--------------------------
+| EVAfter   | -8.3       |
+| EVBefore  | -9.23      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00123416 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_280.model
+********** Iteration 281 ************
+kl just right!
+------------------------
+| EVAfter   | -7.43    |
+| EVBefore  | -8.33    |
+| EpLenMean | 50       |
+| EpRewMean | -3.81927 |
+| EpRewSEM  | 0        |
+| KL        | 0.001974 |
+------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_281.model
+********** Iteration 282 ************
+kl just right!
+--------------------------
+| EVAfter   | -7.09      |
+| EVBefore  | -7.94      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00118355 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_282.model
+********** Iteration 283 ************
+kl just right!
+--------------------------
+| EVAfter   | -6.45      |
+| EVBefore  | -7.24      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00111153 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_283.model
+********** Iteration 284 ************
+kl just right!
+--------------------------
+| EVAfter   | -5.36      |
+| EVBefore  | -6.02      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00180141 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_284.model
+********** Iteration 285 ************
+kl too high
+--------------------------
+| EVAfter   | -4.59      |
+| EVBefore  | -5.14      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00233083 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_285.model
+********** Iteration 286 ************
+kl just right!
+--------------------------
+| EVAfter   | -3.82      |
+| EVBefore  | -4.24      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00167963 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_286.model
+********** Iteration 287 ************
+kl just right!
+--------------------------
+| EVAfter   | -3.23      |
+| EVBefore  | -3.55      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00138706 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_287.model
+********** Iteration 288 ************
+kl too high
+--------------------------
+| EVAfter   | -2.86      |
+| EVBefore  | -3.1       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00237351 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_288.model
+********** Iteration 289 ************
+kl just right!
+--------------------------
+| EVAfter   | -2.8       |
+| EVBefore  | -2.99      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00176787 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_289.model
+********** Iteration 290 ************
+kl just right!
+--------------------------
+| EVAfter   | -2.85      |
+| EVBefore  | -3.03      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00194795 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_290.model
+********** Iteration 291 ************
+kl just right!
+--------------------------
+| EVAfter   | -3.12      |
+| EVBefore  | -3.3       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00162559 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_291.model
+********** Iteration 292 ************
+kl just right!
+---------------------------
+| EVAfter   | -3.5        |
+| EVBefore  | -3.7        |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000561593 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_292.model
+********** Iteration 293 ************
+kl just right!
+---------------------------
+| EVAfter   | -3.56       |
+| EVBefore  | -3.78       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000500056 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_293.model
+********** Iteration 294 ************
+kl too low
+---------------------------
+| EVAfter   | -3.41       |
+| EVBefore  | -3.63       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000130942 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_294.model
+********** Iteration 295 ************
+kl just right!
+-------------------------
+| EVAfter   | -3.39     |
+| EVBefore  | -3.61     |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0005164 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_295.model
+********** Iteration 296 ************
+kl just right!
+---------------------------
+| EVAfter   | -2.97       |
+| EVBefore  | -3.17       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000535389 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_296.model
+********** Iteration 297 ************
+kl just right!
+---------------------------
+| EVAfter   | -2.49       |
+| EVBefore  | -2.66       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000850053 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_297.model
+********** Iteration 298 ************
+kl too high
+--------------------------
+| EVAfter   | -2.08      |
+| EVBefore  | -2.22      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00282819 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_298.model
+********** Iteration 299 ************
+kl just right!
+---------------------------
+| EVAfter   | -1.86       |
+| EVBefore  | -2          |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000905188 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_299.model
+********** Iteration 300 ************
+kl just right!
+--------------------------
+| EVAfter   | -1.91      |
+| EVBefore  | -2.07      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00066624 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_300.model
+********** Iteration 301 ************
+kl just right!
+--------------------------
+| EVAfter   | -2.06      |
+| EVBefore  | -2.26      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00136433 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_301.model
+********** Iteration 302 ************
+kl too high
+--------------------------
+| EVAfter   | -2.51      |
+| EVBefore  | -2.76      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00205743 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_302.model
+********** Iteration 303 ************
+kl just right!
+---------------------------
+| EVAfter   | -3.3        |
+| EVBefore  | -3.64       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000941195 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_303.model
+********** Iteration 304 ************
+kl too low
+---------------------------
+| EVAfter   | -3.75       |
+| EVBefore  | -4.15       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000436912 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_304.model
+********** Iteration 305 ************
+kl just right!
+--------------------------
+| EVAfter   | -3.9       |
+| EVBefore  | -4.35      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00138677 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_305.model
+********** Iteration 306 ************
+kl just right!
+---------------------------
+| EVAfter   | -4.54       |
+| EVBefore  | -5.05       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000999267 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_306.model
+********** Iteration 307 ************
+kl just right!
+--------------------------
+| EVAfter   | -4.96      |
+| EVBefore  | -5.53      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00168297 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_307.model
+********** Iteration 308 ************
+kl just right!
+--------------------------
+| EVAfter   | -5.47      |
+| EVBefore  | -6.09      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00170824 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_308.model
+********** Iteration 309 ************
+kl just right!
+---------------------------
+| EVAfter   | -5.87       |
+| EVBefore  | -6.54       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000953108 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_309.model
+********** Iteration 310 ************
+kl just right!
+--------------------------
+| EVAfter   | -6.03      |
+| EVBefore  | -6.73      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00166732 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_310.model
+********** Iteration 311 ************
+kl just right!
+--------------------------
+| EVAfter   | -6.25      |
+| EVBefore  | -6.97      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00190078 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_311.model
+********** Iteration 312 ************
+kl just right!
+--------------------------
+| EVAfter   | -6.41      |
+| EVBefore  | -7.15      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00127581 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_312.model
+********** Iteration 313 ************
+kl just right!
+--------------------------
+| EVAfter   | -6.1       |
+| EVBefore  | -6.81      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00133807 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_313.model
+********** Iteration 314 ************
+kl just right!
+--------------------------
+| EVAfter   | -5.76      |
+| EVBefore  | -6.45      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00141796 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_314.model
+********** Iteration 315 ************
+kl just right!
+--------------------------
+| EVAfter   | -5.46      |
+| EVBefore  | -6.11      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00130995 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_315.model
+********** Iteration 316 ************
+kl just right!
+--------------------------
+| EVAfter   | -5.1       |
+| EVBefore  | -5.7       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00103535 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_316.model
+********** Iteration 317 ************
+kl just right!
+---------------------------
+| EVAfter   | -4.95       |
+| EVBefore  | -5.53       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000879112 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_317.model
+********** Iteration 318 ************
+kl just right!
+--------------------------
+| EVAfter   | -4.94      |
+| EVBefore  | -5.5       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00149159 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_318.model
+********** Iteration 319 ************
+kl too high
+-------------------------
+| EVAfter   | -5.07     |
+| EVBefore  | -5.64     |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0020649 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_319.model
+********** Iteration 320 ************
+kl just right!
+--------------------------
+| EVAfter   | -5.34      |
+| EVBefore  | -5.94      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00120542 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_320.model
+********** Iteration 321 ************
+kl just right!
+---------------------------
+| EVAfter   | -5.18       |
+| EVBefore  | -5.76       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000971556 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_321.model
+********** Iteration 322 ************
+kl just right!
+---------------------------
+| EVAfter   | -5.04       |
+| EVBefore  | -5.6        |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000810344 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_322.model
+********** Iteration 323 ************
+kl just right!
+---------------------------
+| EVAfter   | -4.89       |
+| EVBefore  | -5.42       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000554404 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_323.model
+********** Iteration 324 ************
+kl just right!
+---------------------------
+| EVAfter   | -4.64       |
+| EVBefore  | -5.14       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000706871 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_324.model
+********** Iteration 325 ************
+kl just right!
+---------------------------
+| EVAfter   | -4.45       |
+| EVBefore  | -4.92       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000598435 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_325.model
+********** Iteration 326 ************
+kl too low
+---------------------------
+| EVAfter   | -4.21       |
+| EVBefore  | -4.65       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000377865 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_326.model
+********** Iteration 327 ************
+kl just right!
+--------------------------
+| EVAfter   | -3.83      |
+| EVBefore  | -4.22      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00104507 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_327.model
+********** Iteration 328 ************
+kl just right!
+--------------------------
+| EVAfter   | -3.63      |
+| EVBefore  | -3.98      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00123137 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_328.model
+********** Iteration 329 ************
+kl too low
+---------------------------
+| EVAfter   | -3.34       |
+| EVBefore  | -3.66       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000369253 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_329.model
+********** Iteration 330 ************
+kl too low
+-------------------------
+| EVAfter   | -3.05     |
+| EVBefore  | -3.33     |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0004666 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_330.model
+********** Iteration 331 ************
+kl just right!
+--------------------------
+| EVAfter   | -2.99      |
+| EVBefore  | -3.24      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00140471 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_331.model
+********** Iteration 332 ************
+kl just right!
+---------------------------
+| EVAfter   | -2.97       |
+| EVBefore  | -3.23       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000790776 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_332.model
+********** Iteration 333 ************
+kl just right!
+---------------------------
+| EVAfter   | -2.81       |
+| EVBefore  | -3.05       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000657116 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_333.model
+********** Iteration 334 ************
+kl too high
+-------------------------
+| EVAfter   | -2.73     |
+| EVBefore  | -2.94     |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0029569 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_334.model
+********** Iteration 335 ************
+kl just right!
+--------------------------
+| EVAfter   | -2.71      |
+| EVBefore  | -2.89      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00123264 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_335.model
+********** Iteration 336 ************
+kl just right!
+--------------------------
+| EVAfter   | -2.59      |
+| EVBefore  | -2.77      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00100055 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_336.model
+********** Iteration 337 ************
+kl too low
+---------------------------
+| EVAfter   | -2.34       |
+| EVBefore  | -2.51       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000341668 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_337.model
+********** Iteration 338 ************
+kl too low
+---------------------------
+| EVAfter   | -2.1        |
+| EVBefore  | -2.25       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000318117 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_338.model
+********** Iteration 339 ************
+kl just right!
+--------------------------
+| EVAfter   | -1.94      |
+| EVBefore  | -2.07      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00073395 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_339.model
+********** Iteration 340 ************
+kl too low
+---------------------------
+| EVAfter   | -1.69       |
+| EVBefore  | -1.79       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000187853 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_340.model
+********** Iteration 341 ************
+kl just right!
+---------------------------
+| EVAfter   | -1.6        |
+| EVBefore  | -1.68       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000750821 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_341.model
+********** Iteration 342 ************
+kl too high
+--------------------------
+| EVAfter   | -1.46      |
+| EVBefore  | -1.54      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00208495 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_342.model
+********** Iteration 343 ************
+kl just right!
+--------------------------
+| EVAfter   | -1.34      |
+| EVBefore  | -1.41      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00151725 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_343.model
+********** Iteration 344 ************
+kl just right!
+---------------------------
+| EVAfter   | -1.3        |
+| EVBefore  | -1.36       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000667839 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_344.model
+********** Iteration 345 ************
+kl too low
+---------------------------
+| EVAfter   | -1.25       |
+| EVBefore  | -1.3        |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000421989 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_345.model
+********** Iteration 346 ************
+kl just right!
+--------------------------
+| EVAfter   | -1.15      |
+| EVBefore  | -1.18      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00101804 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_346.model
+********** Iteration 347 ************
+kl too high
+--------------------------
+| EVAfter   | -1.03      |
+| EVBefore  | -1.05      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00369596 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_347.model
+********** Iteration 348 ************
+kl too high
+--------------------------
+| EVAfter   | -1.07      |
+| EVBefore  | -1.1       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00589112 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_348.model
+********** Iteration 349 ************
+kl just right!
+--------------------------
+| EVAfter   | -1.49      |
+| EVBefore  | -1.56      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00152973 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_349.model
+********** Iteration 350 ************
+kl just right!
+--------------------------
+| EVAfter   | -1.72      |
+| EVBefore  | -1.83      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00103041 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_350.model
+********** Iteration 351 ************
+kl just right!
+-------------------------
+| EVAfter   | -1.85     |
+| EVBefore  | -1.99     |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0011517 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_351.model
+********** Iteration 352 ************
+kl just right!
+--------------------------
+| EVAfter   | -1.95      |
+| EVBefore  | -2.13      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00107615 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_352.model
+********** Iteration 353 ************
+kl just right!
+--------------------------
+| EVAfter   | -1.9       |
+| EVBefore  | -2.07      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00127879 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_353.model
+********** Iteration 354 ************
+kl just right!
+---------------------------
+| EVAfter   | -1.99       |
+| EVBefore  | -2.18       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000966094 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_354.model
+********** Iteration 355 ************
+kl just right!
+--------------------------
+| EVAfter   | -1.66      |
+| EVBefore  | -1.81      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00132938 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_355.model
+********** Iteration 356 ************
+kl just right!
+--------------------------
+| EVAfter   | -1.32      |
+| EVBefore  | -1.4       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00196916 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_356.model
+********** Iteration 357 ************
+kl too high
+--------------------------
+| EVAfter   | -1.11      |
+| EVBefore  | -1.13      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00325622 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_357.model
+********** Iteration 358 ************
+kl too high
+--------------------------
+| EVAfter   | -1.2       |
+| EVBefore  | -1.2       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00269383 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_358.model
+********** Iteration 359 ************
+kl too low
+---------------------------
+| EVAfter   | -1.5        |
+| EVBefore  | -1.56       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000268987 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_359.model
+********** Iteration 360 ************
+kl just right!
+--------------------------
+| EVAfter   | -1.54      |
+| EVBefore  | -1.63      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00115125 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_360.model
+********** Iteration 361 ************
+kl too low
+--------------------------
+| EVAfter   | -1.7       |
+| EVBefore  | -1.82      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00036787 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_361.model
+********** Iteration 362 ************
+kl just right!
+--------------------------
+| EVAfter   | -1.69      |
+| EVBefore  | -1.83      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00067632 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_362.model
+********** Iteration 363 ************
+kl just right!
+--------------------------
+| EVAfter   | -1.7       |
+| EVBefore  | -1.86      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00109093 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_363.model
+********** Iteration 364 ************
+kl too high
+-------------------------
+| EVAfter   | -1.69     |
+| EVBefore  | -1.87     |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0025742 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_364.model
+********** Iteration 365 ************
+kl just right!
+---------------------------
+| EVAfter   | -1.65       |
+| EVBefore  | -1.86       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000755484 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_365.model
+********** Iteration 366 ************
+kl just right!
+--------------------------
+| EVAfter   | -1.48      |
+| EVBefore  | -1.69      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00112939 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_366.model
+********** Iteration 367 ************
+kl too low
+---------------------------
+| EVAfter   | -1.29       |
+| EVBefore  | -1.48       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000425301 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_367.model
+********** Iteration 368 ************
+kl too high
+--------------------------
+| EVAfter   | -1.11      |
+| EVBefore  | -1.28      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00224577 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_368.model
+********** Iteration 369 ************
+kl too low
+---------------------------
+| EVAfter   | -0.992      |
+| EVBefore  | -1.15       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000204244 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_369.model
+********** Iteration 370 ************
+kl just right!
+--------------------------
+| EVAfter   | -0.876     |
+| EVBefore  | -1.01      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00150668 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_370.model
+********** Iteration 371 ************
+kl too high
+--------------------------
+| EVAfter   | -0.916     |
+| EVBefore  | -1.04      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00251495 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_371.model
+********** Iteration 372 ************
+kl just right!
+--------------------------
+| EVAfter   | -1.19      |
+| EVBefore  | -1.31      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00130269 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_372.model
+********** Iteration 373 ************
+kl too high
+--------------------------
+| EVAfter   | -1.5       |
+| EVBefore  | -1.64      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00316416 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_373.model
+********** Iteration 374 ************
+kl too low
+---------------------------
+| EVAfter   | -2.22       |
+| EVBefore  | -2.41       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000372131 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_374.model
+********** Iteration 375 ************
+kl just right!
+---------------------------
+| EVAfter   | -2.34       |
+| EVBefore  | -2.57       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000945321 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_375.model
+********** Iteration 376 ************
+kl just right!
+--------------------------
+| EVAfter   | -2.32      |
+| EVBefore  | -2.58      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00174331 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_376.model
+********** Iteration 377 ************
+kl just right!
+--------------------------
+| EVAfter   | -2.02      |
+| EVBefore  | -2.28      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00138821 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_377.model
+********** Iteration 378 ************
+kl just right!
+--------------------------
+| EVAfter   | -2.11      |
+| EVBefore  | -2.36      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00124421 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_378.model
+********** Iteration 379 ************
+kl just right!
+--------------------------
+| EVAfter   | -2.34      |
+| EVBefore  | -2.6       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00166095 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_379.model
+********** Iteration 380 ************
+kl just right!
+--------------------------
+| EVAfter   | -2.33      |
+| EVBefore  | -2.61      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00117943 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_380.model
+********** Iteration 381 ************
+kl just right!
+--------------------------
+| EVAfter   | -2.25      |
+| EVBefore  | -2.53      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00154886 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_381.model
+********** Iteration 382 ************
+kl just right!
+--------------------------
+| EVAfter   | -2.09      |
+| EVBefore  | -2.36      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00111982 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_382.model
+********** Iteration 383 ************
+kl just right!
+-------------------------
+| EVAfter   | -1.77     |
+| EVBefore  | -2.02     |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0010177 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_383.model
+********** Iteration 384 ************
+kl just right!
+---------------------------
+| EVAfter   | -1.83       |
+| EVBefore  | -2.07       |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000834739 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_384.model
+********** Iteration 385 ************
+kl too low
+---------------------------
+| EVAfter   | -1.87       |
+| EVBefore  | -2.1        |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000197725 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_385.model
+********** Iteration 386 ************
+kl just right!
+--------------------------
+| EVAfter   | -1.98      |
+| EVBefore  | -2.2       |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00142251 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_386.model
+********** Iteration 387 ************
+kl just right!
+-------------------------
+| EVAfter   | -1.79     |
+| EVBefore  | -2.01     |
+| EpLenMean | 50        |
+| EpRewMean | -3.81927  |
+| EpRewSEM  | 0         |
+| KL        | 0.0010718 |
+-------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_387.model
+********** Iteration 388 ************
+kl too high
+--------------------------
+| EVAfter   | -1.39      |
+| EVBefore  | -1.59      |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00310328 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_388.model
+********** Iteration 389 ************
+kl just right!
+--------------------------
+| EVAfter   | -0.843     |
+| EVBefore  | -0.975     |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00141859 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_389.model
+********** Iteration 390 ************
+kl too high
+--------------------------
+| EVAfter   | -0.627     |
+| EVBefore  | -0.708     |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00203399 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_390.model
+********** Iteration 391 ************
+kl just right!
+--------------------------
+| EVAfter   | -0.55      |
+| EVBefore  | -0.595     |
+| EpLenMean | 50         |
+| EpRewMean | -3.81927   |
+| EpRewSEM  | 0          |
+| KL        | 0.00128395 |
+--------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_391.model
+********** Iteration 392 ************
+kl too low
+---------------------------
+| EVAfter   | -0.618      |
+| EVBefore  | -0.648      |
+| EpLenMean | 50          |
+| EpRewMean | -3.81927    |
+| EpRewSEM  | 0           |
+| KL        | 0.000478084 |
+---------------------------
+Saved model to file :/tmp/rosrl/GazeboModularScara3DOFv3Env/acktr/ros1_acktr_H_afterIter_392.model
+Job launching after 0.25 seconds in submission.
+Running python job.
+Importing train_modular_scara_3dof_acktr_spearmint.py
+Running train_modular_scara_3dof_acktr_spearmint.main()
+/media/raid/RL/ros_rl/environments/gym-gazebo/gym_gazebo/envs/modular_scara/gazebo_modular_scara_3dof_v3.py:163: SyntaxWarning: The publisher should be created with an explicit keyword argument 'queue_size'. Please see http://wiki.ros.org/rospy/Overview/Publishers%20and%20Subscribers for more information.
+  self._pub = rospy.Publisher('/scara_controller/command', JointTrajectory)
+Got result 3.81927
+Completed successfully in 6228.79 seconds. [{'main': 3.8192737}]
+Traceback (most recent call last):
+  File "/media/raid/RL/ros_rl/optimization/Spearmint/spearmint/launcher.py", line 420, in <module>
+    main()
+  File "/media/raid/RL/ros_rl/optimization/Spearmint/spearmint/launcher.py", line 220, in main
+    launch(options.db_address, options.experiment_name, options.job_id)
+  File "/media/raid/RL/ros_rl/optimization/Spearmint/spearmint/launcher.py", line 294, in launch
+    db.save(job, experiment_name, 'jobs', {'id' : job_id})
+  File "/media/raid/RL/ros_rl/optimization/Spearmint/spearmint/utils/database/mongodb.py", line 234, in save
+    result = dbcollection.update(field_filters, save_doc, upsert=upsert)
+  File "/home/erle/.local/lib/python3.5/site-packages/pymongo/collection.py", line 2535, in update
+    collation=collation)
+  File "/home/erle/.local/lib/python3.5/site-packages/pymongo/collection.py", line 766, in _update
+    codec_options=self.__write_response_codec_options).copy()
+  File "/home/erle/.local/lib/python3.5/site-packages/pymongo/pool.py", line 482, in command
+    self._raise_connection_failure(error)
+  File "/home/erle/.local/lib/python3.5/site-packages/pymongo/pool.py", line 610, in _raise_connection_failure
+    raise error
+  File "/home/erle/.local/lib/python3.5/site-packages/pymongo/pool.py", line 477, in command
+    collation=collation)
+  File "/home/erle/.local/lib/python3.5/site-packages/pymongo/network.py", line 94, in command
+    None, codec_options, check_keys)
+bson.errors.InvalidDocument: Cannot encode object: 3.8192737
+... logging to /home/erle/.ros/log/da8dd57e-d115-11e7-9421-1866daf94540/roslaunch-erleserver-27835.log
+Checking log directory for disk usage. This may take awhile.
+Press Ctrl-C to interrupt
+Done checking log file disk usage. Usage is <1GB.
+]2;/media/raid/RL/ros_rl/environments/gym-gazebo/gym_gazebo/envs/assets/launch/ModularScara3_v0.launch
+[1mstarted roslaunch server http://erleserver:38923/[0m
+
+SUMMARY
+========
+
+PARAMETERS
+ * /joint_state_controller/publish_rate: 50
+ * /joint_state_controller/type: joint_state_contr...
+ * /robot_description: <?xml version="1....
+ * /robot_state_publisher/publish_frequency: 50.0
+ * /robot_state_publisher/tf_prefix: 
+ * /rosdistro: kinetic
+ * /rosversion: 1.12.7
+ * /scara_controller/action_monitor_rate: 10
+ * /scara_controller/joints: ['motor1', 'motor...
+ * /scara_controller/state_publish_rate: 25
+ * /scara_controller/stop_trajectory_duration: 0.5
+ * /scara_controller/type: position_controll...
+ * /use_sim_time: True
+
+NODES
+  /
+    arm_controller_spawner (controller_manager/controller_manager)
+    fake_joint_calibration (rostopic/rostopic)
+    gazebo (gazebo_ros/gzserver)
+    joint_state_controller_spawner (controller_manager/controller_manager)
+    robot_state_publisher (robot_state_publisher/robot_state_publisher)
+    spawn_gazebo_model (gazebo_ros/spawn_model)
+
+[1mROS_MASTER_URI=http://192.168.1.200:11312[0m
+]2;/media/raid/RL/ros_rl/environments/gym-gazebo/gym_gazebo/envs/assets/launch/ModularScara3_v0.launch http://192.168.1.200:11312
+core service [/rosout] found
+[1mprocess[gazebo-1]: started with pid [28065][0m
+[1mprocess[spawn_gazebo_model-2]: started with pid [28074][0m
+[1mprocess[robot_state_publisher-3]: started with pid [28077][0m
+[1mprocess[fake_joint_calibration-4]: started with pid [28080][0m
+[1mprocess[joint_state_controller_spawner-5]: started with pid [28086][0m
+[1mprocess[arm_controller_spawner-6]: started with pid [28103][0m
+[1m[spawn_gazebo_model-2] process has finished cleanly
+log file: /home/erle/.ros/log/da8dd57e-d115-11e7-9421-1866daf94540/spawn_gazebo_model-2*.log[0m
+[1m[joint_state_controller_spawner-5] process has finished cleanly
+log file: /home/erle/.ros/log/da8dd57e-d115-11e7-9421-1866daf94540/joint_state_controller_spawner-5*.log[0m
+[1m[arm_controller_spawner-6] process has finished cleanly
+log file: /home/erle/.ros/log/da8dd57e-d115-11e7-9421-1866daf94540/arm_controller_spawner-6*.log[0m
+[fake_joint_calibration-4] killing on exit
+[robot_state_publisher-3] killing on exit
+shutting down processing monitor...
+... shutting down processing monitor complete
+[1mdone[0m
