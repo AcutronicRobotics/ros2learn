@@ -187,7 +187,7 @@ import os
 import sys
 import pymongo
 import json
-from parsing import parse_db_address
+from spearmint.utils.parsing import parse_db_address
 
 
 def cleanup(path):
@@ -199,7 +199,7 @@ def cleanup(path):
         cfg = json.load(f)
 
     db_address = parse_db_address(cfg)
-    print 'Cleaning up experiment %s in database at %s' % (cfg["experiment-name"], db_address)
+    print ('Cleaning up experiment %s in database at %s' % (cfg["experiment-name"], db_address))
 
     client = pymongo.MongoClient(db_address)
 
