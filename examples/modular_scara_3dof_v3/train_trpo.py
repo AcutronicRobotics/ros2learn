@@ -38,4 +38,4 @@ env.seed(workerseed)
 print(workerseed)
 
 trpo_mpi.learn(env, policy_fn, timesteps_per_batch=1024, max_kl=0.01, cg_iters=10, cg_damping=0.1,
-            max_timesteps=1e6, gamma=0.99, lam=0.98, vf_iters=5, vf_stepsize=1e-3, save_model_with_prefix='ros1_trpo_test_H')
+            max_timesteps=1e6, gamma=0.99, lam=0.98, vf_iters=5, vf_stepsize=1e-3, save_model_with_prefix='3dof_trpo_test_H')

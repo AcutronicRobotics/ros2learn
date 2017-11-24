@@ -10,7 +10,6 @@ from mpi4py import MPI
 from baselines import logger
 from baselines.common import set_global_seeds, tf_util as U
 
-from baselines.agent.utility.general_utils import get_ee_points, get_position
 from baselines.ppo1.mlp_policy import MlpPolicy
 from baselines.common.mpi_fork import mpi_fork
 from baselines.trpo_mpi import trpo_mpi

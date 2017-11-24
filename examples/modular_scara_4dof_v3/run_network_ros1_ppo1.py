@@ -1,6 +1,5 @@
 import numpy as np
 import sys
-
 import gym
 import gym_gazebo
 
@@ -23,15 +22,9 @@ initial_observation = env.reset()
 print("Initial observation: ", initial_observation)
 env.render()
 seed = 0
-parser = argparse.ArgumentParser(description='Run Gazebo benchmark.')
-parser.add_argument('--seed', help='RNG seed', type=int, default=0)
-parser.add_argument('--save_model_with_prefix',
-                            help='Specify a prefix name to save the model with after every iters. Note that this will generate multiple files (*.data, *.index, *.meta and checkpoint) with the same prefix', default='')
-parser.add_argument('--restore_model_from_file',
-                            help='Specify the absolute path to the model file including the file name upto .model (without the .data-00000-of-00001 suffix). make sure the *.index and the *.meta files for the model exists in the specified location as well', default='')
-args = parser.parse_args()
 
 sess = U.make_session(num_cpu=1)
+
 sess.__enter__()
 def policy_fn(name, ob_space, ac_space):
     return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,
@@ -42,8 +35,11 @@ print("Initial obs: ", obs)
 # env.seed(seed)
 # time.sleep(5)
 pi = policy_fn('pi', env.observation_space, env.action_space)
-# tf.train.Saver().restore(sess, '/home/rkojcev/baselines_networks/ros1_ppo1_test_H/saved_models/ros1_ppo1_test_H_afterIter_282.model') # for the H
-tf.train.Saver().restore(sess, '/home/rkojcev/baselines_networks/ros1_ppo1_test_O/saved_models/ros1_ppo1_test_O_afterIter_421.model') # for the O
+# # tf.train.Saver().restore(sess, '/home/rkojcev/baselines_networks/ros1_ppo1_test_H/saved_models/ros1_ppo1_test_H_afterIter_282.model') # for the H
+# tf.train.Saver().restore(sess, '/home/rkojcev/baselines_networks/ros1_ppo1_test_O/saved_models/ros1_ppo1_test_O_afterIter_421.model') # for the O
+loadPath = '/tmp/rosrl/' + str(env.__class__.__name__) +'_20171115/ppo1/'
+tf.train.Saver().restore(sess, loadPath + '4dof_ppo1_test_O_afterIter_486.model')
+# tf.train.Saver().restore(sess, '/home/rkojcev/devel/baselines/baselines/experiments/4dof_ppo1_test_O/saved_models/4dof_ppo1_test_O_afterIter_387.model')
 done = False
 while True:
     action = pi.act(True, obs)[0]

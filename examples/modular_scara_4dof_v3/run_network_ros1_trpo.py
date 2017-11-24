@@ -25,13 +25,6 @@ initial_observation = env.reset()
 print("Initial observation: ", initial_observation)
 env.render()
 seed = 0
-parser = argparse.ArgumentParser(description='Run Gazebo benchmark.')
-parser.add_argument('--seed', help='RNG seed', type=int, default=0)
-parser.add_argument('--save_model_with_prefix',
-                            help='Specify a prefix name to save the model with after every iters. Note that this will generate multiple files (*.data, *.index, *.meta and checkpoint) with the same prefix', default='')
-parser.add_argument('--restore_model_from_file',
-                            help='Specify the absolute path to the model file including the file name upto .model (without the .data-00000-of-00001 suffix). make sure the *.index and the *.meta files for the model exists in the specified location as well', default='')
-args = parser.parse_args()
 
 rank = MPI.COMM_WORLD.Get_rank()
 if rank != 0:
@@ -47,7 +40,9 @@ obs = env.reset()
 print("Initial obs: ", obs)
 # env.seed(seed)
 pi = policy_fn('pi', env.observation_space, env.action_space)
-tf.train.Saver().restore(sess, '/home/rkojcev/devel/baselines/baselines/experiments/ros1_trpo_test_H/saved_models/ros1_trpo_test_H_afterIter_20.model')
+# tf.train.Saver().restore(sess, '/home/rkojcev/devel/baselines/baselines/experiments/ros1_trpo_test_H/saved_models/ros1_trpo_test_H_afterIter_20.model')
+loadPath = '/tmp/rosrl/' + str(env.__class__.__name__) +'/trpo/'
+tf.train.Saver().restore(sess, loadPath + 'ros1_trpo_H_afterIter_263.model')
 done = False
 while True:
     action = pi.act(True, obs)[0]

@@ -12,6 +12,7 @@ from baselines.acktr.value_functions import NeuralNetValueFunction
 from baselines.common import set_global_seeds
 
 env = gym.make('GazeboModularScara4DOF-v3')
+init_obs = env.goToInit()
 initial_observation = env.reset()
 print("Initial observation: ", initial_observation)
 env.render()
@@ -33,7 +34,7 @@ with tf.Session(config=tf.ConfigProto()) as session:
         gamma=0.99,
         lam=0.97,
         timesteps_per_batch=2500,
-        desired_kl=0.02, 
+        desired_kl=0.002,
         num_timesteps=1e6,
         animate=False,
         save_model_with_prefix='4dof_acktr_O',
