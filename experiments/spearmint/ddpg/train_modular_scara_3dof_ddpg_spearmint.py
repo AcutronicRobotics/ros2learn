@@ -13,27 +13,41 @@ from baselines.ddpg.memory import Memory
 from baselines.ddpg.noise import *
 
 import gym
+import gym_gazebo
 import tensorflow as tf
 from mpi4py import MPI
 
-def train_setup(env_id, seed, noise_type, layer_norm, evaluation, **kwargs,  job_id, act_lr, cr_lr, no_epochs, gam, no_cycles, no_train_steps, no_eval_steps, no_rollout_steps):
+def train_setup(job_id, act_lr, cr_lr, no_epochs, gam, no_cycles, no_train_steps, no_eval_steps, no_rollout_steps):
 #train_setup(job_id, params['actor_lr'], params['critic_lr'], params['no_epochs'], params['gamma'], params['no_cycles'], params['no_train_steps'], params['no_eval_steps'], params['no_rollout_steps'])
     # Configure things.
     rank = MPI.COMM_WORLD.Get_rank()
     if rank != 0:
         logger.set_level(logger.DISABLED)
 
+    #Default parameters
+    env_id = "GazeboModularScara3DOF-v2"
+    noise_type='adaptive-param_0.2'
+    layer_norm = True
+    seed = 0
+    render_eval = False
+    render = False
+    normalize_returns=False
+    normalize_observations=True
+    critic_l2_reg=1e-2
+    batch_size=64
+    popart=False
+    reward_scale=1.
+    clip_norm=None
+    num_timesteps=None
+    evaluation = True
+    nb_epochs = 100
+
     # Create envs.
     env = gym.make(env_id)
     env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir(), str(rank)))
     gym.logger.setLevel(logging.WARN)
 
-    if evaluation and rank==0:
-        eval_env = gym.make(env_id)
-        eval_env = bench.Monitor(eval_env, os.path.join(logger.get_dir(), 'gym_eval'))
-        env = bench.Monitor(env, None)
-    else:
-        eval_env = None
+    eval_env = gym.make(env_id)
 
     # Parse noise_type
     action_noise = None
@@ -70,56 +84,28 @@ def train_setup(env_id, seed, noise_type, layer_norm, evaluation, **kwargs,  job
     if eval_env is not None:
         eval_env.seed(seed)
 
+
     # Disable logging for rank != 0 to avoid noise.
     if rank == 0:
         start_time = time.time()
     optim_metric = training.train(env=env, eval_env=eval_env, param_noise=param_noise,
-        action_noise=action_noise, actor=actor, critic=critic, memory=memory, actor_lr = act_lr, critic_lr = cr_lr, gamma = gam, nb_epoch_cycles = no_cycles, nb_train_steps = no_train_steps, nb_eval_steps = no_eval_steps, nb_rollout_steps = no_rollout_steps, **kwargs)
+        action_noise=action_noise, actor=actor, critic=critic, memory=memory, actor_lr = float(act_lr), critic_lr = float(cr_lr), gamma = float(gam), nb_epoch_cycles = int(no_cycles), nb_train_steps = int(no_train_steps), nb_eval_steps = int(no_eval_steps), nb_rollout_steps = int(no_rollout_steps),
+        nb_epochs= int(nb_epochs), render_eval=render_eval, reward_scale=reward_scale, render=render, normalize_returns=normalize_returns, normalize_observations=normalize_observations, critic_l2_reg=critic_l2_reg, batch_size = batch_size, popart=popart,
+        clip_norm=clip_norm)
     env.close()
     if eval_env is not None:
         eval_env.close()
     if rank == 0:
         logger.info('total runtime: {}s'.format(time.time() - start_time))
+
+    logger.info(' Got optimization_metric %d', optim_metric)
     return optim_metric # Hyperparameter optimization purposes
 
-def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument('--env-id', type=str, default='HalfCheetah-v1')
-    boolean_flag(parser, 'render-eval', default=False)
-    boolean_flag(parser, 'layer-norm', default=True)
-    boolean_flag(parser, 'render', default=False)
-    boolean_flag(parser, 'normalize-returns', default=False)
-    boolean_flag(parser, 'normalize-observations', default=True)
-    parser.add_argument('--seed', help='RNG seed', type=int, default=0)
-    parser.add_argument('--critic-l2-reg', type=float, default=1e-2)
-    parser.add_argument('--batch-size', type=int, default=64)  # per MPI worker
-    parser.add_argument('--actor-lr', type=float, default=1e-4)
-    parser.add_argument('--critic-lr', type=float, default=1e-3)
-    boolean_flag(parser, 'popart', default=False)
-    parser.add_argument('--gamma', type=float, default=0.99)
-    parser.add_argument('--reward-scale', type=float, default=1.)
-    parser.add_argument('--clip-norm', type=float, default=None)
-    parser.add_argument('--nb-epochs', type=int, default=500)  # with default settings, perform 1M steps total
-    parser.add_argument('--nb-epoch-cycles', type=int, default=20)
-    parser.add_argument('--nb-train-steps', type=int, default=50)  # per epoch cycle and MPI worker
-    parser.add_argument('--nb-eval-steps', type=int, default=100)  # per epoch cycle and MPI worker
-    parser.add_argument('--nb-rollout-steps', type=int, default=100)  # per epoch cycle and MPI worker
-    parser.add_argument('--noise-type', type=str, default='adaptive-param_0.2')  # choices are adaptive-param_xx, ou_xx, normal_xx, none
-    parser.add_argument('--num-timesteps', type=int, default=None)
-    boolean_flag(parser, 'evaluation', default=False)
-    args = parser.parse_args()
-    # we don't directly specify timesteps for this script, so make sure that if we do specify them
-    # they agree with the other parameters
-    if args.num_timesteps is not None:
-        assert(args.num_timesteps == args.nb_epochs * args.nb_epoch_cycles * args.nb_rollout_steps)
-    dict_args = vars(args)
-    del dict_args['num_timesteps']
-    return dict_args
 
 def main(job_id, params):
-    args = parse_args()
+
     if MPI.COMM_WORLD.Get_rank() == 0:
         logger.configure()
     # Run actual script.
-    return train_setup(**args, job_id, params['actor_lr'], params['critic_lr'], params['no_epochs'], params['gamma'], params['no_cycles'], params['no_train_steps'], params['no_eval_steps'], params['no_rollout_steps'])
+    return train_setup(job_id, params['actor_lr'], params['critic_lr'], params['no_epochs'], params['gamma'], params['no_cycles'], params['no_train_steps'], params['no_eval_steps'], params['no_rollout_steps'])
