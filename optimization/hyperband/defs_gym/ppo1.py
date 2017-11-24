@@ -40,6 +40,9 @@ def print_params( params ):
 def init_enviroment():
     global env
     global policy_to_run
+    global itter
+
+    itter = 0
     policy_to_run = None
     print("init ppo1 env")
     # policy_to_run  = policy_fn
@@ -76,6 +79,7 @@ def try_params( n_iterations, params ):
     global policy_to_run
     print("iterations:", n_iterations)
     print_params( params )
+    global itter
     # os.system("killall -9 roslaunch roscore gzclient gzserver")
     # env = gym.make('GazeboModularScara4DOF-v3')
     # time.sleep(5)
@@ -111,31 +115,36 @@ def try_params( n_iterations, params ):
     g1 = tf.get_default_graph()
     print("Before session: ",g1.get_operations())
     with U.make_session(num_cpu=1) as session:
-        policy_to_run = policy_fn
+        print("In session: ",g1.get_operations())
     # with tf.Session( graph = g ) as session:
         print("I am in session")
         ob_space = env.observation_space
         ac_space = env.action_space
-        with tf.variable_scope("pi"):
-            pi = policy_fn("pi", ob_space, ac_space)
+        def policy_fn(name, ob_space, ac_space):
+            return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,hid_size=64, num_hid_layers=2)
+        if itter is 0:
+            policy_to_run = policy_fn
+        # with tf.variable_scope("pi"):
+        #     pi = policy_fn#("pi", ob_space, ac_space)
 
     #     # session.__enter__()
     #     # session.as_default()
     #     # policy_to_run  = policy_fn
         mean_reward = pposgd_simple.learn(env,
-                                pi,
+                                policy_to_run,
                                 max_timesteps=params['max_timesteps'],
                                 timesteps_per_actorbatch=params['timesteps_per_actorbatch'],
                                 clip_param=0.2, entcoeff=0.0,
                                 optim_epochs=params['optim_epochs'], optim_stepsize=params['optim_stepsize'], gamma=params['gamma'],
                                 optim_batchsize=params['optim_batchsize'], lam=params['lam'], schedule='linear', save_model_with_prefix='4dof_ppo1_test_H' + str(n_iterations))
         g1 = tf.get_default_graph()
-        print(g1.get_operations())
+        print("after leanrn: ",g1.get_operations())
         policy_to_run  = None
         assert tf.get_default_session() is session
         assert session.graph is tf.get_default_graph()
     session.close()
     tf.reset_default_graph()
+    itter+=1
         # assert tf.get_default_graph() is session.graph()
         # session.close()
         # tf.reset_default_graph()
