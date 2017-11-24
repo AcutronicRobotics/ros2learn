@@ -188,7 +188,7 @@
 [[ -n "$1" ]] || { echo "Usage: ./cleanup.sh <experiment_dir>"; exit 0 ; }
 if [ -d $1 ]
 then
-    python -c "import spearmint.utils.cleanup as cleanup; import sys; cleanup.cleanup(sys.argv[1])" $1
+    python3 -c "import spearmint.utils.cleanup as cleanup; import sys; cleanup.cleanup(sys.argv[1])" $1
     cd $1
     rm output/*
 else
