@@ -1,4 +1,3 @@
-from __future__ import print_function
 import numpy as np
 
 from random import random
@@ -7,95 +6,94 @@ from time import time, ctime
 
 
 class Hyperband:
+    def __init__(self, get_params_function, try_params_function, init_enviroment_function, max_iter=81, eta=3):
+        self.get_params = get_params_function
+        self.try_params = try_params_function
+        self.init_enviroment = init_enviroment_function
 
-	def __init__( self, get_params_function, try_params_function ):
-		self.get_params = get_params_function
-		self.try_params = try_params_function
+        self.max_iter = max_iter  # maximum iterations per configuration
+        self.eta = eta # defines configuration downsampling rate (default = 3)
 
-		self.max_iter = 200 	# maximum iterations per configuration
-		self.eta = 3			# defines configuration downsampling rate (default = 3)
+        self.logeta = lambda x: log(x) / log(self.eta)
+        self.s_max = int(self.logeta(self.max_iter))
+        self.B = (self.s_max + 1) * self.max_iter
 
-		self.logeta = lambda x: log( x ) / log( self.eta )
-		self.s_max = int( self.logeta( self.max_iter ))
-		self.B = ( self.s_max + 1 ) * self.max_iter
+        self.results = []  # list of dicts
+        self.counter = 0
+        self.best_loss = np.inf
+        self.best_counter = -1
 
-		self.results = []	# list of dicts
-		self.counter = 0
-		self.best_loss = np.inf
-		self.best_counter = -1
+    # can be called multiple times
+    def run(self, skip_last=0, dry_run=False):
+        self.init_enviroment()
 
+        for s in reversed(list(range(self.s_max + 1))):
 
-	# can be called multiple times
-	def run( self, skip_last = 0, dry_run = False ):
+            # initial number of configurations
+            n = int(ceil(self.B / self.max_iter / (s + 1) * self.eta ** s))
 
-		for s in reversed( range( self.s_max + 1 )):
+            # initial number of iterations per config
+            r = self.max_iter * self.eta ** (-s)
 
-			# initial number of configurations
-			n = int( ceil( self.B / self.max_iter / ( s + 1 ) * self.eta ** s ))
+            # n random configurations
+            T = [self.get_params() for i in range(n)]
 
-			# initial number of iterations per config
-			r = self.max_iter * self.eta ** ( -s )
+            for i in range((s + 1) - int(skip_last)):  # changed from s + 1
 
-			# n random configurations
-			T = [ self.get_params() for i in range( n )]
+                # Run each of the n configs for <iterations>
+                # and keep best (n_configs / eta) configurations
 
-			for i in range(( s + 1 ) - int( skip_last )):	# changed from s + 1
+                n_configs = n * self.eta ** (-i)
+                n_iterations = r * self.eta ** (i)
 
-				# Run each of the n configs for <iterations>
-				# and keep best (n_configs / eta) configurations
+                print("\n*** {} configurations x {:.1f} iterations each".format(
+                    n_configs, n_iterations))
 
-				n_configs = n * self.eta ** ( -i )
-				n_iterations = r * self.eta ** ( i )
+                val_losses = []
+                early_stops = []
 
-				print("\n*** {} configurations x {:.1f} iterations each".format(
-					n_configs, n_iterations ))
+                for t in T:
 
-				val_losses = []
-				early_stops = []
+                    self.counter += 1
+                    print("\n{} | {} | lowest loss so far: {:.4f} (run {})\n".format(
+                        self.counter, ctime(), self.best_loss, self.best_counter))
 
-				for t in T:
+                    start_time = time()
 
-					self.counter += 1
+                    if dry_run:
+                        result = {'loss': random(), 'log_loss': random(), 'auc': random()}
+                    else:
+                        result = self.try_params(n_iterations, t)  # <---
 
-					print("\n{} | {} | lowest loss so far: {:.4f} (run {})\n".format(
-						self.counter, ctime(), self.best_loss, self.best_counter ))
+                    assert (type(result) == dict)
+                    assert ('loss' in result)
 
-					start_time = time()
+                    seconds = int(round(time() - start_time))
+                    print("\n{} seconds.".format(seconds))
 
-					if dry_run:
-						result = { 'loss': random(), 'log_loss': random(), 'auc': random()}
-					else:
-						result = self.try_params( n_iterations, t )		# <---
+                    loss = result['loss']
+                    val_losses.append(loss)
 
-					assert( type( result ) == dict )
-					assert( 'loss' in result )
+                    early_stop = result.get('early_stop', False)
+                    early_stops.append(early_stop)
 
-					seconds = int( round( time() - start_time ))
-					print("\n{} seconds.".format( seconds ))
+                    # keeping track of the best result so far (for display only)
+                    # could do it be checking results each time, but hey
+                    if loss < self.best_loss:
+                        self.best_loss = loss
+                        self.best_counter = self.counter
 
-					loss = result['loss']
-					val_losses.append( loss )
+                    result['counter'] = self.counter
+                    result['seconds'] = seconds
+                    result['params'] = t
+                    result['iterations'] = n_iterations
 
-					early_stop = result.get( 'early_stop', False )
-					early_stops.append( early_stop )
+                    self.results.append(result)
 
-					# keeping track of the best result so far (for display only)
-					# could do it be checking results each time, but hey
-					if loss < self.best_loss:
-						self.best_loss = loss
-						self.best_counter = self.counter
+                # select a number of best configurations for the next loop
+                # filter out early stops, if any
+                indices = np.argsort(val_losses)
+                T = [T[i] for i in indices if not early_stops[i]]
+                T = T[0:int(n_configs / self.eta)]
 
-					result['counter'] = self.counter
-					result['seconds'] = seconds
-					result['params'] = t
-					result['iterations'] = n_iterations
-
-					self.results.append( result )
-
-				# select a number of best configurations for the next loop
-				# filter out early stops, if any
-				indices = np.argsort( val_losses )
-				T = [ T[i] for i in indices if not early_stops[i]]
-				T = T[ 0:int( n_configs / self.eta )]
-
-		return self.results
+        return self.results
