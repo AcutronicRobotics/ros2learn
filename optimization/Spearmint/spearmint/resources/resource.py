@@ -324,13 +324,11 @@ class Resource(object):
     def acceptingJobs(self, jobs):
         """Is this resource currently accepting new jobs?"""
         if self.numPending(jobs) >= self.max_concurrent:
-            print("self.numPending(jobs) >= self.max_concurrent")
-            print("Resource not accepting jobs")
+
             return False
 
         if self.numComplete(jobs) >= self.max_finished_jobs:
-            print("self.numComplete(jobs) >= self.max_finished_jobs")
-            print("Resource not accepting jobs")
+
             return False
 
         return True
@@ -363,7 +361,6 @@ class Resource(object):
         if job['resource'] != self.name:
             raise Exception("This job does not belong to me!")
 
-        print("line 364")
         process_id = self.scheduler.submit(job['id'], experiment_name, expt_dir, db_address)
 
         if process_id is not None:

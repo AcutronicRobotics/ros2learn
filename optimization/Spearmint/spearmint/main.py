@@ -249,38 +249,27 @@ def main():
     options, expt_dir = get_options()
 
 
-    print("options",options)#debug
-    print("expt_dir", expt_dir)#debug
-
     resources = parse_resources_from_config(options)
-
-    print("expt_dir", expt_dir)#debug
 
     # Load up the chooser.
     chooser_module = importlib.import_module('spearmint.choosers.' + options['chooser'])
 
-    print("chooser_module", chooser_module) #debug
-
     chooser = chooser_module.init(options)
 
-    print("chooser", chooser) #debug
+
     experiment_name     = options.get("experiment-name", 'unnamed-experiment')
 
     # Connect to the database
     db_address = options['database']['address']
 
-    print("db_address", db_address)
     sys.stderr.write('Using database at %s.\n' % db_address)
     db         = MongoDB(database_address=db_address)
 
     while True:
 
         for resource_name, resource in resources.items():
-            print("line 278")
             jobs = load_jobs(db, experiment_name)
-            print("Jobs loaded")
             resource.printStatus(jobs)
-            print("Resouce status")
             # If the resource is currently accepting more jobs
             # TODO: here cost will eventually also be considered: even if the
             #       resource is not full, we might wait because of cost incurred
@@ -288,7 +277,6 @@ def main():
             # You could also do it the other way, by changing "while" to "if" here
 
             while resource.acceptingJobs(jobs):
-                print("Resource accepting jobs")
                 # Load jobs from DB
                 # (move out of one or both loops?) would need to pass into load_tasks
                 jobs = load_jobs(db, experiment_name)
@@ -315,7 +303,6 @@ def main():
 
                 # Print out the status of the resources
                 resource.printStatus(jobs)
-                #print_resources_status(resources.values(), jobs)
 
         # If no resources are accepting jobs, sleep
         # (they might be accepting if suggest takes a while and so some jobs already finished by the time this point is reached)
@@ -449,7 +436,6 @@ def load_task_group(db, options, task_names=None):
     task_options = { task: options["tasks"][task] for task in task_names }
 
     jobs = load_jobs(db, options['experiment-name'])
-    print("jobs", jobs)#debug
     task_group = TaskGroup(task_options, options['variables'])
 
     if jobs:
@@ -505,5 +491,4 @@ def print_diagnostics(chooser):
     best_job_fh.close()
 
 if __name__ == '__main__':
-    print("line 494") #deubg
     main()
