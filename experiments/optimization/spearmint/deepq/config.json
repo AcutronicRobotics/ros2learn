@@ -2,6 +2,9 @@
     "language"        : "PYTHON",
     "main-file"       : "train_modular_scara_3dof_dqn_spearmint.py",
     "experiment-name" : "deepqn-example",
+    "database": {
+            "address": "0.0.0.0:27017"
+        },
     "variables" : {
         "lr" : {
             "type" : "FLOAT",

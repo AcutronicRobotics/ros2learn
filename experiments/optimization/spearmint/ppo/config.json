@@ -3,7 +3,7 @@
     "main-file"       : "train_modular_scara_3dof_ppo_spearmint.py",
     "experiment-name" : "ppo-example",
     "database": {
-            "address": "0.0.0.0:27020"
+            "address": "0.0.0.0:27017"
         },
     "variables" : {
         "max_timesteps" : {

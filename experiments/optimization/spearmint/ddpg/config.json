@@ -3,7 +3,7 @@
     "main-file"       : "train_modular_scara_3dof_ddpg_spearmint.py",
     "experiment-name" : "ddpg-example",
     "database": {
-        "address": "0.0.0.0:27017"
+        "address": "0.0.0.0:27018"
     },
     "variables" : {
         "actor_lr" : {

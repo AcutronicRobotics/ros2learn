@@ -28,6 +28,8 @@ def train_setup(job_id, learning_rate, gam, max_t, buff_size, lr_start):
     epsilon_decay_rate = 0.99 ########
     it = 1 ######
 
+    # tf.reset_default_graph()
+
     # Number of states is huge so in order to simplify the situation
     # typically, we discretize the space to: n_bins ** number_of_features
     joint1_bins = pandas.cut([-np.pi/2, np.pi/2], bins=n_bins, retbins=True)[1][1:-1]
@@ -55,20 +57,18 @@ def train_setup(job_id, learning_rate, gam, max_t, buff_size, lr_start):
         q_func=model,
         lr=float(learning_rate),
         gamma=float(gam),
-        #max_timesteps=500,
         max_timesteps=int(max_t),
-        #buffer_size=5000,
         buffer_size=int(buff_size),
         checkpoint_freq = 100,
-        #learning_starts = 500,
         learning_starts = int(lr_start),
         target_network_update_freq = 100,
         exploration_fraction=0.1,
         exploration_final_eps=0.02,
         print_freq=10,
         callback=callback)
+    # env.close()
 
-
+    # tf.reset_default_graph()
     #print("Saving model to cartpole_model.pkl")
     act.save("scara_model_" + str(job_id) + ".pkl")
 

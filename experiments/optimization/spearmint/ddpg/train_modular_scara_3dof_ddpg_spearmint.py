@@ -93,8 +93,8 @@ def train_setup(job_id, act_lr, cr_lr, no_epochs, gam, no_cycles, no_train_steps
         nb_epochs= int(nb_epochs), render_eval=render_eval, reward_scale=reward_scale, render=render, normalize_returns=normalize_returns, normalize_observations=normalize_observations, critic_l2_reg=critic_l2_reg, batch_size = batch_size, popart=popart,
         clip_norm=clip_norm)
     env.close()
-    if eval_env is not None:
-        eval_env.close()
+    # if eval_env is not None:
+    #     eval_env.close()
     if rank == 0:
         logger.info('total runtime: {}s'.format(time.time() - start_time))
 
