@@ -3,6 +3,8 @@
 
 from common_defs import *
 
+
+
 import gym
 import gym_gazebo
 import tensorflow as tf
@@ -19,13 +21,15 @@ from baselines.common import set_global_seeds
 import os
 import time
 
+from hyperopt.pyll.base import scope
+
 space = {
     'gamma': hp.uniform( 'gamma', 0.1, 0.99 ),
     'lamda': hp.uniform( 'lam', 0.1, 0.99 ),
     'timesteps_per_batch': hp.quniform( 'timesteps_per_batch', 25, 25000, 1),
     'desired_kl': hp.uniform( 'desired_kl', 0.001, 0.01 ),
-    'num_timesteps': hp.quniform( 'num_timesteps', 1, 2, 1 ),
-    'max_pathlength': hp.quniform( 'max_pathlength', 50, 200,1 ),
+    'num_timesteps': scope.int(hp.uniform( 'num_timesteps', 1e6, 1e8)),
+    'max_pathlength': scope.int(hp.uniform( 'max_pathlength', 50, 200)),
     'stepsize': hp.quniform( 'stepsize', 0.01, 0.1, 0.01 )
 }
 
