@@ -123,11 +123,11 @@ def run_a_trial():
         print("Starting from scratch: new trials.")
 
     best = fmin(
-        optimize_train_dqn,
+        optimize_dqn,
         space,
         algo=tpe.suggest,
         trials=trials,
-        max_evals=max_evals
+        max_evals=10
     )
     pickle.dump(trials, open("results.pkl", "wb"))
 
