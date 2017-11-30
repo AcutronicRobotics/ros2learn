@@ -12,12 +12,24 @@ from baselines.acktr.value_functions import NeuralNetValueFunction
 from baselines.common import set_global_seeds
 
 
-def train_setup(job_id, l, gam, t_per_batch, des_kl, num_t,  max_pathl,  step):
+def train_setup(job_id, t_per_batch, des_kl, num_t, max_pathl):
     env = gym.make('GazeboModularScara3DOF-v3')
     initial_observation = env.reset()
     print("Initial observation: ", initial_observation)
     env.render()
 
+    t_per_batch = list(map(float, t_per_batch))
+    num_t = list(map(float, num_t))
+
+    #print("l", l)
+    #print("gam", gam)
+    print("t_per_batch", t_per_batch)
+    print("des_kl", des_kl)
+    print("num_t", num_t)
+    print("t_per_batch", t_per_batch)
+    print("max_pathl", max_pathl)
+    #print("step", step)
+    model_name = 'ros1_acktr_H_' + str(job_id) + '_'
     seed=0
     set_global_seeds(seed)
     env.seed(seed)
@@ -34,14 +46,15 @@ def train_setup(job_id, l, gam, t_per_batch, des_kl, num_t,  max_pathl,  step):
 
         optim_metric_np = learn(env,
             policy=policy, vf=vf,
-            gamma=gam,
-            lam=l,
-            timesteps_per_batch=t_per_batch,
+            gamma=0.99,
+            lam=0.97,
+            timesteps_per_batch=t_per_batch[0],
             desired_kl=des_kl,
-            num_timesteps=num_t,
+            num_timesteps=num_t[0],
             animate=False,
             save_model_with_prefix='spearmint_acktr_H' + str(job_id),
             restore_model_from_file='')
+
         print("reward: ", optim_metric_np)
         optim_metric = optim_metric_np.item()
         if optim_metric > 0:
@@ -55,4 +68,6 @@ def train_setup(job_id, l, gam, t_per_batch, des_kl, num_t,  max_pathl,  step):
         return optim_metric
 
 def main(job_id, params):
-    return train_setup(job_id, params['lam'], params['gamma'], params['timesteps_per_batch'], params['desired_kl'], params['num_timesteps'],  params['max_pathlength'],  params['stepsize'])
+    #return train_setup(job_id, params['lam'], params['gamma'], params['timesteps_per_batch'], params['desired_kl'], params['num_timesteps'],  params['max_pathlength'],  params['stepsize'])
+    return train_setup(job_id, params['timesteps_per_batch'], params['desired_kl'], params['num_timesteps'],params['max_pathlength'])
+

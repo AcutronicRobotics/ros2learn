@@ -1,0 +1,32 @@
+{
+    "language"        : "PYTHON",
+    "main-file"       : "train_modular_scara_3dof_acktr_spearmint.py",
+    "experiment-name" : "acktr-example",
+    "database": {
+        "address": "0.0.0.0:27017"
+    },
+    "variables" : {
+        "num_timesteps" : {
+           "type" : "ENUM",
+           "size" : 1,
+           "options" : ["1e6", "2e6","3e6","4e6","5e6","6e6","7e6","8e6","9e6","1e7"]
+        },
+        "timesteps_per_batch" : {
+            "type" : "ENUM",
+            "size" : 1,
+            "options"  : ["2500", "5000", "7500", "10000"]
+        },
+        "desired_kl" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.001,
+            "max"  : 0.01
+        },
+        "max_pathlength" : {
+            "type" : "INT",
+            "size" : 1,
+            "min"  : 50,
+            "max"  : 100
+        }
+    }
+}

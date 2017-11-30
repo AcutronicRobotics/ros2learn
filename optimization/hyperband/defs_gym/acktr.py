@@ -61,11 +61,9 @@ def try_params( n_iterations, params ):
     print("iterations:", n_iterations)
     print_params( params )
     # os.system("killall -9 roslaunch roscore gzclient gzserver")
-    env = gym.make('GazeboModularScara4DOF-v3')
-    # time.sleep(5)
+    env = gym.make('GazeboModularScara3DOF-v3')
     # init_obs = env.goToInit()
     initial_observation = env.reset()
-    # print("Initial observation: ", initial_observation)
     env.render()
 
     seed=0
