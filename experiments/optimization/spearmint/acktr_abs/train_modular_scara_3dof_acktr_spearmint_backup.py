@@ -31,9 +31,7 @@ def train_setup(job_id, t_per_batch, des_kl, num_t, max_pathl):
     seed=0
     set_global_seeds(seed)
     env.seed(seed)
-    optim_metric = None
-    optim_metric_np = None
-    # graph = tf.Graph()
+
     with tf.Session(config=tf.ConfigProto()) as session:
         ob_dim = env.observation_space.shape[0]
         ac_dim = env.action_space.shape[0]
@@ -41,7 +39,7 @@ def train_setup(job_id, t_per_batch, des_kl, num_t, max_pathl):
             vf = NeuralNetValueFunction(ob_dim, ac_dim)
         with tf.variable_scope("pi"):
             policy = GaussianMlpPolicy(ob_dim, ac_dim)
-
+        
         optim_metric_np = learn(env,
             policy=policy, vf=vf,
             gamma=0.99,
@@ -50,19 +48,13 @@ def train_setup(job_id, t_per_batch, des_kl, num_t, max_pathl):
             desired_kl=des_kl,
             num_timesteps=num_t,
             animate=False,
-            save_model_with_prefix='spearmint_acktr_H' + str(job_id),
+            save_model_with_prefix=model_name,
             restore_model_from_file='')
-
-        print("reward: ", optim_metric_np)
         optim_metric = optim_metric_np.item()
         if optim_metric > 0:
-            optim_metric = optim_metric * (-1)
+                optim_metric = optim_metric * (-1)
         else:
-            optim_metric = abs(optim_metric)
-
-        # session.close()
-        # tf.reset_default_graph()
-
+                optim_metric = abs(optim_metric)
         return optim_metric
 
 def main(job_id, params):
