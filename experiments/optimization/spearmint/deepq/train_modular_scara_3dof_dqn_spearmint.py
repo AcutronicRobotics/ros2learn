@@ -9,7 +9,7 @@ from  baselines.deepq import models
 from  baselines.deepq import build_graph_robotics
 from  baselines.deepq import replay_buffer
 from  baselines.deepq.simple_robotics import learn, load
-
+import tensorflow as tf
 # Use algorithms from baselines
 #from baselines import deepq
 def callback(lcl, glb):
@@ -43,39 +43,51 @@ def train_setup(job_id, learning_rate, gam, max_t, buff_size, lr_start):
             (0.0, 0.0, difference_bins), (0.0, 0.0, -difference_bins),
             (0.0, 0.0, 0.0)]
     discrete_action_space = spaces.Discrete(7)
-    model = models.mlp([64])
+    with tf.variable_scope("dpq" + str(job_id)):
+        graph = tf.Graph()
+        with tf.Session(graph=graph, config=tf.ConfigProto(allow_soft_placement=True,log_device_placement=True)) as session:
+            model = models.mlp([64])
 
-    print("learning rate", learning_rate)
-    print("gam", gam)
-    print("max_timesteps", max_t)
-    print("buffer size", buff_size)
-    print("learning starts", lr_start)
+            print("learning rate", learning_rate)
+            print("gam", gam)
+            print("max_timesteps", max_t)
+            print("buffer size", buff_size)
+            print("learning starts", lr_start)
 
 
-    act, mean_rew = learn(
-        env,
-        q_func=model,
-        lr=float(learning_rate),
-        gamma=float(gam),
-        max_timesteps=int(max_t),
-        buffer_size=int(buff_size),
-        checkpoint_freq = 100,
-        learning_starts = int(lr_start),
-        target_network_update_freq = 100,
-        exploration_fraction=0.1,
-        exploration_final_eps=0.02,
-        print_freq=10,
-        callback=callback)
+            act, mean_rew = learn(
+                env,
+                q_func=model,
+                lr=float(learning_rate),
+                gamma=float(gam),
+                max_timesteps=int(max_t),
+                buffer_size=int(buff_size),
+                checkpoint_freq = 100,
+                learning_starts = int(lr_start),
+                target_network_update_freq = 100,
+                exploration_fraction=0.1,
+                exploration_final_eps=0.02,
+                print_freq=10,
+                callback=callback)
+            # env.close()
+
+            # tf.reset_default_graph()
+            #print("Saving model to cartpole_model.pkl")
+            print("MEAN REWARD", mean_rew, "Job id: ", job_id, "Actor: ", act)
+            act.save("scara_model_" + str(job_id) + ".pkl")
+
+    # session.close()
+    # tf.reset_default_graph()
     # env.close()
 
-    # tf.reset_default_graph()
-    #print("Saving model to cartpole_model.pkl")
-    act.save("scara_model_" + str(job_id) + ".pkl")
+        # session.close()
+        # tf.reset_default_graph()
+    return mean_rew
 
-    print("MEAN REWARD", mean_rew)
+    # print("MEAN REWARD", mean_rew)
 
     #1 - mean of simulation because Spearmin
-    return mean_rew
+
 
 def main(job_id, params):
     print(" train scara spearmint")

@@ -139,7 +139,7 @@ def try_params( n_iterations, params ):
 
     # tf.reset_default_graph()
     #print("Saving model to cartpole_model.pkl")
-    # act.save("scara_model_" + str(job_id) + ".pkl")
+    act.save("scara_model_" + str(job_id) + ".pkl")
 
     print("MEAN REWARD", mean_rew)
 

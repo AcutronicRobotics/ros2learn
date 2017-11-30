@@ -21,7 +21,7 @@ import os
 import time
 
 space = {
-    'max_timesteps': hp.quniform( 'max_timesteps', 1, 1, 1 ),
+    'max_timesteps': hp.quniform( 'max_timesteps', 1e6, 1e7, 100 ),
     'timesteps_per_actorbatch': hp.choice( 'timesteps_per_actorbatch', ( 1024, 2048, 4096)),
     'optim_epochs': scope.int(hp.uniform('optim_epochs', 10, 100)),
     'optim_stepsize': hp.uniform( 'optim_stepsize', 3e-2, 3e-6),
@@ -81,74 +81,65 @@ def try_params( n_iterations, params ):
     print_params( params )
     # global itter
     global env
-    
+
     # tf.reset_default_graph()
     # print("Default graph name is: ",g1.name)
     print("Before policy variables in the graph: ",[n.name for n in tf.get_default_graph().as_graph_def().node])
-    U.make_session(num_cpu=1).__enter__()
-    U.initialize()
-    # print("Before session: ",g1.get_operations())
-    # with U.make_session(num_cpu=1) as session:
-    #     print("I am in session")
-    # ob_space = env.observation_space
-    # ac_space = env.action_space
-    def policy_fn(name, ob_space, ac_space):
-        print("policy_fn is called")
-        return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,hid_size=64, num_hid_layers=2)
-    # if itter is 0:
-    #     policy_to_run = policy_fn
-    # with tf.variable_scope("pi"):
-    #     pi = policy_fn#("pi", ob_space, ac_space)
-    # ob_space = env.observation_space
-    # ac_space = env.action_space
-    # with tf.variable_scope("pi"):
-    #     policy = mlp_policy.MlpPolicy(name="pi", ob_space=ob_space, ac_space=ac_space,hid_size=64, num_hid_layers=2)
-    # with tf.variable_scope("oldpi"):
-    #     oldpolicy = mlp_policy.MlpPolicy(name="oldpi", ob_space=ob_space, ac_space=ac_space,hid_size=64, num_hid_layers=2)
 
-    # pi = policy_func("pi", ob_space, ac_space) # Construct network for new policy
-    # oldpi = policy_func("oldpi", ob_space, ac_space) # Network for old policy
-    # tf.initialize_all_variables().run()
-    mean_reward = pposgd_simple.learn(env, policy_fn,
-                        max_timesteps=1e2,
-                        timesteps_per_actorbatch=2048,
-                        clip_param=0.2, entcoeff=0.0,
-                        optim_epochs=10, optim_stepsize=3e-4, gamma=0.99,
-                        optim_batchsize=64, lam=0.95, schedule='linear', save_model_with_prefix='4dof_ppo1_test_H')
-    # mean_reward = pposgd_simple.learn(env,
-    #                         policy_to_run,
-    #                         max_timesteps=params['max_timesteps'],
-    #                         timesteps_per_actorbatch=params['timesteps_per_actorbatch'],
-    #                         clip_param=0.2, entcoeff=0.0,
-    #                         optim_epochs=params['optim_epochs'], optim_stepsize=params['optim_stepsize'], gamma=params['gamma'],
-    #                         optim_batchsize=params['optim_batchsize'], lam=params['lam'], schedule='linear', save_model_with_prefix='4dof_ppo1_test_H' + str(n_iterations))
-    # g1 = tf.get_default_graph()
-    # print("after learn: ",g1.get_operations())
-    # policy_to_run  = None
-    # assert tf.get_default_session() is session
-    # assert session.graph is tf.get_default_graph()
-    # session.close()
-    # tf.reset_default_graph()
-    # # a = tf.Variable(tf.ones_initializer(()))
-    # init_op = tf.initialize_all_variables()
+    with tf.variable_scope("test_" + str(n_iterations)):
+        U.make_session(num_cpu=1).__enter__()
+        # U.initialize()
+        # print("Before session: ",g1.get_operations())
+        # with U.make_session(num_cpu=1) as session:
+        # with tf.variable_scope("graph_" + str(n_iterations)):
+        #     g=tf.Graph()
+        #     with g.as_default():
+        def policy_fn(name, ob_space, ac_space):
+            print("policy_fn is called")
+            return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,hid_size=64, num_hid_layers=2)
 
-    # print("after reset: ", [n.name for n in tf.get_default_graph().as_graph_def().node])
-    # itter+=1
-        # assert tf.get_default_graph() is session.graph()
+        mean_reward = pposgd_simple.learn(env, policy_fn,
+                            max_timesteps=1e2,
+                                    timesteps_per_actorbatch=2048,
+                                    clip_param=0.2, entcoeff=0.0,
+                                    optim_epochs=10, optim_stepsize=3e-4, gamma=0.99,
+                                    optim_batchsize=64, lam=0.95, schedule='linear', save_model_with_prefix='4dof_ppo1_test_H')
+        # mean_reward = pposgd_simple.learn(env,
+        #                         policy_to_run,
+        #                         max_timesteps=params['max_timesteps'],
+        #                         timesteps_per_actorbatch=params['timesteps_per_actorbatch'],
+        #                         clip_param=0.2, entcoeff=0.0,
+        #                         optim_epochs=params['optim_epochs'], optim_stepsize=params['optim_stepsize'], gamma=params['gamma'],
+        #                         optim_batchsize=params['optim_batchsize'], lam=params['lam'], schedule='linear', save_model_with_prefix='4dof_ppo1_test_H' + str(n_iterations))
+        # g1 = tf.get_default_graph()
+        # print("after learn: ",g1.get_operations())
+        # policy_to_run  = None
+        # assert tf.get_default_session() is session
+        # assert session.graph is tf.get_default_graph()
         # session.close()
         # tf.reset_default_graph()
-    # # assert tf.get_default_session() is session
-    # print("Varibale scope is: ", tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='pi'))
+        # # a = tf.Variable(tf.ones_initializer(()))
+        # init_op = tf.initialize_all_variables()
+
+        # print("after reset: ", [n.name for n in tf.get_default_graph().as_graph_def().node])
+        # itter+=1
+            # assert tf.get_default_graph() is session.graph()
+            # session.close()
+            # tf.reset_default_graph()
+        # # assert tf.get_default_session() is session
+        # print("Varibale scope is: ", tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='pi'))
 
 
 
-         # tf.Session.reset(target, ["experiment0"])
-         # tf.Session.reset(target='', containers=None, config=None)
+             # tf.Session.reset(target, ["experiment0"])
+             # tf.Session.reset(target='', containers=None, config=None)
 
-         # print("Graph is still the same: ", tf.get_default_graph())
-    # print(tf.get_default_graph())
-    # tf.reset_default_graph()
-    # policy_fn = None
+             # print("Graph is still the same: ", tf.get_default_graph())
+        # print(tf.get_default_graph())
+        # tf.reset_default_graph()
+        # policy_fn = None
+        # session.close()
+        # tf.reset_default_graph()
 
 
     print("mean_reward: ", mean_reward)
