@@ -6,16 +6,10 @@
             "address": "0.0.0.0:27017"
         },
     "variables" : {
-        "max_timesteps" : {
-            "type" : "INT",
-            "size" : 1,
-            "min"  : 1e06,
-            "max"  : 1e08
-        },
         "timesteps_per_actorbatch" : {
             "type" : "ENUM",
             "size" : 1,
-            "options" : ["1024", "2048", "4096"]
+            "options" : ["1024","2048", "4096"]
         },
         "optim_epochs" : {
             "type" : "INT",
@@ -23,28 +17,10 @@
             "min"  : 10,
             "max"  : 100
         },
-        "optim_stepsize" : {
-            "type" : "FLOAT",
-            "size" : 1,
-            "min"  : 3e-06,
-            "max"  : 3e-02
-        },
-        "gamma" : {
-            "type" : "FLOAT",
-            "size" : 1,
-            "min"  : 0.1,
-            "max"  : 0.99
-        },
         "optim_batchsize" : {
             "type" : "ENUM",
             "size" : 1,
-            "options" : ["32", "64", "128"]
-        },
-        "lam" : {
-            "type" : "FLOAT",
-            "size" : 1,
-            "min"  : 0.1,
-            "max"  : 0.99
+            "options" : ["32","64","128"]
         }
     }
 }
