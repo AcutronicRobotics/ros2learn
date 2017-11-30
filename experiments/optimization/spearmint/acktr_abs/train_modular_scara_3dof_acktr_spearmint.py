@@ -18,6 +18,8 @@ def train_setup(job_id, t_per_batch, des_kl, num_t, max_pathl):
     print("Initial observation: ", initial_observation)
     env.render()
 
+    t_per_batch = list(map(float, t_per_batch))
+    num_t = list(map(float, num_t))
 
     #print("l", l)
     #print("gam", gam)
@@ -46,9 +48,9 @@ def train_setup(job_id, t_per_batch, des_kl, num_t, max_pathl):
             policy=policy, vf=vf,
             gamma=0.99,
             lam=0.97,
-            timesteps_per_batch=t_per_batch,
+            timesteps_per_batch=t_per_batch[0],
             desired_kl=des_kl,
-            num_timesteps=num_t,
+            num_timesteps=num_t[0],
             animate=False,
             save_model_with_prefix='spearmint_acktr_H' + str(job_id),
             restore_model_from_file='')

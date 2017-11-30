@@ -9,7 +9,7 @@
         "num_timesteps" : {
            "type" : "ENUM",
            "size" : 1,
-           "options" : ["1e6", "2e6","3e6","4e6","5e6","6e6","7e6","8e6","9e6","1e7"]
+           "options" : ["1e06", "2e06","3e06","4e06","5e06","6e06","7e06","8e06","9e06","1e07"]
         },
         "timesteps_per_batch" : {
             "type" : "ENUM",
