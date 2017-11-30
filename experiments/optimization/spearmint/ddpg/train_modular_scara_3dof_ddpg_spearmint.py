@@ -11,6 +11,7 @@ import baselines.ddpg.training as training
 from baselines.ddpg.models import Actor, Critic
 from baselines.ddpg.memory import Memory
 from baselines.ddpg.noise import *
+import baselines.common.tf_util as U
 
 import gym
 import gym_gazebo
@@ -25,7 +26,7 @@ def train_setup(job_id, act_lr, cr_lr, no_epochs, gam, no_cycles, no_train_steps
         logger.set_level(logger.DISABLED)
 
     #Default parameters
-    env_id = "GazeboModularScara3DOF-v2"
+    env_id = "GazeboModularScara4DOF-v3"
     noise_type='adaptive-param_0.2'
     layer_norm = True
     seed = 0
@@ -53,7 +54,6 @@ def train_setup(job_id, act_lr, cr_lr, no_epochs, gam, no_cycles, no_train_steps
     action_noise = None
     param_noise = None
 
-    nb_actions = env.action_space.shape[-1]
     for current_noise_type in noise_type.split(','):
         current_noise_type = current_noise_type.strip()
         if current_noise_type == 'none':
@@ -70,38 +70,65 @@ def train_setup(job_id, act_lr, cr_lr, no_epochs, gam, no_cycles, no_train_steps
         else:
             raise RuntimeError('unknown noise type "{}"'.format(current_noise_type))
 
-    # Configure components.
-    memory = Memory(limit=int(1e6), action_shape=env.action_space.shape, observation_shape=env.observation_space.shape)
-    critic = Critic(layer_norm=layer_norm)
-    actor = Actor(nb_actions, layer_norm=layer_norm)
+    # with tf.variable_scope("ddpg_" + str(job_id)):
+    # with U.single_threaded_session() as session:
+    with tf.Session(config=tf.ConfigProto()) as session:
+        nb_actions = env.action_space.shape[-1]
 
-    # Seed everything to make things reproducible.
-    seed = seed + 1000000 * rank
-    logger.info('rank {}: seed={}, logdir={}'.format(rank, seed, logger.get_dir()))
-    tf.reset_default_graph()
-    set_global_seeds(seed)
-    env.seed(seed)
-    if eval_env is not None:
-        eval_env.seed(seed)
+        # Configure components.
+        memory = Memory(limit=int(1e6), action_shape=env.action_space.shape, observation_shape=env.observation_space.shape)
+        critic = Critic(layer_norm=layer_norm)
+        actor = Actor(nb_actions, layer_norm=layer_norm)
 
+        # Seed everything to make things reproducible.
+        seed = seed + 1000000 * rank
+        logger.info('rank {}: seed={}, logdir={}'.format(rank, seed, logger.get_dir()))
+        # tf.reset_default_graph()
+        set_global_seeds(seed)
+        env.seed(seed)
+        if eval_env is not None:
+            eval_env.seed(seed)
 
-    # Disable logging for rank != 0 to avoid noise.
-    if rank == 0:
-        start_time = time.time()
-    optim_metric = training.train(env=env, eval_env=eval_env, param_noise=param_noise,
-        action_noise=action_noise, actor=actor, critic=critic, memory=memory, actor_lr = float(act_lr), critic_lr = float(cr_lr), gamma = float(gam), nb_epoch_cycles = int(no_cycles), nb_train_steps = int(no_train_steps), nb_eval_steps = int(no_eval_steps), nb_rollout_steps = int(no_rollout_steps),
-        nb_epochs= int(nb_epochs), render_eval=render_eval, reward_scale=reward_scale, render=render, normalize_returns=normalize_returns, normalize_observations=normalize_observations, critic_l2_reg=critic_l2_reg, batch_size = batch_size, popart=popart,
-        clip_norm=clip_norm)
-    env.close()
-    # if eval_env is not None:
-    #     eval_env.close()
-    if rank == 0:
-        logger.info('total runtime: {}s'.format(time.time() - start_time))
+            # tf.variable_scope("graph" + str(itteration)):
+            # graph = tf.Graph()
+            # graph.as_default()
+        # Disable logging for rank != 0 to avoid noise.
+        if rank == 0:
+            start_time = time.time()
+        optim_metric = training.train(env=env,
+                                          eval_env=eval_env,
+                                          session=session,
+                                          param_noise=param_noise,
+                                          action_noise=action_noise,
+                                          actor=actor,
+                                          critic=critic,
+                                          memory=memory,
+                                          actor_lr = float(act_lr),
+                                          critic_lr = float(cr_lr),
+                                          gamma = float(gam),
+                                          nb_epoch_cycles = int(no_cycles),
+                                          nb_train_steps = int(no_train_steps),
+                                          nb_eval_steps = int(no_eval_steps),
+                                          nb_rollout_steps = int(no_rollout_steps),
+                                          nb_epochs= int(nb_epochs),
+                                          render_eval=render_eval,
+                                          reward_scale=reward_scale,
+                                          render=render,
+                                          normalize_returns=normalize_returns,
+                                          normalize_observations=normalize_observations,
+                                          critic_l2_reg=critic_l2_reg,
+                                          batch_size = batch_size,
+                                          popart=popart,
+                                          clip_norm=clip_norm)
+            # env.close()
+            # if eval_env is not None:
+            #     eval_env.close()
+        if rank == 0:
+            logger.info('total runtime: {}s'.format(time.time() - start_time))
 
     logger.info(' Got optimization_metric %d', optim_metric)
     return optim_metric # Hyperparameter optimization purposes
-
-
+    # tf.Session.reset(target, ["ddpg_" + str(job_id)])
 
 def main(job_id, params):
 
