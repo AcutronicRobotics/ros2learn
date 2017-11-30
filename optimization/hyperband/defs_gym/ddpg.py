@@ -21,6 +21,7 @@ import gym
 import gym_gazebo
 import tensorflow as tf
 from mpi4py import MPI
+import baselines.common.tf_util as U
 
 
 import os
@@ -112,55 +113,56 @@ def try_params( n_iterations, params ):
     action_noise = None
     param_noise = None
 
-    nb_actions = env.action_space.shape[-1]
-    for current_noise_type in noise_type.split(','):
-        current_noise_type = current_noise_type.strip()
-        if current_noise_type == 'none':
-            pass
-        elif 'adaptive-param' in current_noise_type:
-            _, stddev = current_noise_type.split('_')
-            param_noise = AdaptiveParamNoiseSpec(initial_stddev=float(stddev), desired_action_stddev=float(stddev))
-        elif 'normal' in current_noise_type:
-            _, stddev = current_noise_type.split('_')
-            action_noise = NormalActionNoise(mu=np.zeros(nb_actions), sigma=float(stddev) * np.ones(nb_actions))
-        elif 'ou' in current_noise_type:
-            _, stddev = current_noise_type.split('_')
-            action_noise = OrnsteinUhlenbeckActionNoise(mu=np.zeros(nb_actions), sigma=float(stddev) * np.ones(nb_actions))
-        else:
-            raise RuntimeError('unknown noise type "{}"'.format(current_noise_type))
+    with U.single_threaded_session() as session:
+        nb_actions = env.action_space.shape[-1]
+        for current_noise_type in noise_type.split(','):
+            current_noise_type = current_noise_type.strip()
+            if current_noise_type == 'none':
+                pass
+            elif 'adaptive-param' in current_noise_type:
+                _, stddev = current_noise_type.split('_')
+                param_noise = AdaptiveParamNoiseSpec(initial_stddev=float(stddev), desired_action_stddev=float(stddev))
+            elif 'normal' in current_noise_type:
+                _, stddev = current_noise_type.split('_')
+                action_noise = NormalActionNoise(mu=np.zeros(nb_actions), sigma=float(stddev) * np.ones(nb_actions))
+            elif 'ou' in current_noise_type:
+                _, stddev = current_noise_type.split('_')
+                action_noise = OrnsteinUhlenbeckActionNoise(mu=np.zeros(nb_actions), sigma=float(stddev) * np.ones(nb_actions))
+            else:
+                raise RuntimeError('unknown noise type "{}"'.format(current_noise_type))
 
-    # Configure components.
-    memory = Memory(limit=int(1e6), action_shape=env.action_space.shape, observation_shape=env.observation_space.shape)
-    critic = Critic(layer_norm=layer_norm)
-    actor = Actor(nb_actions, layer_norm=layer_norm)
+        # Configure components.
+        memory = Memory(limit=int(1e6), action_shape=env.action_space.shape, observation_shape=env.observation_space.shape)
+        critic = Critic(layer_norm=layer_norm)
+        actor = Actor(nb_actions, layer_norm=layer_norm)
 
-    # Seed everything to make things reproducible.
-    seed = seed + 1000000 * rank
-    logger.info('rank {}: seed={}, logdir={}'.format(rank, seed, logger.get_dir()))
-    tf.reset_default_graph()
-    set_global_seeds(seed)
-    env.seed(seed)
-    if eval_env is not None:
-        eval_env.seed(seed)
+        # Seed everything to make things reproducible.
+        seed = seed + 1000000 * rank
+        logger.info('rank {}: seed={}, logdir={}'.format(rank, seed, logger.get_dir()))
+        # tf.reset_default_graph()
+        set_global_seeds(seed)
+        env.seed(seed)
+        if eval_env is not None:
+            eval_env.seed(seed)
 
 
-    # Disable logging for rank != 0 to avoid noise.
-    if rank == 0:
-        start_time = time.time()
-    optim_metric = training.train(env=env, eval_env=eval_env, param_noise=param_noise,
-        action_noise=action_noise, actor=actor, critic=critic, memory=memory,
-        actor_lr = params['actor_lr'], critic_lr = params['critic_lr'], gamma = params['gamma'],
-        nb_epoch_cycles = params['nb_epoch_cycles'], nb_train_steps = params['nb_train_steps'], nb_eval_steps = params['nb_eval_steps'], nb_rollout_steps = params['nb_rollout_steps'],
-        nb_epochs= params['nb_epochs'], render_eval=render_eval, reward_scale=reward_scale, render=render,
-        normalize_returns=normalize_returns, normalize_observations=normalize_observations,
-        critic_l2_reg=critic_l2_reg, batch_size = batch_size, popart=popart,
-        clip_norm=clip_norm)
+        # Disable logging for rank != 0 to avoid noise.
+        if rank == 0:
+            start_time = time.time()
+        optim_metric = training.train(env=env, eval_env=eval_env,session=session, param_noise=param_noise,
+            action_noise=action_noise, actor=actor, critic=critic, memory=memory,
+            actor_lr = params['actor_lr'], critic_lr = params['critic_lr'], gamma = params['gamma'],
+            nb_epoch_cycles = params['nb_epoch_cycles'], nb_train_steps = params['nb_train_steps'], nb_eval_steps = params['nb_eval_steps'], nb_rollout_steps = params['nb_rollout_steps'],
+            nb_epochs= params['nb_epochs'], render_eval=render_eval, reward_scale=reward_scale, render=render,
+            normalize_returns=normalize_returns, normalize_observations=normalize_observations,
+            critic_l2_reg=critic_l2_reg, batch_size = batch_size, popart=popart,
+            clip_norm=clip_norm)
 
-    env.close()
-    # if eval_env is not None:
-    #     eval_env.close()
-    if rank == 0:
-        logger.info('total runtime: {}s'.format(time.time() - start_time))
+        # env.close()
+        # if eval_env is not None:
+        #     eval_env.close()
+        if rank == 0:
+            logger.info('total runtime: {}s'.format(time.time() - start_time))
 
     # policy_to_run = None
 
