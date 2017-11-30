@@ -113,7 +113,7 @@ def try_params( n_iterations, params ):
     action_noise = None
     param_noise = None
 
-    with U.single_threaded_session() as session:
+    with tf.Session(config=tf.ConfigProto()) as session:
         nb_actions = env.action_space.shape[-1]
         for current_noise_type in noise_type.split(','):
             current_noise_type = current_noise_type.strip()
@@ -163,8 +163,11 @@ def try_params( n_iterations, params ):
         #     eval_env.close()
         if rank == 0:
             logger.info('total runtime: {}s'.format(time.time() - start_time))
+    session.close()
+    tf.reset_default_graph()
 
     # policy_to_run = None
+    print("metric for hyperband: ", optim_metric)
 
     # return { 'loss':mean_reward, 'loss':mean_reward}
     return { 'loss':optim_metric, 'loss':optim_metric}
