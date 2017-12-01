@@ -44,8 +44,8 @@ def train_setup(job_id, learning_rate, gam, max_t, buff_size, lr_start):
             (0.0, 0.0, 0.0)]
     discrete_action_space = spaces.Discrete(7)
     with tf.variable_scope("dpq" + str(job_id)):
-        graph = tf.Graph()
-        with tf.Session(graph=graph, config=tf.ConfigProto(allow_soft_placement=True,log_device_placement=True)) as session:
+        # graph = tf.Graph()
+        with tf.Session(config=tf.ConfigProto()) as session:
             model = models.mlp([64])
 
             print("learning rate", learning_rate)
@@ -68,7 +68,7 @@ def train_setup(job_id, learning_rate, gam, max_t, buff_size, lr_start):
                 exploration_fraction=0.1,
                 exploration_final_eps=0.02,
                 print_freq=10,
-                callback=callback)
+                callback=callback, job_id=str(job_id))
             # env.close()
 
             # tf.reset_default_graph()
