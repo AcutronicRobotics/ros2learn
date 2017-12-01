@@ -3,7 +3,7 @@
     "main-file"       : "train_modular_scara_3dof_ddpg_spearmint.py",
     "experiment-name" : "ddpg-example",
     "database": {
-        "address": "0.0.0.0:27018"
+        "address": "0.0.0.0:27017"
     },
     "variables" : {
         "actor_lr" : {
@@ -17,12 +17,6 @@
             "size" : 1,
             "min"  : 1e-05,
             "max"  : 0.1
-        },
-        "no_epochs" : {
-            "type" : "INT",
-            "size" : 1,
-            "min"  : 200,
-            "max"  : 700
         },
         "gamma" : {
             "type" : "FLOAT",
@@ -41,12 +35,6 @@
             "size" : 1,
             "min"  : 20,
             "max"  : 100
-        },
-        "no_eval_steps" : {
-            "type" : "INT",
-            "size" : 1,
-            "min"  : 50,
-            "max"  : 200
         },
         "no_rollout_steps" : {
             "type" : "INT",

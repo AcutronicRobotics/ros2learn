@@ -18,7 +18,7 @@ import gym_gazebo
 import tensorflow as tf
 from mpi4py import MPI
 
-def train_setup(job_id, act_lr, cr_lr, no_epochs, gam, no_cycles, no_train_steps, no_eval_steps, no_rollout_steps):
+def train_setup(job_id, act_lr, cr_lr, gam, no_cycles, no_train_steps, no_rollout_steps):
 #train_setup(job_id, params['actor_lr'], params['critic_lr'], params['no_epochs'], params['gamma'], params['no_cycles'], params['no_train_steps'], params['no_eval_steps'], params['no_rollout_steps'])
     # Configure things.
     rank = MPI.COMM_WORLD.Get_rank()
@@ -26,7 +26,7 @@ def train_setup(job_id, act_lr, cr_lr, no_epochs, gam, no_cycles, no_train_steps
         logger.set_level(logger.DISABLED)
 
     #Default parameters
-    env_id = "GazeboModularScara4DOF-v3"
+    env_id = "GazeboModularScara3DOF-v2"
     noise_type='adaptive-param_0.2'
     layer_norm = True
     seed = 0
@@ -41,14 +41,15 @@ def train_setup(job_id, act_lr, cr_lr, no_epochs, gam, no_cycles, no_train_steps
     clip_norm=None
     num_timesteps=None
     evaluation = True
-    nb_epochs = 100
+    nb_epochs = 150
 
     # Create envs.
     env = gym.make(env_id)
     env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir(), str(rank)))
     gym.logger.setLevel(logging.WARN)
 
-    eval_env = gym.make(env_id)
+    #eval_env = gym.make(env_id)
+    eval_env = None
 
     # Parse noise_type
     action_noise = None
@@ -108,7 +109,6 @@ def train_setup(job_id, act_lr, cr_lr, no_epochs, gam, no_cycles, no_train_steps
                                           gamma = float(gam),
                                           nb_epoch_cycles = int(no_cycles),
                                           nb_train_steps = int(no_train_steps),
-                                          nb_eval_steps = int(no_eval_steps),
                                           nb_rollout_steps = int(no_rollout_steps),
                                           nb_epochs= int(nb_epochs),
                                           render_eval=render_eval,
@@ -119,14 +119,15 @@ def train_setup(job_id, act_lr, cr_lr, no_epochs, gam, no_cycles, no_train_steps
                                           critic_l2_reg=critic_l2_reg,
                                           batch_size = batch_size,
                                           popart=popart,
-                                          clip_norm=clip_norm)
+                                          clip_norm=clip_norm,
+                                          job_id=str(job_id))
             # env.close()
             # if eval_env is not None:
             #     eval_env.close()
         if rank == 0:
             logger.info('total runtime: {}s'.format(time.time() - start_time))
 
-    logger.info(' Got optimization_metric %d', optim_metric)
+    logger.info(' Got optimization_metric ', optim_metric)
     return optim_metric # Hyperparameter optimization purposes
     # tf.Session.reset(target, ["ddpg_" + str(job_id)])
 
@@ -135,4 +136,4 @@ def main(job_id, params):
     if MPI.COMM_WORLD.Get_rank() == 0:
         logger.configure()
     # Run actual script.
-    return train_setup(job_id, params['actor_lr'], params['critic_lr'], params['no_epochs'], params['gamma'], params['no_cycles'], params['no_train_steps'], params['no_eval_steps'], params['no_rollout_steps'])
+    return train_setup(job_id, params['actor_lr'], params['critic_lr'], params['gamma'], params['no_cycles'], params['no_train_steps'], params['no_rollout_steps'])
