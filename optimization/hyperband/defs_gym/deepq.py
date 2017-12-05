@@ -33,6 +33,7 @@ space = {
     'buffer_size': scope.int(hp.uniform( 'buffer_size', 5000, 10000)),
     'learning_starts': scope.int(hp.uniform( 'learning_starts', 100, 1000))
 }
+itter_deepq = 0
 
 def get_params():
     params = sample( space )
@@ -42,7 +43,7 @@ def print_params( params ):
     pprint({ k: v for k, v in params.items() if not k.startswith( 'layer_' )})
     print
 def init_enviroment():
-    print("init env")
+    print("init env deepq")
 
 
 def callback(lcl, glb):
@@ -51,6 +52,10 @@ def callback(lcl, glb):
     return is_solved
 
 def try_params( n_iterations, params ):
+    global itter_deepq
+    print("Nr. iterations:", n_iterations)
+    print_params(params)
+    print("itter: ", itter_deepq)
 
     env = gym.make("GazeboModularScara3DOF-v2")
     tf.reset_default_graph()
@@ -91,12 +96,13 @@ def try_params( n_iterations, params ):
             exploration_fraction=0.1,
             exploration_final_eps=0.02,
             print_freq=10,
-            callback=callback)
+            callback=callback, job_id=str(int(itter_deepq)))
         print("MEAN REWARD", mean_rew)
-        act.save("scara_model_" + str(n_iterations) + ".pkl")
+        act.save("scara_model_" + str(int(itter_deepq)) + ".pkl")
 
     session.close()
     tf.reset_default_graph()
+    itter_deepq+=1
 
 
     #1 - mean of simulation because Spearmin

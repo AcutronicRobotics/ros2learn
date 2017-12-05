@@ -33,13 +33,13 @@ space = {
     'actor_lr': hp.uniform( 'actor_lr', 1e-05, 0.1 ),
     'critic_lr': hp.uniform( 'critic_lr', 1e-05, 0.1),
     'gamma': hp.uniform('gamma', 0.1, 1.0),
-    'nb_epoch_cycles': scope.int(hp.uniform( 'nb_epoch_cycles', 1, 2)),
-    'gamma': hp.uniform( 'gamma', 0.1, 0.99),
+    'nb_epoch_cycles': scope.int(hp.uniform( 'nb_epoch_cycles', 10, 50)),
     'nb_train_steps': scope.int(hp.uniform( 'nb_train_steps', 20, 100)),
-    'nb_eval_steps': scope.int(hp.uniform( 'nb_eval_steps', 50, 200)),
+    # 'nb_eval_steps': scope.int(hp.uniform( 'nb_eval_steps', 50, 200)),
     'nb_rollout_steps': scope.int(hp.uniform( 'nb_rollout_steps', 50, 200)),
-    'nb_epochs': scope.int(hp.uniform( 'nb_epochs', 200, 700))
+    # 'nb_epochs': scope.int(hp.uniform( 'nb_epochs', 200, 700))
 }
+itter_ddpg = 0
 
 def get_params():
     params = sample( space )
@@ -49,7 +49,9 @@ def print_params( params ):
     pprint({ k: v for k, v in params.items() if not k.startswith( 'layer_' )})
     print
 def init_enviroment():
-    print("init env")
+    # global itter_ddpg
+    print("init env ddpg")
+    # itter_ddpg = 0
     # global env
     # global itter
     #
@@ -80,6 +82,10 @@ def init_enviroment():
 #     return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,hid_size=64, num_hid_layers=2)
 
 def try_params( n_iterations, params ):
+    global itter_ddpg
+    print("Nr. iterations:", n_iterations)
+    print_params(params)
+    print("itter_ddpg: ", itter_ddpg)
 
     rank = MPI.COMM_WORLD.Get_rank()
     if rank != 0:
@@ -101,14 +107,14 @@ def try_params( n_iterations, params ):
     clip_norm=None
     num_timesteps=None
     evaluation = True
-    nb_epochs = 100
+    nb_epochs = 150
 
     # Create envs.
     env = gym.make(env_id)
     env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir(), str(rank)))
     gym.logger.setLevel(logging.WARN)
 
-    eval_env = gym.make(env_id)
+    # eval_env = gym.make(env_id)
     # Parse noise_type
     action_noise = None
     param_noise = None
@@ -142,21 +148,36 @@ def try_params( n_iterations, params ):
         # tf.reset_default_graph()
         set_global_seeds(seed)
         env.seed(seed)
-        if eval_env is not None:
-            eval_env.seed(seed)
+        # if eval_env is not None:
+        #     eval_env.seed(seed)
 
 
         # Disable logging for rank != 0 to avoid noise.
         if rank == 0:
             start_time = time.time()
-        optim_metric = training.train(env=env, eval_env=eval_env,session=session, param_noise=param_noise,
-            action_noise=action_noise, actor=actor, critic=critic, memory=memory,
-            actor_lr = params['actor_lr'], critic_lr = params['critic_lr'], gamma = params['gamma'],
-            nb_epoch_cycles = params['nb_epoch_cycles'], nb_train_steps = params['nb_train_steps'], nb_eval_steps = params['nb_eval_steps'], nb_rollout_steps = params['nb_rollout_steps'],
-            nb_epochs= params['nb_epochs'], render_eval=render_eval, reward_scale=reward_scale, render=render,
-            normalize_returns=normalize_returns, normalize_observations=normalize_observations,
-            critic_l2_reg=critic_l2_reg, batch_size = batch_size, popart=popart,
-            clip_norm=clip_norm)
+        optim_metric = training.train(env=env,
+                                      session=session,
+                                      param_noise=param_noise,
+                                      action_noise=action_noise,
+                                      actor=actor, critic=critic,
+                                      memory=memory,
+                                      actor_lr = params['actor_lr'],
+                                      critic_lr = params['critic_lr'],
+                                      gamma = params['gamma'],
+                                      nb_epoch_cycles = params['nb_epoch_cycles'],
+                                      nb_train_steps = params['nb_train_steps'],
+                                      nb_rollout_steps = params['nb_rollout_steps'],
+                                      nb_epochs= int(nb_epochs), #params['nb_epochs'],
+                                      render_eval=render_eval,
+                                      reward_scale=reward_scale,
+                                      render=render,
+                                      normalize_returns=normalize_returns,
+                                      normalize_observations=normalize_observations,
+                                      critic_l2_reg=critic_l2_reg,
+                                      batch_size = batch_size,
+                                      popart=popart,
+                                      clip_norm=clip_norm,
+                                      job_id = str(int(itter_ddpg)))
 
         # env.close()
         # if eval_env is not None:
@@ -168,6 +189,7 @@ def try_params( n_iterations, params ):
 
     # policy_to_run = None
     print("metric for hyperband: ", optim_metric)
+    itter_ddpg+=1
 
     # return { 'loss':mean_reward, 'loss':mean_reward}
     return { 'loss':optim_metric, 'loss':optim_metric}
