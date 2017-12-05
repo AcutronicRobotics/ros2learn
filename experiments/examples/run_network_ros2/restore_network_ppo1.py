@@ -32,6 +32,13 @@ class ScaraJntsEnv(AgentSCARAROS):
         # Topics for the robot publisher and subscriber.
         JOINT_PUBLISHER = '/scara_controller/command'
         JOINT_SUBSCRIBER = '/scara_controller/state'
+        # where should the agent reach, in this case the middle of the O letter in H-ROS
+        # EE_POS_TGT = np.asmatrix([0.3325683, 0.0657366, 0.3746])
+        EE_POS_TGT = np.asmatrix([0.3305805, -0.1326121, 0.4868]) # center of the H
+        EE_ROT_TGT = np.asmatrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+        EE_POINTS = np.asmatrix([[0, 0, 0]])
+        EE_VELOCITIES = np.asmatrix([[0, 0, 0]])
+
         # joint names:
         MOTOR1_JOINT = 'motor1'
         MOTOR2_JOINT = 'motor2'
@@ -76,17 +83,16 @@ class ScaraJntsEnv(AgentSCARAROS):
               SCARA_MOTOR3, SCARA_INSIDE_MOTOR3, SCARA_SUPPORT_MOTOR3, SCARA_BAR_MOTOR3, SCARA_FIXBAR_MOTOR3,
               SCARA_MOTOR4, SCARA_INSIDE_MOTOR4, SCARA_SUPPORT_MOTOR4,
               EE_LINK]
+        # Set end effector constants
+        INITIAL_JOINTS = np.array([0, 0, 0])
+        # where is your urdf? We load here the 4 joints.... In the agent_scara we need to generalize it for joints depending on the input urdf
+        TREE_PATH = "/home/rkojcev/devel/ros_rl/environments/gym-gazebo/gym_gazebo/envs/assets/urdf/modular_scara/scara_e1_4joints.urdf"
 
         reset_condition = {
             'initial_positions': INITIAL_JOINTS,
              'initial_velocities': []
         }
-        #############################
 
-        # TODO: fix this and make it relative
-        # Set the path of the corresponding URDF file from "assets"
-        URDF_PATH = "/home/rkojcev/devel/ros_rl/environments/gym-gazebo/gym_gazebo/envs/assets/urdf/modular_scara/scara_e1_4joints.urdf"
-        
         STEP_COUNT = 2  # Typically 100.
 
         # Set the number of seconds per step of a sample.
@@ -158,7 +164,7 @@ class ScaraJntsEnv(AgentSCARAROS):
         print("Initial obs: ", obs)
         # env.seed(seed)
         pi = policy_fn('pi', env.observation_space, env.action_space)
-        tf.train.Saver().restore(sess, '/home/rkojcev/devel/baselines/baselines/experiments/ros1_ppo1_test_H/saved_models/ros1_ppo1_test_H_afterIter_420.model')
+        tf.train.Saver().restore(sess, '/home/rkojcev/baselines_networks/slow/GazeboModularScara4DOFv3Env/ppo1_slow/4dof_ppo1_test_H_afterIter_490.model')
         done = False
         while True:
             action = pi.act(True, obs)[0]
