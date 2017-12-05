@@ -32,20 +32,13 @@ class ScaraJntsEnv(AgentSCARAROS):
         # Topics for the robot publisher and subscriber.
         JOINT_PUBLISHER = '/scara_controller/command'
         JOINT_SUBSCRIBER = '/scara_controller/state'
-        # where should the agent reach, in this case the middle of the O letter in H-ROS
-        # EE_POS_TGT = np.asmatrix([0.3325683, 0.0657366, 0.3746]) # center of the O
-        EE_POS_TGT = np.asmatrix([0.3305805, -0.1326121, 0.3746]) # center of the H
-        EE_ROT_TGT = np.asmatrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
-        EE_POINTS = np.asmatrix([[0, 0, 0]])
-        EE_VELOCITIES = np.asmatrix([[0, 0, 0]])
-
-        #add here the joint names:
+        # joint names:
         MOTOR1_JOINT = 'motor1'
         MOTOR2_JOINT = 'motor2'
         MOTOR3_JOINT = 'motor3'
+        MOTOR4_JOINT = 'motor4'
 
         # Set constants for links
-        WORLD = "world"
         BASE = 'scara_e1_base_link'
         BASE_MOTOR = 'scara_e1_base_motor'
 
@@ -67,26 +60,33 @@ class ScaraJntsEnv(AgentSCARAROS):
         SCARA_BAR_MOTOR3 = 'scara_e1_bar3'
         SCARA_FIXBAR_MOTOR3 = 'scara_e1_fixbar3'
 
+        SCARA_MOTOR4 = 'scara_e1_motor4'
+        SCARA_INSIDE_MOTOR4 = 'scara_e1_motor4_inside'
+        SCARA_SUPPORT_MOTOR4 = 'scara_e1_motor4_support'
+        SCARA_BAR_MOTOR4 = 'scara_e1_bar4'
+        SCARA_FIXBAR_MOTOR4= 'scara_e1_fixbar4'
+
         SCARA_RANGEFINDER = 'scara_e1_rangefinder'
 
         EE_LINK = 'ee_link'
-
-        JOINT_ORDER = [MOTOR1_JOINT, MOTOR2_JOINT, MOTOR3_JOINT]
+        JOINT_ORDER = [MOTOR1_JOINT, MOTOR2_JOINT, MOTOR3_JOINT, MOTOR4_JOINT]
         LINK_NAMES = [BASE, BASE_MOTOR,
-                      SCARA_MOTOR1, SCARA_INSIDE_MOTOR1, SCARA_SUPPORT_MOTOR1, SCARA_BAR_MOTOR1, SCARA_FIXBAR_MOTOR1,
-                      SCARA_MOTOR2, SCARA_INSIDE_MOTOR2, SCARA_SUPPORT_MOTOR2, SCARA_BAR_MOTOR2, SCARA_FIXBAR_MOTOR2,
-                      SCARA_MOTOR3, SCARA_INSIDE_MOTOR3, SCARA_SUPPORT_MOTOR3,
-                      EE_LINK]
-        # Set end effector constants
-        INITIAL_JOINTS = np.array([0, 0, 0])
-        # where is your urdf? We load here the 3 joints.... In the agent_scara we need to generalize it for joints depending on the input urdf
-        TREE_PATH = '/home/rkojcev/catkin_ws/src/scara_e1/scara_e1_description/urdf/scara_e1_3joints.urdf'
+              SCARA_MOTOR1, SCARA_INSIDE_MOTOR1, SCARA_SUPPORT_MOTOR1, SCARA_BAR_MOTOR1, SCARA_FIXBAR_MOTOR1,
+              SCARA_MOTOR2, SCARA_INSIDE_MOTOR2, SCARA_SUPPORT_MOTOR2, SCARA_BAR_MOTOR2, SCARA_FIXBAR_MOTOR2,
+              SCARA_MOTOR3, SCARA_INSIDE_MOTOR3, SCARA_SUPPORT_MOTOR3, SCARA_BAR_MOTOR3, SCARA_FIXBAR_MOTOR3,
+              SCARA_MOTOR4, SCARA_INSIDE_MOTOR4, SCARA_SUPPORT_MOTOR4,
+              EE_LINK]
 
         reset_condition = {
             'initial_positions': INITIAL_JOINTS,
              'initial_velocities': []
         }
+        #############################
 
+        # TODO: fix this and make it relative
+        # Set the path of the corresponding URDF file from "assets"
+        URDF_PATH = "/home/rkojcev/devel/ros_rl/environments/gym-gazebo/gym_gazebo/envs/assets/urdf/modular_scara/scara_e1_4joints.urdf"
+        
         STEP_COUNT = 2  # Typically 100.
 
         # Set the number of seconds per step of a sample.
