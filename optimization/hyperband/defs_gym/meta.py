@@ -1,7 +1,7 @@
 # meta classifier
 from common_defs import *
 
-models = ('ddpg','ddpg')
+models = ('ddpg','deepq')
 
 # import all the functions
 for m in models:
