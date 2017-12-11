@@ -100,9 +100,11 @@ def try_params( n_iterations, params ):
         print("MEAN REWARD", mean_rew)
         act.save("scara_model_" + str(int(itter_deepq)) + ".pkl")
 
+
+    itter_deepq+=1
+    
     session.close()
     tf.reset_default_graph()
-    itter_deepq+=1
 
 
     #1 - mean of simulation because Spearmin

@@ -184,12 +184,14 @@ def try_params( n_iterations, params ):
         #     eval_env.close()
         if rank == 0:
             logger.info('total runtime: {}s'.format(time.time() - start_time))
-    session.close()
-    tf.reset_default_graph()
+
 
     # policy_to_run = None
     print("metric for hyperband: ", optim_metric)
     itter_ddpg+=1
+
+    session.close()
+    tf.reset_default_graph()
 
     # return { 'loss':mean_reward, 'loss':mean_reward}
     return { 'loss':optim_metric, 'loss':optim_metric}
