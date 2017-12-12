@@ -14,8 +14,6 @@ parser.add_argument('-s', action='store_true')
 parser.add_argument('--continue_iter', type=str)
 args = parser.parse_args()
 
-# python main.py --task MovementBandits-v0 --num_subs 2 --macro_duration 10 --num_rollouts 1000 --warmup_time 60 --train_time 1 --replay True test
-
 from mpi4py import MPI
 from rl_algs.common import set_global_seeds, tf_util as U
 import os.path as osp
@@ -42,7 +40,7 @@ replay = str2bool(args.replay)
 args.replay = str2bool(args.replay)
 
 RELPATH = osp.join(args.savename)
-LOGDIR = osp.join('/root/results' if sys.platform.startswith('linux') else '/tmp', RELPATH)
+LOGDIR = osp.join('/tmp', RELPATH)
 # def callback(it):
 #     if it >= 1:
 #         fname = osp.join("/Users/kevin/data/tinkerbell/gce/"+args.savename+"/checkpoints/", format(it*5, '05d'))
