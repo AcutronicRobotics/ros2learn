@@ -46,9 +46,9 @@ with tf.variable_scope("vf"):
 with tf.variable_scope("pi"):
     policy = GaussianMlpPolicy(ob_dim, ac_dim)
 
-loadPath = '/tmp/rosrl/' + str(env.__class__.__name__) +'_no_reset/acktr/'
-tf.train.Saver().restore(sess, loadPath + '4dof_acktr_O_afterIter_397.model')
-# tf.train.Saver().restore(sess, '/home/rkojcev/baselines_networks/ros1_acktr_H/saved_models/ros1_acktr_H_afterIter_263.model')
+# loadPath = '/tmp/rosrl/' + str(env.__class__.__name__) +'_no_reset/acktr/'
+# tf.train.Saver().restore(sess, loadPath + '4dof_acktr_O_afterIter_397.model')
+tf.train.Saver().restore(sess, '/home/rkojcev/baselines_networks/ros1_acktr_H/saved_models/ros1_acktr_H_afterIter_263.model')
 done = False
 # ac, ac_dist, logp = policy.act(state)
 # # print("action: ", ac)

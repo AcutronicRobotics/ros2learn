@@ -77,7 +77,7 @@ def policy_fn(name, ob_space, ac_space):
 
 def try_params( n_iterations, params ):
     global policy_to_run
-    print("iterations:", n_iterations)
+    print("Nr. iterations:", n_iterations)
     print_params( params )
     # global itter
     global env

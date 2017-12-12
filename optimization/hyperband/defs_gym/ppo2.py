@@ -62,12 +62,6 @@ def init_enviroment():
     seed = 0
     set_global_seeds(seed)
 
-    # env = gym.make('GazeboModularScara4DOF-v3')
-    # time.sleep(5)
-    # initial_observation = env.reset()
-    # print("Initial observation: ", initial_observation)
-    # env.render()
-
 def get_scope_variable(scope_name, var, shape=None):
     with tf.variable_scope(scope_name) as scope:
         try:
@@ -81,7 +75,7 @@ def policy_fn(name, ob_space, ac_space):
 
 def try_params( n_iterations, params ):
     global policy_to_run
-    print("iterations:", n_iterations)
+    print("Nr. iterations:", n_iterations)
     print_params( params )
     global itter
 
@@ -105,23 +99,6 @@ def try_params( n_iterations, params ):
         assert session.graph is tf.get_default_graph()
     session.close()
     tf.reset_default_graph()
-    # itter+=1
-        # assert tf.get_default_graph() is session.graph()
-        # session.close()
-        # tf.reset_default_graph()
-    # # assert tf.get_default_session() is session
-    # print("Varibale scope is: ", tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='pi'))
-
-
-
-         # tf.Session.reset(target, ["experiment0"])
-         # tf.Session.reset(target='', containers=None, config=None)
-
-         # print("Graph is still the same: ", tf.get_default_graph())
-    # print(tf.get_default_graph())
-    # tf.reset_default_graph()
-    # policy_fn = None
-
 
     print("mean_reward: ", mean_reward)
 

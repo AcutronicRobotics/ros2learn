@@ -26,7 +26,6 @@ class Hyperband:
     # can be called multiple times
     def run(self, skip_last=0, dry_run=False):
         self.init_enviroment()
-
         for s in reversed(list(range(self.s_max + 1))):
 
             # initial number of configurations
