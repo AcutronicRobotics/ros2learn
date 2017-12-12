@@ -7,40 +7,25 @@
     },
     "variables" : {
         "actor_lr" : {
-            "type" : "FLOAT",
+            "type" : "ENUM",
             "size" : 1,
-            "min"  : 1e-05,
-            "max"  : 0.1
+            "options" : ["1e-04", "1e-03", "1e-02"]
+        },
+        "reward_scale" : {
+            "type" : "ENUM",
+            "size" : 1,
+            "options" : ["0.001", "0.01", "0.1", "1"]
+        },
+        "gamma" : {
+            "type" : "ENUM",
+            "size" : 1,
+            "options" : ["0.5", "0.8", "0.9", "0.99"]
         },
         "critic_lr" : {
             "type" : "FLOAT",
             "size" : 1,
-            "min"  : 1e-05,
-            "max"  : 0.1
-        },
-        "gamma" : {
-            "type" : "FLOAT",
-            "size" : 1,
-            "min"  : 0.1,
-            "max"  : 1
-        },
-        "no_cycles" : {
-            "type" : "INT",
-            "size" : 1,
-            "min"  : 10,
-            "max"  : 50
-        },
-        "no_train_steps" : {
-            "type" : "INT",
-            "size" : 1,
-            "min"  : 20,
-            "max"  : 100
-        },
-        "no_rollout_steps" : {
-            "type" : "INT",
-            "size" : 1,
-            "min"  : 50,
-            "max"  : 200
+            "min"  : 1e-03,
+            "max"  : 1e-02
         }
     }
 }
