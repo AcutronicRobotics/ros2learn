@@ -58,7 +58,7 @@ def init_enviroment():
 
 def try_params( n_iterations, params ):
     # print("itter: ", itter)
-    print("iterations:", n_iterations)
+    print("Nr. iterations:", n_iterations)
     print_params( params )
     # os.system("killall -9 roslaunch roscore gzclient gzserver")
     env = gym.make('GazeboModularScara3DOF-v3')

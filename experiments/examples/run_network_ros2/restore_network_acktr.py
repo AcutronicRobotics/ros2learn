@@ -34,18 +34,19 @@ class ScaraJntsEnv(AgentSCARAROS):
         JOINT_PUBLISHER = '/scara_controller/command'
         JOINT_SUBSCRIBER = '/scara_controller/state'
         # where should the agent reach, in this case the middle of the O letter in H-ROS
-        EE_POS_TGT = np.asmatrix([0.3325683, 0.0657366, 0.3746])
+        # EE_POS_TGT = np.asmatrix([0.3325683, 0.0657366, 0.3746])
+        EE_POS_TGT = np.asmatrix([0.3305805, -0.1326121, 0.4868]) # center of the H
         EE_ROT_TGT = np.asmatrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
         EE_POINTS = np.asmatrix([[0, 0, 0]])
         EE_VELOCITIES = np.asmatrix([[0, 0, 0]])
 
-        #add here the joint names:
+        # joint names:
         MOTOR1_JOINT = 'motor1'
         MOTOR2_JOINT = 'motor2'
         MOTOR3_JOINT = 'motor3'
+        MOTOR4_JOINT = 'motor4'
 
         # Set constants for links
-        WORLD = "world"
         BASE = 'scara_e1_base_link'
         BASE_MOTOR = 'scara_e1_base_motor'
 
@@ -67,20 +68,26 @@ class ScaraJntsEnv(AgentSCARAROS):
         SCARA_BAR_MOTOR3 = 'scara_e1_bar3'
         SCARA_FIXBAR_MOTOR3 = 'scara_e1_fixbar3'
 
+        SCARA_MOTOR4 = 'scara_e1_motor4'
+        SCARA_INSIDE_MOTOR4 = 'scara_e1_motor4_inside'
+        SCARA_SUPPORT_MOTOR4 = 'scara_e1_motor4_support'
+        SCARA_BAR_MOTOR4 = 'scara_e1_bar4'
+        SCARA_FIXBAR_MOTOR4= 'scara_e1_fixbar4'
+
         SCARA_RANGEFINDER = 'scara_e1_rangefinder'
 
         EE_LINK = 'ee_link'
-
-        JOINT_ORDER = [MOTOR1_JOINT, MOTOR2_JOINT, MOTOR3_JOINT]
+        JOINT_ORDER = [MOTOR1_JOINT, MOTOR2_JOINT, MOTOR3_JOINT, MOTOR4_JOINT]
         LINK_NAMES = [BASE, BASE_MOTOR,
-                      SCARA_MOTOR1, SCARA_INSIDE_MOTOR1, SCARA_SUPPORT_MOTOR1, SCARA_BAR_MOTOR1, SCARA_FIXBAR_MOTOR1,
-                      SCARA_MOTOR2, SCARA_INSIDE_MOTOR2, SCARA_SUPPORT_MOTOR2, SCARA_BAR_MOTOR2, SCARA_FIXBAR_MOTOR2,
-                      SCARA_MOTOR3, SCARA_INSIDE_MOTOR3, SCARA_SUPPORT_MOTOR3,
-                      EE_LINK]
+              SCARA_MOTOR1, SCARA_INSIDE_MOTOR1, SCARA_SUPPORT_MOTOR1, SCARA_BAR_MOTOR1, SCARA_FIXBAR_MOTOR1,
+              SCARA_MOTOR2, SCARA_INSIDE_MOTOR2, SCARA_SUPPORT_MOTOR2, SCARA_BAR_MOTOR2, SCARA_FIXBAR_MOTOR2,
+              SCARA_MOTOR3, SCARA_INSIDE_MOTOR3, SCARA_SUPPORT_MOTOR3, SCARA_BAR_MOTOR3, SCARA_FIXBAR_MOTOR3,
+              SCARA_MOTOR4, SCARA_INSIDE_MOTOR4, SCARA_SUPPORT_MOTOR4,
+              EE_LINK]
         # Set end effector constants
         INITIAL_JOINTS = np.array([0, 0, 0])
-        # where is your urdf? We load here the 3 joints.... In the agent_scara we need to generalize it for joints depending on the input urdf
-        TREE_PATH = '/home/rkojcev/catkin_ws/src/scara_e1/scara_e1_description/urdf/scara_e1_3joints.urdf'
+        # where is your urdf? We load here the 4 joints.... In the agent_scara we need to generalize it for joints depending on the input urdf
+        TREE_PATH = "/home/rkojcev/devel/ros_rl/environments/gym-gazebo/gym_gazebo/envs/assets/urdf/modular_scara/scara_e1_4joints.urdf"
 
         reset_condition = {
             'initial_positions': INITIAL_JOINTS,
@@ -152,38 +159,45 @@ class ScaraJntsEnv(AgentSCARAROS):
         sess.__enter__()
         # logger.session().__enter__()
 
-        # with tf.Session(config=tf.ConfigProto()) as session:
-        obs = []
-        acs = []
-        ac_dists = []
-        logps = []
-        rewards = []
+        # # with tf.Session(config=tf.ConfigProto()) as session:
+        # obs = []
+        # acs = []
+        # ac_dists = []
+        # logps = []
+        # rewards = []
         ob_dim = env.observation_space.shape[0]
         ac_dim = env.action_space.shape[0]
-        ob = env.reset()
-        prev_ob = np.float32(np.zeros(ob.shape))
-        state = np.concatenate([ob, prev_ob], -1)
-        obs.append(state)
+        # ob = env.reset()
+        # prev_ob = np.float32(np.zeros(ob.shape))
+        # state = np.concatenate([ob, prev_ob], -1)
+        # obs.append(state)
         with tf.variable_scope("vf"):
             vf = NeuralNetValueFunction(ob_dim, ac_dim)
         with tf.variable_scope("pi"):
             policy = GaussianMlpPolicy(ob_dim, ac_dim)
-        tf.train.Saver().restore(sess, '/home/rkojcev/devel/baselines/baselines/experiments/scara_3joints_acktr/saved_models/scara_3joints_acktr_afterIter_332.model')
-        done = False
-        ac, ac_dist, logp = policy.act(state)
-        # print("action: ", ac)
-        acs.append(ac)
-        ac_dists.append(ac_dist)
-        logps.append(logp)
-        prev_ob = np.copy(ob)
-        scaled_ac = env.action_space.low + (ac + 1.) * 0.5 * (env.action_space.high - env.action_space.low)
-        scaled_ac = np.clip(scaled_ac, env.action_space.low, env.action_space.high)
-        while not done:
+        tf.train.Saver().restore(sess, '/tmp/rosrl/GazeboModularScara4DOFv3Env/acktr/4dof_acktr_H_afterIter_282.model')
+        while True:
+            ob = env.reset()
+            prev_ob = np.float32(np.zeros(ob.shape))
+
+            obs = []
+            acs = []
+            ac_dists = []
+            logps = []
+            rewards = []
+
+            state = np.concatenate([ob, prev_ob], -1)
+            obs.append(state)
             ac, ac_dist, logp = policy.act(state)
+            acs.append(ac)
+            ac_dists.append(ac_dist)
+            logps.append(logp)
+            prev_ob = np.copy(ob)
             scaled_ac = env.action_space.low + (ac + 1.) * 0.5 * (env.action_space.high - env.action_space.low)
             scaled_ac = np.clip(scaled_ac, env.action_space.low, env.action_space.high)
-            print(scaled_ac)
-            ob, rew, done, _ = env.step(ac)
+            # ac, ac_dist, logp = policy.act(state)
+            print(ac)
+            ob, rew, done, _ = env.step(scaled_ac)
             # print("done is: ",done)
 
         #
