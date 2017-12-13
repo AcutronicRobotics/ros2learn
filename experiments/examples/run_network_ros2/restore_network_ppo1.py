@@ -15,6 +15,8 @@ from baselines.acktr.acktr_cont import learn
 from baselines.agent.utility.general_utils import get_ee_points, get_position
 from baselines.ppo1 import mlp_policy, pposgd_simple
 
+import csv
+
 
 # from gym import utils
 # from gym.envs.mujoco import mujoco_env
@@ -33,7 +35,7 @@ class ScaraJntsEnv(AgentSCARAROS):
         JOINT_PUBLISHER = '/scara_controller/command'
         JOINT_SUBSCRIBER = '/scara_controller/state'
         # where should the agent reach, in this case the middle of the O letter in H-ROS
-        EE_POS_TGT = np.asmatrix([0.3325683, 0.0657366, 0.3746])
+        EE_POS_TGT = np.asmatrix([0.3325683, 0.0657366, 0.4868]) # center of the O
         # EE_POS_TGT = np.asmatrix([0.3305805, -0.1326121, 0.4868]) # center of the H
         EE_ROT_TGT = np.asmatrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
         EE_POINTS = np.asmatrix([[0, 0, 0]])
@@ -104,7 +106,7 @@ class ScaraJntsEnv(AgentSCARAROS):
         # set the number of conditions per iteration.
         # Set the number of trajectory iterations to collect.
         ITERATIONS = 20  # Typically 10.
-        slowness = 1
+        slowness = 10
 
         m_joint_order = copy.deepcopy(JOINT_ORDER)
         m_link_names = copy.deepcopy(LINK_NAMES)
@@ -166,13 +168,20 @@ class ScaraJntsEnv(AgentSCARAROS):
         pi = policy_fn('pi', env.observation_space, env.action_space)
         tf.train.Saver().restore(sess, '/home/rkojcev/baselines_networks/GazeboModularScara4DOFv3Env/ppo1/04dof_ppo1_test_O_afterIter_486.model')
         done = False
+        f = open("/home/rkojcev/baselines_networks/ppo1_output/ppo1_action.csv", "w")
+        f2 = open("/home/rkojcev/baselines_networks/ppo1_output/ppo1_observation.csv", "w")
         while True:
             action = pi.act(False, obs)[0]
             print("action ppo1: ", action)
+            f.write(np.array_str(action) + '\n')
             # action_tmp =  0.1 * action# - obs[:4]
             # print("action_tmp: ",action_tmp)
             obs, reward, done, info = env.step(action)
-            print(action)
+
+            f2.write(np.array_str(obs[:4]) + '\n')
+            # print(action)
+        f.close()
+        f2.close()
 
 if __name__ == "__main__":
     ScaraJntsEnv()
