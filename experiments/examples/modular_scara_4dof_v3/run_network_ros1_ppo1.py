@@ -38,7 +38,8 @@ pi = policy_fn('pi', env.observation_space, env.action_space)
 # # tf.train.Saver().restore(sess, '/home/rkojcev/baselines_networks/ros1_ppo1_test_H/saved_models/ros1_ppo1_test_H_afterIter_282.model') # for the H
 # tf.train.Saver().restore(sess, '/home/rkojcev/baselines_networks/ros1_ppo1_test_O/saved_models/ros1_ppo1_test_O_afterIter_421.model') # for the O
 loadPath = '/tmp/rosrl/' + str(env.__class__.__name__) +'_20171115/ppo1/'
-tf.train.Saver().restore(sess, loadPath + '4dof_ppo1_test_O_afterIter_486.model')
+# tf.train.Saver().restore(sess, loadPath + '4dof_ppo1_test_O_afterIter_486.model')
+tf.train.Saver().restore(sess, '/home/rkojcev/baselines_networks/GazeboModularScara4DOFv3Env/ppo1/04dof_ppo1_test_O_afterIter_486.model')
 # tf.train.Saver().restore(sess, '/home/rkojcev/devel/baselines/baselines/experiments/4dof_ppo1_test_O/saved_models/4dof_ppo1_test_O_afterIter_387.model')
 done = False
 while True:
