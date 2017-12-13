@@ -18,7 +18,7 @@ import gym_gazebo
 import tensorflow as tf
 from mpi4py import MPI
 
-def train_setup(job_id, act_lr, cr_lr, gam, no_cycles, no_train_steps, no_rollout_steps):
+def train_setup(job_id, ac_lr, cr_lr, g, rew_sc):
 #train_setup(job_id, params['actor_lr'], params['critic_lr'], params['no_epochs'], params['gamma'], params['no_cycles'], params['no_train_steps'], params['no_eval_steps'], params['no_rollout_steps'])
     # Configure things.
     rank = MPI.COMM_WORLD.Get_rank()
@@ -27,7 +27,7 @@ def train_setup(job_id, act_lr, cr_lr, gam, no_cycles, no_train_steps, no_rollou
 
     #Default parameters
     env_id = "GazeboModularScara3DOF-v2"
-    noise_type='adaptive-param_0.2'
+    noise_type='ou_0.2'
     layer_norm = True
     seed = 0
     render_eval = False
@@ -45,8 +45,9 @@ def train_setup(job_id, act_lr, cr_lr, gam, no_cycles, no_train_steps, no_rollou
 
     # Create envs.
     env = gym.make(env_id)
-    env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir(), str(rank)))
-    gym.logger.setLevel(logging.WARN)
+    env.reset()
+    #env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir(), str(rank)))
+    #gym.logger.setLevel(logging.WARN)
 
     #eval_env = gym.make(env_id)
     eval_env = None
@@ -54,9 +55,11 @@ def train_setup(job_id, act_lr, cr_lr, gam, no_cycles, no_train_steps, no_rollou
     # Parse noise_type
     action_noise = None
     param_noise = None
+    nb_actions = env.action_space.shape[-1]
 
     for current_noise_type in noise_type.split(','):
         current_noise_type = current_noise_type.strip()
+
         if current_noise_type == 'none':
             pass
         elif 'adaptive-param' in current_noise_type:
@@ -74,12 +77,16 @@ def train_setup(job_id, act_lr, cr_lr, gam, no_cycles, no_train_steps, no_rollou
     # with tf.variable_scope("ddpg_" + str(job_id)):
     # with U.single_threaded_session() as session:
     with tf.Session(config=tf.ConfigProto()) as session:
-        nb_actions = env.action_space.shape[-1]
 
         # Configure components.
         memory = Memory(limit=int(1e6), action_shape=env.action_space.shape, observation_shape=env.observation_space.shape)
         critic = Critic(layer_norm=layer_norm)
         actor = Actor(nb_actions, layer_norm=layer_norm)
+
+        #no_rollout_i = list(map(int, no_rollout_steps))
+        ack_lr = list(map(float, ac_lr))
+        gam = list(map(float, g))
+        reward_scale = list(map(float, rew_sc))
 
         # Seed everything to make things reproducible.
         seed = seed + 1000000 * rank
@@ -104,15 +111,16 @@ def train_setup(job_id, act_lr, cr_lr, gam, no_cycles, no_train_steps, no_rollou
                                           actor=actor,
                                           critic=critic,
                                           memory=memory,
-                                          actor_lr = float(act_lr),
-                                          critic_lr = float(cr_lr),
-                                          gamma = float(gam),
-                                          nb_epoch_cycles = int(no_cycles),
-                                          nb_train_steps = int(no_train_steps),
-                                          nb_rollout_steps = int(no_rollout_steps),
-                                          nb_epochs= int(nb_epochs),
+                                          actor_lr = ack_lr[0],
+                                          critic_lr = cr_lr[0],
+                                          gamma =gam[0],
+                                          nb_epoch_cycles = 10,
+                                          nb_train_steps = 5,
+                                          #nb_rollout_steps = 100,
+                                          nb_rollout_steps = 200,
+                                          nb_epochs= 100,
                                           render_eval=render_eval,
-                                          reward_scale=reward_scale,
+                                          reward_scale=1,
                                           render=render,
                                           normalize_returns=normalize_returns,
                                           normalize_observations=normalize_observations,
@@ -136,4 +144,5 @@ def main(job_id, params):
     if MPI.COMM_WORLD.Get_rank() == 0:
         logger.configure()
     # Run actual script.
-    return train_setup(job_id, params['actor_lr'], params['critic_lr'], params['gamma'], params['no_cycles'], params['no_train_steps'], params['no_rollout_steps'])
+    #return train_setup(job_id, params['critic_lr'], params['gamma'])
+    return train_setup(job_id, params['actor_lr'], params['critic_lr'], params['gamma'], params['reward_scale'])
