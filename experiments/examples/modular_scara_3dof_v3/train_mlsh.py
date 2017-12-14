@@ -1,19 +1,20 @@
 import argparse
 import tensorflow as tf
-#parser.add_argument('savename', type=str)
-#parser.add_argument('--task', type=str)
-#parser.add_argument('--num_subs', type=int)
-#parser.add_argument('--macro_duration', type=int)
-#parser.add_argument('--num_rollouts', type=int)
-#parser.add_argument('--warmup_time', type=int)
-#parser.add_argument('--force_subpolicy', type=int)
-#arser.add_argument('--replay', type=str)
-#parser.add_argument('--train_time', type=int)
-#parser.add_argument('-s', action='store_true')
-#parser.add_argument('--continue_iter', type=str)
-#args = parser.parse_args()
 
 # python main.py --task MovementBandits-v0 --num_subs 2 --macro_duration 10 --num_rollouts 1000 --warmup_time 60 --train_time 1 --replay True test
+# parser = argparse.ArgumentParser()
+# parser.add_argument('savename', type=str)
+# parser.add_argument('--task', type=str)
+# parser.add_argument('--num_subs', type=int)
+# parser.add_argument('--macro_duration', type=int)
+# parser.add_argument('--num_rollouts', type=int)
+# parser.add_argument('--warmup_time', type=int)
+# parser.add_argument('--train_time', type=int)
+# parser.add_argument('--force_subpolicy', type=int)
+# parser.add_argument('--replay', type=str)
+# parser.add_argument('-s', action='store_true')
+# parser.add_argument('--continue_iter', type=str)
+# args = parser.parse_args()
 
 from mpi4py import MPI
 from rl_algs.common import set_global_seeds, tf_util as U
@@ -27,6 +28,7 @@ import sys
 import shutil
 import subprocess
 import mlsh_code.master_robotics as master_robotics
+import mlsh_code.master as master
 import gym_gazebo
 
 def str2bool(v):
@@ -73,7 +75,7 @@ def callback(it):
         # U.load_state(fname, subvars)
         pass
 
-def train(job_id, env, savename, replay, macro_duration, num_subs,  num_rollouts, warmup_time, train_time, force_subpolicy, store):
+def train(env, savename, replay, macro_duration, num_subs,  num_rollouts, warmup_time, train_time, force_subpolicy, store):
     num_timesteps=1e9
     seed = 1401
     rank = MPI.COMM_WORLD.Get_rank()
@@ -93,37 +95,36 @@ def train(job_id, env, savename, replay, macro_duration, num_subs,  num_rollouts
     comm = MPI.COMM_WORLD.Create(theta_group)
     comm.Barrier()
     # comm = MPI.COMM_WORLD
-
-    #master_robotics.start(callback, args=args, workerseed=workerseed, rank=rank, comm=comm)
     master_robotics.start(callback, env, savename, replay, macro_duration, num_subs,  num_rollouts, warmup_time, train_time, force_subpolicy, store, workerseed=workerseed, rank=rank, comm=comm)
 
-def main(job_id, env, savename, replay, macro_duration, num_subs,  num_rollouts, warmup_time, train_time, force_subpolicy, store):
+#def main(job_id, env, savename, replay, macro_duration, num_subs,  num_rollouts, warmup_time, train_time, force_subpolicy, store):
+def main(env, savename, replay, macro_duration, num_subs, num_rollouts, warmup_time, train_time, force_subpolicy, store):
     if MPI.COMM_WORLD.Get_rank() == 0 and osp.exists(LOGDIR):
         shutil.rmtree(LOGDIR)
     MPI.COMM_WORLD.Barrier()
     # with logger.session(dir=LOGDIR):
-    train(job_id, env, savename, replay, macro_duration, num_subs,  num_rollouts, warmup_time, train_time, force_subpolicy, store)
+    train(env, savename, replay, macro_duration, num_subs,  num_rollouts, warmup_time, train_time, force_subpolicy, store)
 
 if __name__ == '__main__':
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--optimize', type=bool)
-    args = parser.parse_args()
-
-    replay = False
-
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument('--optimize', type=bool)
+    # args = parser.parse_args()
+    #
     env = 'GazeboModularScara3DOF-v3'
-    force_subpolicy = None
-    store = True
 
-    if 'optimize' == True:
-        main(job_id, env, savename, replay, params['macro_duration'], params['num_subs'], params['num_rollouts'], params['warmup_time'],  params['train_time'], force_subpolicy, store)
-    else:
-        #Parameters set by user
-        job_id = None
-        macro_duration = 10
-        num_subs = 2
-        num_rollouts = 2500
-        warmup_time = 30
-        train_time = 200
-        main(job_id, env, savename, replay, macro_duration, num_subs, num_rollouts, warmup_time, train_time, force_subpolicy, store)
+    # if 'optimize' == True:
+    #     main(job_id, env, savename, replay, params['macro_duration'], params['num_subs'], params['num_rollouts'], params['warmup_time'],  params['train_time'], force_subpolicy, store)
+    # else:
+    #     #Parameters set by user
+    #     job_id = None
+    savename = 'ScaraTest'
+    replay=True
+    macro_duration = 10
+    num_subs = 2
+    num_rollouts = 2500
+    warmup_time = 30
+    train_time = 200
+    force_subpolicy=None
+    store=True
+
+    main(env, savename, replay, macro_duration, num_subs, num_rollouts, warmup_time, train_time, force_subpolicy, store)
