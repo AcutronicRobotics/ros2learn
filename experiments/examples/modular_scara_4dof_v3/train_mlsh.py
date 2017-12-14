@@ -82,7 +82,6 @@ def train(job_id, env, savename, replay, macro_duration, num_subs,  num_rollouts
     comm.Barrier()
     # comm = MPI.COMM_WORLD
 
-    #master_robotics.start(callback, args=args, workerseed=workerseed, rank=rank, comm=comm)
     master_robotics.start(callback, env, savename, replay, macro_duration, num_subs,  num_rollouts, warmup_time, train_time, force_subpolicy, store, workerseed=workerseed, rank=rank, comm=comm)
 
 def main(job_id, env, savename, replay, macro_duration, num_subs,  num_rollouts, warmup_time, train_time, force_subpolicy, store):
