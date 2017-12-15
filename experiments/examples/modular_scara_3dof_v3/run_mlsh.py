@@ -37,8 +37,6 @@ train_time = 200 #2 # 200
 force_subpolicy=None
 store=True
 
-
-
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
         return True
@@ -54,7 +52,7 @@ RELPATH = osp.join(savename)
 LOGDIR = osp.join('/root/results' if sys.platform.startswith('linux') else '/tmp', RELPATH)
 
 def start(callback, workerseed, rank, comm):
-    env = gym.make('GazeboModularScara4DOF-v3')
+    env = gym.make('GazeboModularScara3DOF-v3')
     env.seed(workerseed)
     np.random.seed(workerseed)
     ob_space = env.observation_space
