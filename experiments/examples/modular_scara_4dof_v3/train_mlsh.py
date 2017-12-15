@@ -28,8 +28,11 @@ import sys
 import shutil
 import subprocess
 import mlsh_code.master_robotics as master_robotics
-import mlsh_code.master as master
+# import mlsh_code.master as master
 import gym_gazebo
+import os
+
+from baselines import logger
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
@@ -58,10 +61,18 @@ LOGDIR = osp.join('/root/results' if sys.platform.startswith('linux') else '/tmp
 
 def callback(it):
     if MPI.COMM_WORLD.Get_rank()==0:
-        if it % 5 == 0 and it > 3 and not replay:
-            fname = osp.join("savedir/", 'checkpoints', '%.5i'%it)
-            # logger.log('Saving model to %s'%fname)
-            U.save_state(fname)
+        # RK change back to 5
+        if it % 5 == 0 and it > 1 and not replay:
+            basePath = '/tmp/rosrl/mlsh/'
+            if not os.path.exists(basePath):
+                os.makedirs(basePath)
+            print("calling the save network from here: ")
+            modelF= basePath + "/saved_models/" + str('%.5i'%it) # + ".model"
+            U.save_state(modelF)
+            logger.log("Saved model to file :{}".format(modelF))
+            # fname = osp.join("savedir/", 'checkpoints', '%.5i'%it)
+            # # logger.log('Saving model to %s'%fname)
+            # U.save_state(fname)
     if it == 0 and continue_iter is not None:
         #fname = osp.join(""+args.savename+"/checkpoints/", str(args.continue_iter))
         fname = osp.join(""+savename+"/checkpoints/", str(continue_iter))
@@ -118,12 +129,12 @@ if __name__ == '__main__':
     #     #Parameters set by user
     #     job_id = None
     savename = 'ScaraTest'
-    replay=True
+    replay=False
     macro_duration = 10
     num_subs = 2
     num_rollouts = 2500
-    warmup_time = 30
-    train_time = 200
+    warmup_time = 30 #1 # 30
+    train_time = 200 #2 # 200
     force_subpolicy=None
     store=True
 
