@@ -28,7 +28,7 @@ import pickle
 
 # here we define the parameters necessary to launch
 savename = 'ScaraTest'
-replay_bool= 'True'
+replay=False
 macro_duration = 10
 num_subs = 2
 num_rollouts = 2500
@@ -39,15 +39,15 @@ store=True
 
 
 
-def str2bool(v):
-    if v.lower() in ('yes', 'true', 't', 'y', '1'):
-        return True
-    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
-        return False
-    else:
-        raise argparse.ArgumentTypeError('Boolean value expected.')
+# def str2bool(v):
+#     if v.lower() in ('yes', 'true', 't', 'y', '1'):
+#         return True
+#     elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+#         return False
+#     else:
+#         raise argparse.ArgumentTypeError('Boolean value expected.')
 
-replay = str2bool(replay_bool)
+# replay = False
 # args.replay = str2bool(args.replay)
 
 RELPATH = osp.join(savename)
@@ -59,7 +59,7 @@ def start(callback, workerseed, rank, comm):
     np.random.seed(workerseed)
     ob_space = env.observation_space
     ac_space = env.action_space
-    stochastic=True
+    stochastic=False
 
     # num_subs = args.num_subs
     # macro_duration = args.macro_duration
@@ -78,7 +78,7 @@ def start(callback, workerseed, rank, comm):
     old_sub_policies = [SubPolicy(name="old_sub_policy_%i" % x, ob=ob, ac_space=ac_space, hid_size=32, num_hid_layers=2) for x in range(num_subs)]
 
     learner = Learner(env, policy, old_policy, sub_policies, old_sub_policies, comm, clip_param=0.2, entcoeff=0, optim_epochs=10, optim_stepsize=3e-5, optim_batchsize=64)
-    rollout = rollouts.traj_segment_generator(policy, sub_policies, env, macro_duration, num_rollouts, replay, force_subpolicy, stochastic=True)
+    rollout = rollouts.traj_segment_generator(policy, sub_policies, env, macro_duration, num_rollouts, replay, force_subpolicy, stochastic=stochastic)
     #
     callback(0)
     learner.syncSubpolicies()
