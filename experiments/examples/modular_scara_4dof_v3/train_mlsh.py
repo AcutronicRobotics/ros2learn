@@ -129,7 +129,7 @@ if __name__ == '__main__':
     #     #Parameters set by user
     #     job_id = None
     savename = 'ScaraTest'
-    replay=False
+    replay=True
     macro_duration = 10
     num_subs = 2
     num_rollouts = 2500
