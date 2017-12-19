@@ -20,6 +20,9 @@ logger.configure(os.path.abspath(logdir))
 print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
 env = bench.MonitorRobotics(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True) #, allow_early_resets=True
 
+# set_global_seeds(seed)
+# env.seed(seed)
+
 initial_observation = env.reset()
 print("Initial observation: ", initial_observation)
 env.render()
