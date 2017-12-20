@@ -41,7 +41,7 @@ pposgd_simple.learn(env, policy_fn,
                     timesteps_per_actorbatch=2048,
                     clip_param=0.2, entcoeff=0.0,
                     optim_epochs=10, optim_stepsize=3e-4, gamma=0.99,
-                    optim_batchsize=64, lam=0.95, schedule='linear', save_model_with_prefix='3dof_ppo1_test_O')
+                    optim_batchsize=64, lam=0.95, schedule='linear', save_model_with_prefix='3dof_ppo1_test_H')
 
 
 # env.monitor.close()

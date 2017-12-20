@@ -48,5 +48,5 @@ with tf.Session(config=tf.ConfigProto()) as session:
         desired_kl=0.002,
         num_timesteps=1e6,
         animate=False,
-        save_model_with_prefix='3dof_acktr_O',
+        save_model_with_prefix='3dof_acktr_H',
         restore_model_from_file='')
