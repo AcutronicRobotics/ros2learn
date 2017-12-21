@@ -17,6 +17,11 @@ from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 
 import os
 
+ncpu = 10
+config = tf.ConfigProto(allow_soft_placement=True,
+                        intra_op_parallelism_threads=ncpu,
+                        inter_op_parallelism_threads=ncpu)
+tf.Session(config=config).__enter__()
 
 def make_env():
     env = gym.make('GazeboModularScara3DOF-v3')
@@ -27,28 +32,18 @@ def make_env():
     env.render()
     return env
 
-
 env = DummyVecEnv([make_env])
 env = VecNormalize(env)
+
 initial_observation = env.reset()
 print("Initial observation: ", initial_observation)
-
-ncpu = 1
-config = tf.ConfigProto(allow_soft_placement=True,
-                        intra_op_parallelism_threads=ncpu,
-                        inter_op_parallelism_threads=ncpu)
-tf.Session(config=config).__enter__()
 # env.render()
 seed = 0
 set_global_seeds(seed)
-
-)
-
-
 policy = MlpPolicy
 ppo2.learn(policy=policy, env=env, nsteps=2048, nminibatches=32,
     lam=0.95, gamma=0.99, noptepochs=10, log_interval=1,
     ent_coef=0.0,
     lr=3e-4,
     cliprange=0.2,
-    total_timesteps=1e6, save_interval=5)
+    total_timesteps=1e6, save_interval=10)
