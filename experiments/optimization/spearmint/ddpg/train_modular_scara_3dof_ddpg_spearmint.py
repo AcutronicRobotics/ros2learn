@@ -103,6 +103,34 @@ def train_setup(job_id, ac_lr, cr_lr, g, rew_sc):
         # Disable logging for rank != 0 to avoid noise.
         if rank == 0:
             start_time = time.time()
+
+        # optim_metric = training.train(env=env,
+        #                                   eval_env=eval_env,
+        #                                   session=session,
+        #                                   param_noise=param_noise,
+        #                                   action_noise=action_noise,
+        #                                   actor=actor,
+        #                                   critic=critic,
+        #                                   memory=memory,
+        #                                   actor_lr = 1e-04,
+        #                                   critic_lr = 1e-03,
+        #                                   gamma =0.8,
+        #                                   nb_epoch_cycles = 10,
+        #                                   nb_train_steps = 5,
+        #                                   #nb_rollout_steps = 100,
+        #                                   nb_rollout_steps = 200,
+        #                                   nb_epochs= 300,
+        #                                   render_eval=render_eval,
+        #                                   reward_scale=1,
+        #                                   render=render,
+        #                                   normalize_returns=normalize_returns,
+        #                                   normalize_observations=normalize_observations,
+        #                                   critic_l2_reg=critic_l2_reg,
+        #                                   batch_size = batch_size,
+        #                                   popart=popart,
+        #                                   clip_norm=clip_norm,
+        #                                   job_id=str(job_id))
+
         optim_metric = training.train(env=env,
                                           eval_env=eval_env,
                                           session=session,
@@ -111,14 +139,14 @@ def train_setup(job_id, ac_lr, cr_lr, g, rew_sc):
                                           actor=actor,
                                           critic=critic,
                                           memory=memory,
-                                          actor_lr = ack_lr[0],
-                                          critic_lr = cr_lr[0],
-                                          gamma =gam[0],
-                                          nb_epoch_cycles = 10,
-                                          nb_train_steps = 5,
+                                          actor_lr = 1e-04,
+                                          critic_lr = 1e-03,
+                                          gamma =0.99,
+                                          nb_epoch_cycles = 20,
+                                          nb_train_steps = 50,
                                           #nb_rollout_steps = 100,
-                                          nb_rollout_steps = 200,
-                                          nb_epochs= 100,
+                                          nb_rollout_steps = 100,
+                                          nb_epochs= 500,
                                           render_eval=render_eval,
                                           reward_scale=1,
                                           render=render,
@@ -128,7 +156,7 @@ def train_setup(job_id, ac_lr, cr_lr, g, rew_sc):
                                           batch_size = batch_size,
                                           popart=popart,
                                           clip_norm=clip_norm,
-                                          job_id=str(job_id))
+                                          job_id=str(0))
             # env.close()
             # if eval_env is not None:
             #     eval_env.close()
