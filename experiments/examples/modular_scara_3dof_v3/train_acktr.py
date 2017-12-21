@@ -18,7 +18,11 @@ env = gym.make('GazeboModularScara3DOF-v3')
 logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/acktr/monitor/'
 logger.configure(os.path.abspath(logdir))
 print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
-env = bench.MonitorRobotics(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True) #, allow_early_resets=True
+# RK: we are not using this for now but for the future left it here
+# env = bench.MonitorRobotics(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True) #, allow_early_resets=True
+
+# set_global_seeds(seed)
+# env.seed(seed)
 
 initial_observation = env.reset()
 print("Initial observation: ", initial_observation)
@@ -44,5 +48,5 @@ with tf.Session(config=tf.ConfigProto()) as session:
         desired_kl=0.002,
         num_timesteps=1e6,
         animate=False,
-        save_model_with_prefix='3dof_acktr_O',
+        save_model_with_prefix='3dof_acktr_H',
         restore_model_from_file='')
