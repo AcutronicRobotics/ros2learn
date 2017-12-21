@@ -20,8 +20,10 @@ from mpi4py import MPI
 
 
 #Default parameters
+#env_id = "HalfCheetah-v1"
 env_id = "GazeboModularScara3DOF-v2"
 noise_type='ou_0.2'
+#noise_type='ou_1'
 layer_norm = True
 seed = 0
 render_eval = False
@@ -40,14 +42,12 @@ nb_epochs = 150
 # Create envs.
 env = gym.make(env_id)
 env.reset()
-env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir(), str(rank)))
-gym.logger.setLevel(logging.WARN)
 
 logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ddpg/monitor/'
 logger.configure(os.path.abspath(logdir))
 print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
 env = bench.MonitorRobotics(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True) #, allow_early_resets=True
-
+gym.logger.setLevel(logging.WARN)
 
 #eval_env = gym.make(env_id)
 eval_env = None
