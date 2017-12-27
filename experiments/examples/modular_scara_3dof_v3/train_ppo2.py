@@ -14,13 +14,22 @@ from baselines.ppo2 import ppo2
 from baselines.ppo2.policies import MlpPolicy
 import tensorflow as tf
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
+import multiprocessing
 
 import os
 
-ncpu = 10
+
+ncpu = multiprocessing.cpu_count()
+if sys.platform == 'darwin': ncpu //= 2
+
+print("ncpu: ", ncpu)
+# ncpu = 1
 config = tf.ConfigProto(allow_soft_placement=True,
                         intra_op_parallelism_threads=ncpu,
-                        inter_op_parallelism_threads=ncpu)
+                        inter_op_parallelism_threads=ncpu,
+                        log_device_placement=True)
+config.gpu_options.allow_growth = True #pylint: disable=E1101
+
 tf.Session(config=config).__enter__()
 
 def make_env():
