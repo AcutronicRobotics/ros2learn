@@ -15,7 +15,7 @@ from baselines import bench, logger
 import os
 
 env = gym.make('GazeboModularArticulatedArm4DOF-v1')
-logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/acktr/monitor/'
+logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/acktr/logger/'
 logger.configure(os.path.abspath(logdir))
 print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
 # RK: we are not using this for now but for the future left it here
@@ -46,7 +46,7 @@ with tf.Session(config=tf.ConfigProto()) as session:
         lam=0.97,
         timesteps_per_batch=2500,
         desired_kl=0.002,
-        num_timesteps=1e7,
+        num_timesteps=1e6,
         animate=False,
         save_model_with_prefix='3dof_acktr_H',
         restore_model_from_file='')
