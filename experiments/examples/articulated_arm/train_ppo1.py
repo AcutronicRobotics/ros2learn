@@ -14,7 +14,7 @@ import os
 # from baselines.agent.utility.general_utils import get_ee_points, get_position
 
 
-env = gym.make('GazeboModularScara3DOF-v3')
+env = gym.make('GazeboModularArticulatedArm4DOF-v1')
 logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/monitor/'
 logger.configure(os.path.abspath(logdir))
 print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
@@ -37,7 +37,7 @@ def policy_fn(name, ob_space, ac_space):
 
 
 pposgd_simple.learn(env, policy_fn,
-                    max_timesteps=1e6,
+                    max_timesteps=1e7,
                     timesteps_per_actorbatch=2048,
                     clip_param=0.2, entcoeff=0.0,
                     optim_epochs=10, optim_stepsize=3e-4, gamma=0.99,
