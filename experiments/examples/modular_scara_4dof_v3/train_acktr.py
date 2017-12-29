@@ -11,7 +11,14 @@ from baselines.acktr.policies import GaussianMlpPolicy
 from baselines.acktr.value_functions import NeuralNetValueFunction
 from baselines.common import set_global_seeds
 
+from baselines import bench, logger
+import os
+
 env = gym.make('GazeboModularScara4DOF-v3')
+logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/acktr/logger/'
+logger.configure(os.path.abspath(logdir))
+print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
+
 init_obs = env.goToInit()
 initial_observation = env.reset()
 print("Initial observation: ", initial_observation)

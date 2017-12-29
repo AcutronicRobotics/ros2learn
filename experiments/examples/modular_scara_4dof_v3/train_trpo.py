@@ -7,7 +7,8 @@ import sys
 import numpy as np
 from mpi4py import MPI
 
-from baselines import logger
+from baselines import bench, logger
+import os
 from baselines.common import set_global_seeds, tf_util as U
 
 from baselines.ppo1.mlp_policy import MlpPolicy
