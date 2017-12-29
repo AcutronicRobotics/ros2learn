@@ -34,7 +34,7 @@ tf.Session(config=config).__enter__()
 
 def make_env():
     env = gym.make('GazeboModularScara3DOF-v3')
-    logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/'
+    logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/logger/'
     logger.configure(os.path.abspath(logdir))
     print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
     env = bench.MonitorRobotics(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True)

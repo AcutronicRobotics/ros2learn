@@ -15,7 +15,7 @@ import os
 
 
 env = gym.make('GazeboModularScara3DOF-v3')
-logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/monitor/'
+logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/logger/'
 logger.configure(os.path.abspath(logdir))
 print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
 # RK: we are not using this for now but for the future left it here
