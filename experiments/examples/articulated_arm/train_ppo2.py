@@ -33,7 +33,7 @@ config.gpu_options.allow_growth = True #pylint: disable=E1101
 tf.Session(config=config).__enter__()
 
 def make_env():
-    env = gym.make('GazeboModularScara3DOF-v3')
+    env = gym.make('GazeboModularArticulatedArm4DOF-v1')
     logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/logger/'
     logger.configure(os.path.abspath(logdir))
     print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))

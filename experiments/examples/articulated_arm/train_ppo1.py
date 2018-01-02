@@ -14,7 +14,7 @@ import os
 # from baselines.agent.utility.general_utils import get_ee_points, get_position
 
 
-env = gym.make('GazeboModularScara3DOF-v3')
+env = gym.make('GazeboModularArticulatedArm4DOF-v1')
 logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/logger/'
 logger.configure(os.path.abspath(logdir))
 print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))

@@ -30,6 +30,7 @@ import subprocess
 import mlsh_code.master_robotics as master_robotics
 # import mlsh_code.master as master
 import gym_gazebo
+from baselines import bench, logger
 import os
 
 from baselines import logger

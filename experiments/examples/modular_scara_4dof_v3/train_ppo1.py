@@ -6,11 +6,17 @@ import copy
 import sys
 import numpy as np
 
-from baselines import logger
 from baselines.common import set_global_seeds, tf_util as U
 from baselines.ppo1 import mlp_policy, pposgd_simple
 
+from baselines import bench, logger
+import os
+
 env = gym.make('GazeboModularScara4DOF-v3')
+logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/logger/'
+logger.configure(os.path.abspath(logdir))
+print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
+
 initial_observation = env.reset()
 print("Initial observation: ", initial_observation)
 env.render()
