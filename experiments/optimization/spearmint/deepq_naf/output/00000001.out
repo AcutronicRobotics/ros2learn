@@ -1,0 +1,51 @@
+SpawnModel script started
+[INFO] [1514995700.291842, 0.000000]: Loading model XML from ros parameter
+[INFO] [1514995700.294125, 0.000000]: Waiting for service /gazebo/spawn_urdf_model
+[INFO] [1514995700.897384, 0.000000]: Calling service /gazebo/spawn_urdf_model
+[INFO] [1514995701.190187, 0.169000]: Spawn status: SpawnModel: Successfully spawned model
+Loaded joint_state_controller
+Started ['joint_state_controller'] successfully
+Loaded scara_controller
+Started ['scara_controller'] successfully
+Roscore launched!
+Gazebo launched!
+Logging to /tmp/rosrl/str/deepq_naf/monitor
+[31mroscore cannot run as another roscore/master is already running. 
+Please kill other roscore/master processes before relaunching.
+The ROS_MASTER_URI is http://wk3:11311/[0m
+[31mThe traceback for the exception was written to the log file[0m
+... logging to /home/erle/.ros/log/4faf2dea-f0a0-11e7-b9a7-88d7f65271a9/roslaunch-wk3-28432.log
+Checking log directory for disk usage. This may take awhile.
+Press Ctrl-C to interrupt
+Done checking log file disk usage. Usage is <1GB.
+]2;roscore
+[1mstarted roslaunch server http://wk3:36954/[0m
+ros_comm version 1.12.12
+
+
+SUMMARY
+========
+
+PARAMETERS
+ * /rosdistro: kinetic
+ * /rosversion: 1.12.12
+
+NODES
+
+Segmentation fault (core dumped)
+[31m[gazebo-1] process has died [pid 28465, exit code 139, cmd /opt/ros/kinetic/lib/gazebo_ros/gzserver -e ode /home/erle/Desktop/Nora/ros_rl/environments/gym-gazebo/gym_gazebo/envs/installation/../assets/worlds/scara_basic.world __name:=gazebo __log:=/home/erle/.ros/log/4faf2dea-f0a0-11e7-b9a7-88d7f65271a9/gazebo-1.log].
+log file: /home/erle/.ros/log/4faf2dea-f0a0-11e7-b9a7-88d7f65271a9/gazebo-1*.log[0m
+[31m[ERROR] [1514995704.035477696, 2.653000000]: A controller named 'joint_state_controller' was already loaded inside the controller manager[0m
+[31m[ERROR] [1514995704.038159416, 2.655000000]: Controller 'joint_state_controller' is already running[0m
+[31m[ERROR] [1514995704.047333020, 2.665000000]: A controller named 'scara_controller' was already loaded inside the controller manager[0m
+[31m[ERROR] [1514995704.049247955, 2.667000000]: Controller 'scara_controller' is already running[0m
+Error when loading joint_state_controller
+Error when starting  ['joint_state_controller']
+[31m[ERROR] [1514995704.181419889, 2.799000000]: SpawnModel: Failure - model name robot already exist.[0m
+Error when loading scara_controller
+Error when starting  ['scara_controller']
+SpawnModel script started
+[INFO] [1514995704.169131, 0.000000]: Loading model XML from ros parameter
+[INFO] [1514995704.173135, 0.000000]: Waiting for service /gazebo/spawn_urdf_model
+[INFO] [1514995704.174859, 0.000000]: Calling service /gazebo/spawn_urdf_model
+[INFO] [1514995704.181796, 2.799000]: Spawn status: SpawnModel: Failure - model already exists.
