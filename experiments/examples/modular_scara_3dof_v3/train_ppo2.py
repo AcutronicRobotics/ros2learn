@@ -27,13 +27,15 @@ print("ncpu: ", ncpu)
 config = tf.ConfigProto(allow_soft_placement=True,
                         intra_op_parallelism_threads=ncpu,
                         inter_op_parallelism_threads=ncpu,
-                        log_device_placement=True)
+                        log_device_placement=False)
 config.gpu_options.allow_growth = True #pylint: disable=E1101
 
 tf.Session(config=config).__enter__()
-
+env_name = ""
 def make_env():
     env = gym.make('GazeboModularScara3DOF-v3')
+    env_name = str(env.__class__.__name__)
+    print("Env Name is: ", env_name)
     logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/logger/'
     logger.configure(os.path.abspath(logdir))
     print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
@@ -55,4 +57,4 @@ ppo2.learn(policy=policy, env=env, nsteps=2048, nminibatches=32,
     ent_coef=0.0,
     lr=3e-4,
     cliprange=0.2,
-    total_timesteps=1e6, save_interval=10)
+    total_timesteps=1e6, save_interval=10, outdir=logger.get_dir())
