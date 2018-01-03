@@ -1,0 +1,22 @@
+{
+    "language"        : "PYTHON",
+    "main-file"       : "train_modular_scara_3dof_dqn_naf_spearmint.py",
+    "experiment-name" : "deepqn-example",
+    "database": {
+            "address": "0.0.0.0:27017"
+        },
+    "variables" : {
+        "gamma" : {
+            "type" : "FLOAT",
+            "size" : 1,
+            "min"  : 0.5,
+            "max"  : 0.99
+        },
+        "memory_capacity" : {
+            "type" : "INT",
+            "size" : 1,
+            "min"  : 10000,
+            "max"  : 1000000
+        }
+    }
+}
