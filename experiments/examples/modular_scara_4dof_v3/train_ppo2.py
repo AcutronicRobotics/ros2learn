@@ -20,7 +20,7 @@ import os
 
 def make_env():
     env = gym.make('GazeboModularScara3DOF-v3')
-    logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/logger/'
+    logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/'
     logger.configure(os.path.abspath(logdir))
     print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
     env = bench.MonitorRobotics(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True)
@@ -49,4 +49,4 @@ ppo2.learn(policy=policy, env=env, nsteps=2048, nminibatches=32,
     ent_coef=0.0,
     lr=3e-4,
     cliprange=0.2,
-    total_timesteps=1e6, save_interval=10)
+    total_timesteps=1e6, save_interval=10, outdir=logger.get_dir())

@@ -31,12 +31,10 @@ config = tf.ConfigProto(allow_soft_placement=True,
 config.gpu_options.allow_growth = True #pylint: disable=E1101
 
 tf.Session(config=config).__enter__()
-env_name = ""
 def make_env():
     env = gym.make('GazeboModularScara3DOF-v3')
-    env_name = str(env.__class__.__name__)
     print("Env Name is: ", env_name)
-    logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/logger/'
+    logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/'
     logger.configure(os.path.abspath(logdir))
     print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
     env = bench.MonitorRobotics(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True)

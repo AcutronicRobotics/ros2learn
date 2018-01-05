@@ -15,7 +15,7 @@ from baselines import bench, logger
 import os
 
 env = gym.make('GazeboModularScara3DOF-v3')
-logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/acktr/monitor/'
+logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/acktr/'
 logger.configure(os.path.abspath(logdir))
 print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
 # RK: we are not using this for now but for the future left it here
@@ -49,4 +49,4 @@ with tf.Session(config=tf.ConfigProto()) as session:
         num_timesteps=1e6,
         animate=False,
         save_model_with_prefix='3dof_acktr_H',
-        restore_model_from_file='')
+        restore_model_from_file='', outdir=logger.get_dir())
