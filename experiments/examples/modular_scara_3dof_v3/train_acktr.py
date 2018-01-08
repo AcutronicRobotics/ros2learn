@@ -14,8 +14,17 @@ from baselines.common import set_global_seeds
 from baselines import bench, logger
 import os
 
+# parser
+parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1)
+parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='sec')
+args = parser.parse_args()
+
+
 env = gym.make('GazeboModularScara3DOF-v3')
-logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/acktr/'
+env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit)
+logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/acktr/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
+# logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/acktr/'
 logger.configure(os.path.abspath(logdir))
 print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
 # RK: we are not using this for now but for the future left it here
@@ -25,7 +34,7 @@ print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
 # env.seed(seed)
 
 initial_observation = env.reset()
-print("Initial observation: ", initial_observation)
+# print("Initial observation: ", initial_observation)
 env.render()
 
 seed=0
