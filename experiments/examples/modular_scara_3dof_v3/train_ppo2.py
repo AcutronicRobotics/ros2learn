@@ -18,6 +18,18 @@ import multiprocessing
 
 import os
 
+#parser
+# parser = argparse.ArgumentParser()
+# parser.add_argument('--slowness', dest='slowness', type=int, default=1)
+# parser.add_argument('--slowness_unit', dest='slowness_unit', type=str, default='sec')
+# args = parser.parse_args()
+
+parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1)
+parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='sec')
+# parser.add_argument('--num-timesteps', type=int, default=int(1e6))
+args = parser.parse_args()
+
 
 ncpu = multiprocessing.cpu_count()
 if sys.platform == 'darwin': ncpu //= 2
@@ -33,8 +45,9 @@ config.gpu_options.allow_growth = True #pylint: disable=E1101
 tf.Session(config=config).__enter__()
 def make_env():
     env = gym.make('GazeboModularScara3DOF-v3')
-    print("Env Name is: ", env_name)
-    logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/'
+    env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit)
+    print("slowness unit is: ",args.slowness_unit)
+    logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
     logger.configure(os.path.abspath(logdir))
     print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
     env = bench.MonitorRobotics(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True)
