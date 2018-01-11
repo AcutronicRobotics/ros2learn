@@ -18,12 +18,20 @@ import time
 
 sys.path.append('/media/erle/Datos/RISTO_NN/baselines')
 from baselines.agent.scara_arm.agent_scara_real import AgentSCARAROS
-from baselines import logger
+from baselines import benc,logger
 from baselines.common import set_global_seeds, tf_util as U
 
-from baselines.acktr.acktr_cont import learn
-from baselines.agent.utility.general_utils import get_ee_points, get_position
-from baselines.ppo1 import mlp_policy, pposgd_simple
+
+from baselines.common.vec_env.vec_normalize import VecNormalize
+from baselines.ppo2 import ppo2
+from baselines.ppo2.policies import MlpPolicy
+import tensorflow as tf
+from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
+import joblib
+
+import multiprocessing
+
+import os
 
 class ScaraJntsEnv(AgentSCARAROS):
 
@@ -167,22 +175,22 @@ class ScaraJntsEnv(AgentSCARAROS):
         env.render()
         return env
 
-    def test_ppo1(self,env, num_timesteps, seed, save_model_with_prefix, restore_model_from_file):
+    def test_ppo2(self,env, num_timesteps, seed, save_model_with_prefix, restore_model_from_file):
+        ncpu = multiprocessing.cpu_count()
+        if sys.platform == 'darwin': ncpu //= 2
 
-        # sess = U.make_session(num_cpu=1)
-        # sess.__enter__()
-        # def policy_fn(name, ob_space, ac_space):
-        #     return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,
-        #     hid_size=64, num_hid_layers=2)
-        # # gym.logger.setLevel(logging.WARN)
-        #
-        # obs = env.reset()
-        # print("Initial obs: ", obs)
-        # # env.seed(seed)
-        # pi = policy_fn('pi', env.observation_space, env.action_space)
-        # tf.train.Saver().restore(sess, '/media/erle/Datos/RISTO_NN/GazeboModularScara4DOFv3Env/ppo1/04dof_ppo1_test_O_afterIter_486.model')
+        print("ncpu: ", ncpu)
+        # ncpu = 1
+        config = tf.ConfigProto(allow_soft_placement=True,
+                                intra_op_parallelism_threads=ncpu,
+                                inter_op_parallelism_threads=ncpu,
+                                log_device_placement=False)
+        config.gpu_options.allow_growth = True #pylint: disable=E1101
 
-        env = DummyVecEnv([make_env])
+        sess = tf.Session(config=config)
+
+        sess.__enter__()
+        env = DummyVecEnv([self.make_env])
         env = VecNormalize(env)
 
         nenvs = env.num_envs
