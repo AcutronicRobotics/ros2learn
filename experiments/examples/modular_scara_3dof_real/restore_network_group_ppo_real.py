@@ -98,7 +98,7 @@ class ScaraJntsEnv(AgentSCARAROS):
             print("I can't find scara_e1_description")
             sys.exit(0)
 
-        TREE_PATH = prefix_path + "/share/scara_e1_description/urdf/scara_e1_4joints.urdf"
+        TREE_PATH = prefix_path + "/share/scara_e1_description/urdf/scara_e1_3joints.urdf"
 
         reset_condition = {
             'initial_positions': INITIAL_JOINTS,
@@ -163,13 +163,12 @@ class ScaraJntsEnv(AgentSCARAROS):
 
         env = self
 
-        self.test_ppo1(env,num_timesteps=1, seed=args.seed, save_model_with_prefix=args.save_model_with_prefix, restore_model_from_file=args.restore_model_from_file)
+        self.test_ppo2(env,num_timesteps=1, seed=args.seed, save_model_with_prefix=args.save_model_with_prefix, restore_model_from_file=args.restore_model_from_file)
 
     def _observation_callback1(self, message):
         self._observation_msg =  message
 
     def make_env():
-        env = gym.make('GazeboModularScara3DOF-v3')
         # env.init_time(slowness= 10, slowness_unit='sec', reset_jnts=False)
         env = bench.MonitorRobotics(env, logger.get_dir(), allow_early_resets=True)
         env.render()
