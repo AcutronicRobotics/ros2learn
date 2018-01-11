@@ -41,4 +41,4 @@ done = False
 while True:
     action = pi.act(True, obs)[0]
     obs, reward, done, info = env.step(action)
-    print(action)
+    # print(action)

@@ -16,12 +16,30 @@ import tensorflow as tf
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 import joblib
 
+import multiprocessing
+
 import os
+import time
+
+ncpu = multiprocessing.cpu_count()
+if sys.platform == 'darwin': ncpu //= 2
+
+print("ncpu: ", ncpu)
+# ncpu = 1
+config = tf.ConfigProto(allow_soft_placement=True,
+                        intra_op_parallelism_threads=ncpu,
+                        inter_op_parallelism_threads=ncpu,
+                        log_device_placement=False)
+config.gpu_options.allow_growth = True #pylint: disable=E1101
+
+sess = tf.Session(config=config)
+
+sess.__enter__()
 
 
 def make_env():
     env = gym.make('GazeboModularScara3DOF-v3')
-    # env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit)
+    env.init_time(slowness= 10, slowness_unit='sec', reset_jnts=False)
     # logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
     # logger.configure(os.path.abspath(logdir))
     # print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
@@ -33,43 +51,66 @@ def make_env():
 env = DummyVecEnv([make_env])
 env = VecNormalize(env)
 
-# env = gym.make('GazeboModularScara3DOF-v3')
-# initial_observation = env.reset()
-# print("Initial observation: ", initial_observation)
-# env.render()
-seed = 0
-
-ncpu = 1
-config = tf.ConfigProto(allow_soft_placement=True,
-                        intra_op_parallelism_threads=ncpu,
-                        inter_op_parallelism_threads=ncpu)
-
-sess = tf.Session(config=config)
-sess.__enter__()
-# env.render()
-seed = 0
-set_global_seeds(seed)
-
-
-
-# def policy_fn(name, ob_space, ac_space):
-#     return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,
-#     hid_size=64, num_hid_layers=2)
-# gym.logger.setLevel(logging.WARN)
-policy = MlpPolicy
-nsteps=2048
-nminibatches=32
-ent_coef=0.0
-vf_coef=0.5
-max_grad_norm=0.5
 nenvs = env.num_envs
 ob_space = env.observation_space
 ac_space = env.action_space
+nsteps = 1 # default
 nbatch = nenvs * nsteps
-nbatch_train = nbatch // nminibatches
+nminibatches=4
 
+nbatch_train = nbatch // nminibatches
+vf_coef=0.5
+max_grad_norm=0.5
+ent_coef=0.0
+
+gamma=0.99
+lam=0.95
+
+dones = [False for _ in range(nenvs)]
+
+policy = MlpPolicy
 make_model = lambda : ppo2.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train,
-                    nsteps=nsteps, ent_coef=ent_coef, vf_coef=vf_coef,
-                    max_grad_norm=max_grad_norm)
+                nsteps=nsteps, ent_coef=ent_coef, vf_coef=vf_coef,
+                max_grad_norm=max_grad_norm)
+
 model = make_model()
-model.load('/home/rkojcev/baselines_networks/paper/data/GazeboModularScara3DOFv3Env_12222017/ppo2/checkpoints/00480')
+
+model.load('/home/rkojcev/baselines_networks/paper/data/GazeboModularScara3DOFv3Env_diff_times/ppo2/10000000_nsec/checkpoints/00410')
+
+runner = ppo2.Runner(env=env, model=model, nsteps=nsteps, gamma=gamma, lam=lam)
+
+
+# def policy_fn(sess, ob_space, ac_space, nbatch, nsteps):
+#     return MlpPolicy(sess=sess, ob_space=ob_space, ac_space=ac_space,
+#     nbatch=nbatch, nsteps=nsteps)
+# model = policy_fn(sess, env.observation_space, env.action_space, nbatch, nsteps)
+# tf.train.Saver().restore(sess, '/tmp/rosrl/GazeboModularScara3DOFv3Env/ppo2/1000000_nsec/checkpoints/00480') # for the H
+# #
+obs = np.zeros((nenvs,) + env.observation_space.shape, dtype=model.train_model.X.dtype.name)
+# obs = np.zeros((nenvs,) + env.observation_space.shape, dtype=model.X.dtype.name)
+obs[:] = env.reset()
+print("Initial obs: ", obs)
+obs_extended = np.tile(obs, (nsteps,1))
+
+# print(obs_extended.shape)
+#
+done = False
+while True:
+# for _ in range(nsteps):
+    # runner.run()
+    # obs, returns, masks, actions, values, neglogpacs, states, epinfos = runner.run()
+    # action = pi.step(True, obs)[0]
+    # obs_extended = np.tile(obs, (nsteps,1))
+    actions, values, states, neglogpacs = model.step(obs)
+    # # action = pi.step(obs)
+    #
+    # print("action is: ", actions[0])
+    obs, reward, done, info = env.step(actions)
+
+# time.sleep(10)
+
+
+    # obs = []
+    # # obs = np.zeros((nenvs,) + env.observation_space.shape, dtype=pi.X.dtype.name)
+    # # obs[:] = env.reset()
+    # # print(action)

@@ -17,12 +17,14 @@ from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 import multiprocessing
 
 import os
+import time
 
 
 # parser
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1)
 parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='sec')
+parser.add_argument('--reset-jnts', help='reset the enviroment',type=bool, default=True)
 args = parser.parse_args()
 
 
@@ -40,7 +42,7 @@ config.gpu_options.allow_growth = True #pylint: disable=E1101
 tf.Session(config=config).__enter__()
 def make_env():
     env = gym.make('GazeboModularScara3DOF-v3')
-    env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit)
+    env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit, reset_jnts=args.reset_jnts)
     logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
     logger.configure(os.path.abspath(logdir))
     print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
@@ -51,8 +53,8 @@ def make_env():
 env = DummyVecEnv([make_env])
 env = VecNormalize(env)
 
-initial_observation = env.reset()
-print("Initial observation: ", initial_observation)
+# initial_observation = env.reset()
+# print("Initial observation: ", initial_observation)
 # env.render()
 seed = 0
 set_global_seeds(seed)

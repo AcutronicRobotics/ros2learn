@@ -18,11 +18,12 @@ import os
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1)
 parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='sec')
+parser.add_argument('--reset-jnts', help='reset the enviroment',type=bool, default=True)
 args = parser.parse_args()
 
 
 env = gym.make('GazeboModularScara3DOF-v3')
-env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit)
+env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit, reset_jnts=args.reset_jnts)
 logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/acktr/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
 # logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/acktr/'
 logger.configure(os.path.abspath(logdir))
