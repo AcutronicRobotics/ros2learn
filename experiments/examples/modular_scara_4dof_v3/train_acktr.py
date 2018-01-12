@@ -50,7 +50,7 @@ with tf.Session(config=tf.ConfigProto()) as session:
         lam=0.97,
         timesteps_per_batch=2500,
         desired_kl=0.001,
-        num_timesteps=4e6,
+        num_timesteps=1e6,
         animate=False,
         save_model_with_prefix='4dof_acktr_H',
         restore_model_from_file='', outdir=logger.get_dir())

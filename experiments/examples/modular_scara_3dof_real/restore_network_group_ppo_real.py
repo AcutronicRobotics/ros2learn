@@ -184,6 +184,7 @@ class ScaraJntsEnv(AgentSCARAROS):
                                 intra_op_parallelism_threads=ncpu,
                                 inter_op_parallelism_threads=ncpu,
                                 log_device_placement=False)
+                                
         config.gpu_options.allow_growth = True #pylint: disable=E1101
 
         sess = tf.Session(config=config)

@@ -24,7 +24,7 @@ parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='s
 args = parser.parse_args()
 
 def make_env():
-    env = gym.make('GazeboModularScara3DOF-v3')
+    env = gym.make('GazeboModularScara4DOF-v3')
     env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit)
     logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
     logger.configure(os.path.abspath(logdir))

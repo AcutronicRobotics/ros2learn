@@ -39,11 +39,11 @@ sess.__enter__()
 
 def make_env():
     env = gym.make('GazeboModularScara3DOF-v3')
-    env.init_time(slowness= 10, slowness_unit='sec', reset_jnts=False)
+    env.init_time(slowness= 2, slowness_unit='sec', reset_jnts=False)
     # logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
     # logger.configure(os.path.abspath(logdir))
     # print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
-    env = bench.MonitorRobotics(env, logger.get_dir(), allow_early_resets=True)
+    # env = bench.MonitorRobotics(env, logger.get_dir(), allow_early_resets=True)
     env.render()
     return env
 
@@ -75,7 +75,7 @@ make_model = lambda : ppo2.Model(policy=policy, ob_space=ob_space, ac_space=ac_s
 
 model = make_model()
 
-model.load('/home/rkojcev/baselines_networks/paper/data/GazeboModularScara3DOFv3Env_diff_times/ppo2/10000000_nsec/checkpoints/00410')
+model.load('/home/rkojcev/baselines_networks/paper/data/GazeboModularScara3DOFv3Env_diff_times/ppo2/100000000_nsec/checkpoints/00250')
 
 runner = ppo2.Runner(env=env, model=model, nsteps=nsteps, gamma=gamma, lam=lam)
 
