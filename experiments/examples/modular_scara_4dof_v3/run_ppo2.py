@@ -39,7 +39,7 @@ sess.__enter__()
 
 def make_env():
     env = gym.make('GazeboModularScara4DOF-v3')
-    env.init_time(slowness= 2, slowness_unit='sec', reset_jnts=False)
+    env.init_time(slowness= 10, slowness_unit='sec', reset_jnts=False)
     # logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
     # logger.configure(os.path.abspath(logdir))
     # print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
@@ -75,7 +75,7 @@ make_model = lambda : ppo2.Model(policy=policy, ob_space=ob_space, ac_space=ac_s
 
 model = make_model()
 
-model.load('/home/rkojcev/baselines_networks/paper/data/GazeboModularScara3DOFv3Env_diff_times/ppo2/100000000_nsec/checkpoints/00250')
+model.load('/home/rkojcev/baselines_networks/networks_paper_launch/GazeboModularScara4DOFv3Env/ppo2/10000000_nsec/00440')
 
 runner = ppo2.Runner(env=env, model=model, nsteps=nsteps, gamma=gamma, lam=lam)
 
