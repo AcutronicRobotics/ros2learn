@@ -6,8 +6,6 @@ env.reset()
 
 for i in range(10):
     env.randomizeCorrect()
-    # env.reset()
-
     print("Reset!")
     for _ in range(200):
         env.render()
