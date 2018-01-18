@@ -4,13 +4,8 @@ import time
 env = gym.make('GazeboModularScaraArm4And3DOF-v1')
 env.reset()
 
-# Check the env limits:
-# print(env.action_space) # Box(3,)
-# print(env.observation_space) # Box(9,)
-
 for i in range(10):
     env.randomizeCorrect()
-    time.sleep(2)
     # env.reset()
 
     print("Reset!")
