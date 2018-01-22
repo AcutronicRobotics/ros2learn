@@ -32,8 +32,8 @@ replay_bool= 'True'
 macro_duration = 10
 num_subs = 2
 num_rollouts = 2500
-warmup_time = 30 #1 # 30
-train_time = 200 #2 # 200
+warmup_time = 1 #1 # 30
+train_time = 2 #2 # 200
 force_subpolicy=None
 store=True
 
@@ -57,7 +57,7 @@ def start(callback, workerseed, rank, comm):
     np.random.seed(workerseed)
     ob_space = env.observation_space
     ac_space = env.action_space
-    stochastic=True
+    stochastic=False
 
     # num_subs = args.num_subs
     # macro_duration = args.macro_duration
@@ -82,26 +82,28 @@ def start(callback, workerseed, rank, comm):
     learner.syncSubpolicies()
     policy.reset()
     learner.syncMasterPolicies()
-    env.randomizeCorrect()
+    # env.randomizeCorrect()
     shared_goal = comm.bcast(env.realgoal, root=0)
     print("The goal to %s" % (env.realgoal))
+    print("which robot? ", env.choose_robot)
     obs=env.reset()
-    print("OBS")
+    print("OBS: ", obs)
     t = 0
 
     time.sleep(10)
     while True:
+        # env.randomizeCorrect()
         #print("t", t)
         if t % macro_duration == 0:
             cur_subpolicy, macro_vpred = policy.act(stochastic, obs)
 
-        ac, vpred = sub_policies[1].act(stochastic, obs)
+        ac, vpred = sub_policies[env.choose_robot].act(stochastic, obs)
 
         obs, rew, new, info = env.step(ac)
 
         if new:
             print("ENVIRONMENT SOLVED")
-            time.sleep(20)
+            time.sleep(1)
         t += 1
 
 
@@ -112,7 +114,7 @@ def callback(it):
             U.save_state(fname)
     if it == 0:
         print("CALLBACK")
-        fname = '/home/rkojcev/baselines_networks/mlsh/saved_models/00040'
+        fname = '/tmp/rosrl/mlsh/saved_models/00005'
         subvars = []
         for i in range(num_subs-1):
             subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i+1))

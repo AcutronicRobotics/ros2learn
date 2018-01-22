@@ -124,6 +124,7 @@ if __name__ == '__main__':
     #
     env = 'GazeboModularScaraArm4And3DOF-v1'
 
+
     # if 'optimize' == True:
     #     main(job_id, env, savename, replay, params['macro_duration'], params['num_subs'], params['num_rollouts'], params['warmup_time'],  params['train_time'], force_subpolicy, store)
     # else:
@@ -134,8 +135,8 @@ if __name__ == '__main__':
     macro_duration = 10
     num_subs = 2
     num_rollouts = 2500
-    warmup_time = 1 #1 # 30
-    train_time = 2 #2 # 200
+    warmup_time = 30 #1 # 30
+    train_time = 200 #2 # 200
     force_subpolicy=None
     store=True
 
