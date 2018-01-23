@@ -45,6 +45,7 @@ def str2bool(v):
 
 #replay = str2bool(replay)
 #replay = str2bool(replay)
+replay = False
 savename = 'ScaraTest'
 continue_iter = None
 RELPATH = osp.join(savename)
@@ -63,7 +64,7 @@ LOGDIR = osp.join('/root/results' if sys.platform.startswith('linux') else '/tmp
 def callback(it):
     if MPI.COMM_WORLD.Get_rank()==0:
         # RK change back to 5
-        if it % 5 == 0 and it > 1 and not replay:
+        if it % 2 == 0 and it > 1 and not replay:
             basePath = '/tmp/rosrl/mlsh/'
             if not os.path.exists(basePath):
                 os.makedirs(basePath)
@@ -135,8 +136,8 @@ if __name__ == '__main__':
     macro_duration = 10
     num_subs = 2
     num_rollouts = 2500
-    warmup_time = 30 #1 # 30
-    train_time = 200 #2 # 200
+    warmup_time = 5 #1 # 30
+    train_time = 20 #2 # 200
     force_subpolicy=None
     store=True
 
