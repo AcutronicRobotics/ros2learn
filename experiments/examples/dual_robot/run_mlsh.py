@@ -30,6 +30,7 @@ import pickle
 savename = 'ScaraTest'
 replay_bool= 'True'
 macro_duration = 10
+#num_subs = 4
 num_subs = 2
 num_rollouts = 2500
 warmup_time = 1 #1 # 30
@@ -59,6 +60,8 @@ def start(callback, workerseed, rank, comm):
     ac_space = env.action_space
     stochastic=False
 
+
+    env.init_time(10, 'sec')## Set time to 10 seconds
     # num_subs = args.num_subs
     # macro_duration = args.macro_duration
     # num_rollouts = args.num_rollouts
@@ -82,7 +85,18 @@ def start(callback, workerseed, rank, comm):
     learner.syncSubpolicies()
     policy.reset()
     learner.syncMasterPolicies()
-    # env.randomizeCorrect()
+    #env.randomizeCorrect()
+    #env.randomizeRobot()
+
+    #Uncomment to test with 3Dof robot
+    # env.init_3dof_robot()
+    # env.realgoal= [0.3305805, -0.1326121, 0.3746]
+    #env.realgoal= [0.3325683, 0.0657366, 0.3746]
+    #Uncomment to test with 4Dof robot
+    env.init_4dof_robot()
+    #env.realgoal = [0.3325683, 0.0657366, 0.4868] # center of O
+    env.realgoal = [0.3305805, -0.1326121, 0.4868] # center of the H
+
     shared_goal = comm.bcast(env.realgoal, root=0)
     print("The goal to %s" % (env.realgoal))
     print("which robot? ", env.choose_robot)
@@ -90,20 +104,20 @@ def start(callback, workerseed, rank, comm):
     print("OBS: ", obs)
     t = 0
 
-    time.sleep(10)
+    time.sleep(1)
     while True:
         # env.randomizeCorrect()
         #print("t", t)
         if t % macro_duration == 0:
             cur_subpolicy, macro_vpred = policy.act(stochastic, obs)
 
-        ac, vpred = sub_policies[env.choose_robot].act(stochastic, obs)
-
+        #ac, vpred = sub_policies[env.choose_robot].act(stochastic, obs) #####!!!!!!!!!!!!!!!!!!
+        ac, vpred = sub_policies[cur_subpolicy].act(stochastic, obs)
         obs, rew, new, info = env.step(ac)
 
         if new:
             print("ENVIRONMENT SOLVED")
-            time.sleep(1)
+            time.sleep(100)
         t += 1
 
 
@@ -114,7 +128,9 @@ def callback(it):
             U.save_state(fname)
     if it == 0:
         print("CALLBACK")
-        fname = '/tmp/rosrl/mlsh/saved_models/00005'
+        #fname = '/tmp/rosrl/mlsh/saved_models/00048'
+        #fname = '/home/erle/Desktop/tmp/00266'
+        fname = '/home/erle/Desktop/rosrl/mlsh/saved_models/00096'
         subvars = []
         for i in range(num_subs-1):
             subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i+1))
