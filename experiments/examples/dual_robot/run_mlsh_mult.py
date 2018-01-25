@@ -31,7 +31,7 @@ savename = 'ScaraTest'
 replay_bool= 'True'
 macro_duration = 10
 # num_subs = 4
-num_subs = 2
+num_subs = 4
 num_rollouts = 2500
 warmup_time = 1 #1 # 30
 train_time = 2 #2 # 200
@@ -132,9 +132,8 @@ def callback(it):
             U.save_state(fname)
     if it == 0:
         print("CALLBACK")
-        #fname = '/tmp/rosrl/mlsh/saved_models/00310'
+        fname = '/tmp/rosrl/mlsh/saved_models/00310'
         #fname = '/tmp/rosrl/GazeboModularScara4and3DOF/saved_models/00310'
-        fname = '/tmp/rosrl/mlsh/saved_models/00024'
         subvars = []
         for i in range(num_subs-1):
             subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i+1))
