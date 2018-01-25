@@ -372,7 +372,7 @@ class ScaraJntsEnv(AgentSCARAROS):
                 print("CALLBACK")
                 # fname = '/tmp/rosrl/mlsh/saved_models/00310'
                 #fname = '/tmp/rosrl/GazeboModularScara4and3DOF/saved_models/00310'
-                fname = '/home/rkojcev/baselines_networks/nora_networks/00046'
+                fname = '/home/rkojcev/baselines_networks/mlsh_networks_test/00046'
                 subvars = []
                 for i in range(num_subs-1):
                     subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i+1))
