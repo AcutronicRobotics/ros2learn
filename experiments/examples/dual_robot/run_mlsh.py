@@ -61,7 +61,7 @@ def start(callback, workerseed, rank, comm):
     stochastic=False
 
 
-    env.init_time(10, 'sec')## Set time to 10 seconds
+    env.init_time(6, 'sec')## Set time to 10 seconds
     # num_subs = args.num_subs
     # macro_duration = args.macro_duration
     # num_rollouts = args.num_rollouts
@@ -79,7 +79,7 @@ def start(callback, workerseed, rank, comm):
     old_sub_policies = [SubPolicy(name="old_sub_policy_%i" % x, ob=ob, ac_space=ac_space, hid_size=32, num_hid_layers=2) for x in range(num_subs)]
 
     learner = Learner(env, policy, old_policy, sub_policies, old_sub_policies, comm, clip_param=0.2, entcoeff=0, optim_epochs=10, optim_stepsize=3e-5, optim_batchsize=64)
-    rollout = rollouts.traj_segment_generator(policy, sub_policies, env, macro_duration, num_rollouts, replay, force_subpolicy, stochastic=True)
+    rollout = rollouts.traj_segment_generator(policy, sub_policies, env, macro_duration, num_rollouts, replay, force_subpolicy, stochastic=False)
     #
     callback(0)
     learner.syncSubpolicies()
@@ -94,8 +94,8 @@ def start(callback, workerseed, rank, comm):
     #env.realgoal= [0.3325683, 0.0657366, 0.3746]
     #Uncomment to test with 4Dof robot
     env.init_4dof_robot()
-    #env.realgoal = [0.3325683, 0.0657366, 0.4868] # center of O
-    env.realgoal = [0.3305805, -0.1326121, 0.4868] # center of the H
+    env.realgoal = [0.3325683, 0.0657366, 0.4868] # center of O
+    #env.realgoal = [0.3305805, -0.1326121, 0.4868] # center of the H
 
     shared_goal = comm.bcast(env.realgoal, root=0)
     print("The goal to %s" % (env.realgoal))
@@ -130,7 +130,7 @@ def callback(it):
         print("CALLBACK")
         #fname = '/tmp/rosrl/mlsh/saved_models/00048'
         #fname = '/home/erle/Desktop/tmp/00266'
-        fname = '/home/erle/Desktop/rosrl/mlsh/saved_models/00096'
+        fname = '/tmp/rosrl/GazeboModularScara4and3DOF/saved_models/00310'
         subvars = []
         for i in range(num_subs-1):
             subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i+1))
