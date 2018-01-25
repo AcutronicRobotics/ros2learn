@@ -30,8 +30,8 @@ import pickle
 savename = 'ScaraTest'
 replay_bool= 'True'
 macro_duration = 10
-#num_subs = 4
-num_subs = 2
+num_subs = 4
+#num_subs = 2
 num_rollouts = 2500
 warmup_time = 1 #1 # 30
 train_time = 2 #2 # 200
@@ -54,16 +54,16 @@ LOGDIR = osp.join('/root/results' if sys.platform.startswith('linux') else '/tmp
 
 def start(callback, workerseed, rank, comm):
     env = gym.make('GazeboModularScaraArm4And3DOF-v1')
-    env.init_time(slowness= 10, slowness_unit='sec', reset_jnts=False)
+    env.init_time(slowness= 2, slowness_unit='sec', reset_jnts=False)
     env.seed(workerseed)
     np.random.seed(workerseed)
     ob_space = env.observation_space
     ac_space = env.action_space
     stochastic=False
-    env.init_4dof_robot()
+    #env.init_4dof_robot()
 
 
-    env.init_time(6, 'sec')## Set time to 10 seconds
+    #env.init_time(6, 'sec')## Set time to 10 seconds
     # num_subs = args.num_subs
     # macro_duration = args.macro_duration
     # num_rollouts = args.num_rollouts
@@ -92,13 +92,14 @@ def start(callback, workerseed, rank, comm):
     #env.randomizeRobot()
 
     #Uncomment to test with 3Dof robot
-    # env.init_3dof_robot()
-    # env.realgoal= [0.3305805, -0.1326121, 0.3746]
+    #env.init_3dof_robot()
+    #env.realgoal= [0.3305805, -0.1326121, 0.3746] # center of the H
     #env.realgoal= [0.3325683, 0.0657366, 0.3746]
+
     #Uncomment to test with 4Dof robot
     env.init_4dof_robot()
-    env.realgoal = [0.3325683, 0.0657366, 0.4868] # center of O
-    #env.realgoal = [0.3305805, -0.1326121, 0.4868] # center of the H
+    #env.realgoal = [0.3325683, 0.0657366, 0.4868] # center of O
+    env.realgoal = [0.3305805, -0.1326121, 0.4868] # center of the H
 
     shared_goal = comm.bcast(env.realgoal, root=0)
     print("The goal to %s" % (env.realgoal))
@@ -120,7 +121,7 @@ def start(callback, workerseed, rank, comm):
 
         if new:
             print("ENVIRONMENT SOLVED")
-            time.sleep(100)
+            #time.sleep(100)
         t += 1
 
 
@@ -131,8 +132,9 @@ def callback(it):
             U.save_state(fname)
     if it == 0:
         print("CALLBACK")
-        fname = '/tmp/rosrl/mlsh/saved_models/00048'
-
+        #fname = '/tmp/rosrl/mlsh/saved_models/00310'
+        #fname = '/tmp/rosrl/GazeboModularScara4and3DOF/saved_models/00310'
+        fname = '/tmp/rosrl/GazeboModularScara4and3DOF/saved_models/00046'
         subvars = []
         for i in range(num_subs-1):
             subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i+1))
