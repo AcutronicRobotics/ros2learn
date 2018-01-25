@@ -136,8 +136,8 @@ if __name__ == '__main__':
     macro_duration = 10
     num_subs = 2
     num_rollouts = 2500
-    warmup_time = 5 #1 # 30
-    train_time = 20 #2 # 200
+    warmup_time = 30 #1 # 30
+    train_time = 200 #2 # 200
     force_subpolicy=None
     store=True
 

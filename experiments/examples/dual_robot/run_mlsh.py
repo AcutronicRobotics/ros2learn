@@ -54,11 +54,13 @@ LOGDIR = osp.join('/root/results' if sys.platform.startswith('linux') else '/tmp
 
 def start(callback, workerseed, rank, comm):
     env = gym.make('GazeboModularScaraArm4And3DOF-v1')
+    env.init_time(slowness= 10, slowness_unit='sec', reset_jnts=False)
     env.seed(workerseed)
     np.random.seed(workerseed)
     ob_space = env.observation_space
     ac_space = env.action_space
     stochastic=False
+    env.init_4dof_robot()
 
 
     env.init_time(6, 'sec')## Set time to 10 seconds
@@ -81,6 +83,7 @@ def start(callback, workerseed, rank, comm):
     learner = Learner(env, policy, old_policy, sub_policies, old_sub_policies, comm, clip_param=0.2, entcoeff=0, optim_epochs=10, optim_stepsize=3e-5, optim_batchsize=64)
     rollout = rollouts.traj_segment_generator(policy, sub_policies, env, macro_duration, num_rollouts, replay, force_subpolicy, stochastic=False)
     #
+
     callback(0)
     learner.syncSubpolicies()
     policy.reset()
@@ -106,13 +109,13 @@ def start(callback, workerseed, rank, comm):
 
     time.sleep(1)
     while True:
-        # env.randomizeCorrect()
+        # env.init_3dof_robot()
         #print("t", t)
         if t % macro_duration == 0:
             cur_subpolicy, macro_vpred = policy.act(stochastic, obs)
 
-        #ac, vpred = sub_policies[env.choose_robot].act(stochastic, obs) #####!!!!!!!!!!!!!!!!!!
         ac, vpred = sub_policies[cur_subpolicy].act(stochastic, obs)
+
         obs, rew, new, info = env.step(ac)
 
         if new:
@@ -128,9 +131,8 @@ def callback(it):
             U.save_state(fname)
     if it == 0:
         print("CALLBACK")
-        #fname = '/tmp/rosrl/mlsh/saved_models/00048'
-        #fname = '/home/erle/Desktop/tmp/00266'
-        fname = '/tmp/rosrl/GazeboModularScara4and3DOF/saved_models/00310'
+        fname = '/tmp/rosrl/mlsh/saved_models/00048'
+
         subvars = []
         for i in range(num_subs-1):
             subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i+1))
