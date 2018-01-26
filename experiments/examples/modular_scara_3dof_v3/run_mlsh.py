@@ -30,7 +30,7 @@ import pickle
 savename = 'ScaraTest'
 replay_bool= 'True'
 macro_duration = 10
-num_subs = 2
+num_subs = 6
 num_rollouts = 2500
 warmup_time = 30 #1 # 30
 train_time = 200 #2 # 200
@@ -131,10 +131,6 @@ def load():
     rank = MPI.COMM_WORLD.Get_rank()
     set_global_seeds(workerseed)
 
-    # if rank != 0:
-    #     logger.set_level(logger.DISABLED)
-    # logger.log("rank %i" % MPI.COMM_WORLD.Get_rank())
-
     world_group = MPI.COMM_WORLD.Get_group()
     mygroup = rank % 10
     theta_group = world_group.Incl([x for x in range(MPI.COMM_WORLD.size) if (x % 10 == mygroup)])
@@ -146,19 +142,6 @@ def load():
     start(callback, workerseed=workerseed, rank=rank, comm=comm)
 
 def main():
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument('--optimize', type=bool)
-    # args = parser.parse_args()
-    #
-    # env = 'GazeboModularScara4DOF-v3'
-
-    # if 'optimize' == True:
-    #     main(job_id, env, savename, replay, params['macro_duration'], params['num_subs'], params['num_rollouts'], params['warmup_time'],  params['train_time'], force_subpolicy, store)
-    # else:
-    #     #Parameters set by user
-    #     job_id = None
-
-
     if MPI.COMM_WORLD.Get_rank() == 0 and osp.exists(LOGDIR):
         shutil.rmtree(LOGDIR)
     MPI.COMM_WORLD.Barrier()

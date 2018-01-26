@@ -1,20 +1,6 @@
 import argparse
 import tensorflow as tf
 
-# python main.py --task MovementBandits-v0 --num_subs 2 --macro_duration 10 --num_rollouts 1000 --warmup_time 60 --train_time 1 --replay True test
-# parser = argparse.ArgumentParser()
-# parser.add_argument('savename', type=str)
-# parser.add_argument('--task', type=str)
-# parser.add_argument('--num_subs', type=int)
-# parser.add_argument('--macro_duration', type=int)
-# parser.add_argument('--num_rollouts', type=int)
-# parser.add_argument('--warmup_time', type=int)
-# parser.add_argument('--train_time', type=int)
-# parser.add_argument('--force_subpolicy', type=int)
-# parser.add_argument('--replay', type=str)
-# parser.add_argument('-s', action='store_true')
-# parser.add_argument('--continue_iter', type=str)
-# args = parser.parse_args()
 
 from mpi4py import MPI
 from rl_algs.common import set_global_seeds, tf_util as U
@@ -27,7 +13,7 @@ import mlsh_code.misc_util
 import sys
 import shutil
 import subprocess
-import mlsh_code.master_robotics as master_robotics
+import mlsh_code.master_robotics_mult as master_robotics
 # import mlsh_code.master as master
 import gym_gazebo
 from baselines import bench, logger
@@ -132,7 +118,7 @@ if __name__ == '__main__':
     savename = 'ScaraTest'
     replay=False
     macro_duration = 10
-    num_subs = 2
+    num_subs = 6
     num_rollouts = 2500
     warmup_time = 30 #1 # 30
     train_time = 200 #2 # 200
