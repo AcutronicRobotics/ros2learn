@@ -75,6 +75,7 @@ RELPATH = osp.join(savename)
 LOGDIR = osp.join('/root/results' if sys.platform.startswith('linux') else '/tmp', RELPATH)
 class ScaraJntsEnv(AgentSCARAROS):
     def __init__(self):
+        #put some logic here to init some robot or change it depending on the DoFs(number of nodes)
         self.init_3dof_robot()
         AgentSCARAROS.__init__(self)
 
@@ -91,7 +92,7 @@ class ScaraJntsEnv(AgentSCARAROS):
             JOINT_SUBSCRIBER = '/scara_controller/state'
 
             EE_POS_TGT = np.asmatrix([0.3325683, 0.0657366, 0.3746]) # center of the O
-            EE_POS_TGT = np.asmatrix([0.3305805, -0.1326121, 0.3746]) # center of the H
+            # EE_POS_TGT = np.asmatrix([0.3305805, -0.1326121, 0.3746]) # center of the H
 
             EE_ROT_TGT = np.asmatrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
             EE_POINTS = np.asmatrix([[0, 0, 0]])
@@ -195,8 +196,8 @@ class ScaraJntsEnv(AgentSCARAROS):
             JOINT_PUBLISHER = '/scara_controller/command'
             JOINT_SUBSCRIBER = '/scara_controller/state'
             # where should the agent reach, in this case the middle of the O letter in H-ROS
-            EE_POS_TGT = np.asmatrix([0.3325683, 0.0657366, 0.4868]) # center of the O
-            # EE_POS_TGT = np.asmatrix([0.3305805, -0.1326121, 0.4868]) # center of the H
+            # EE_POS_TGT = np.asmatrix([0.3325683, 0.0657366, 0.4868]) # center of the O
+            EE_POS_TGT = np.asmatrix([0.3305805, -0.1326121, 0.4868]) # center of the H
             EE_ROT_TGT = np.asmatrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
             EE_POINTS = np.asmatrix([[0, 0, 0]])
             EE_VELOCITIES = np.asmatrix([[0, 0, 0]])
@@ -294,6 +295,53 @@ class ScaraJntsEnv(AgentSCARAROS):
                 'end_effector_velocities': EE_VELOCITIES,
                 'num_samples': SAMPLE_COUNT,
             }
+    def randomizeTarget(self):
+        print("calling randomize target")
+        if self.choose_robot is 0:
+            print("Randomize target for the 3 DoF")
+            EE_POS_TGT_1 = np.asmatrix([0.3325683, 0.0657366, 0.3746]) # center of O
+            EE_POS_TGT_2 = np.asmatrix([0.3305805, -0.1326121, 0.3746]) # center of the H
+            EE_ROT_TGT = np.asmatrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+            EE_POINTS = np.asmatrix([[0, 0, 0]])
+
+            ee_pos_tgt_1 = EE_POS_TGT_1
+            ee_pos_tgt_2 = EE_POS_TGT_2
+
+            # leave rotation target same since in scara we do not have rotation of the end-effector
+            ee_rot_tgt = EE_ROT_TGT
+
+            # Initialize target end effector position
+            target1 = np.ndarray.flatten(get_ee_points(EE_POINTS, ee_pos_tgt_1, ee_rot_tgt).T)
+            target2 = np.ndarray.flatten(get_ee_points(EE_POINTS, ee_pos_tgt_2, ee_rot_tgt).T)
+
+            """
+            This is for initial test only, we need to change this in the future to be more realistic.
+            E.g. covered target -> go to other target. This could be implemented for example with vision.
+            """
+            self.realgoal = target1 if np.random.uniform() < 0.5 else target2
+            print("randomizeTarget realgoal: ", self.realgoal)
+        else:
+            print("Randomize target for the 4 DoF")
+            EE_POS_TGT_1 = np.asmatrix([0.3325683, 0.0657366, 0.4868]) # center of O
+            EE_POS_TGT_2 = np.asmatrix([0.3305805, -0.1326121, 0.4868]) # center of the H
+            EE_ROT_TGT = np.asmatrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+            EE_POINTS = np.asmatrix([[0, 0, 0]])
+
+            ee_pos_tgt_1 = EE_POS_TGT_1
+            ee_pos_tgt_2 = EE_POS_TGT_2
+
+            # leave rotation target same since in scara we do not have rotation of the end-effector
+            ee_rot_tgt = EE_ROT_TGT
+
+            target1 = np.ndarray.flatten(get_ee_points(EE_POINTS, ee_pos_tgt_1, ee_rot_tgt).T)
+            target2 = np.ndarray.flatten(get_ee_points(EE_POINTS, ee_pos_tgt_2, ee_rot_tgt).T)
+
+            """
+            This is for initial test only, we need to change this in the future to be more realistic.
+            E.g. covered target -> go to other target. This could be implemented for example with vision.
+            """
+            self.realgoal = target1 if np.random.uniform() < 0.5 else target2
+            print("randomizeTarget realgoal: ", self.realgoal)
     def start(self,callback, workerseed, rank, comm):
         # self.spec = {'timestep_limit': 5,
         # 'reward_threshold':  950.0,}
@@ -312,7 +360,7 @@ class ScaraJntsEnv(AgentSCARAROS):
             high = np.inf*np.ones(10)
             low = -high
             ob_space = spaces.Box(low, high)
-            print("3dof increase ob space",ob_space)
+            # print("3dof increase ob space",ob_space)
         else:
             ob_space = env.observation_space
             ac_space = env.action_space
@@ -342,9 +390,9 @@ class ScaraJntsEnv(AgentSCARAROS):
         obs=env.reset()
         if self.choose_robot is 0:
             obs = np.insert(obs, 3, 0.)
-            print("obs_extended", obs)
+            # print("obs_extended", obs)
 
-        print("OBS: ", obs)
+        # print("OBS: ", obs)
 
         t = 0
 
@@ -358,6 +406,7 @@ class ScaraJntsEnv(AgentSCARAROS):
             ac, vpred = sub_policies[cur_subpolicy].act(stochastic, obs)
 
             obs, rew, new, info = env.step(ac)
+            print("obs", obs)
             if self.choose_robot is 0:
                 obs = np.insert(obs, 3, 0.)
                 print("obs_extended", obs)
@@ -372,7 +421,7 @@ class ScaraJntsEnv(AgentSCARAROS):
                 print("CALLBACK")
                 # fname = '/tmp/rosrl/mlsh/saved_models/00310'
                 #fname = '/tmp/rosrl/GazeboModularScara4and3DOF/saved_models/00310'
-                fname = '/home/rkojcev/baselines_networks/mlsh_networks_test/00046'
+                fname = '/home/rkojcev/baselines_networks/mlsh_networks_test/new_to_test/00066'
                 subvars = []
                 for i in range(num_subs-1):
                     subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i+1))

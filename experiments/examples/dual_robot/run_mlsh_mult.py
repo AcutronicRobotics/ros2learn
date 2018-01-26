@@ -18,7 +18,7 @@ import time
 import time
 import gym_gazebo
 
-import mlsh_code.rollouts_robotics as rollouts
+import mlsh_code.rollouts_robotics_mult as rollouts
 from mlsh_code.policy_network import Policy
 from mlsh_code.subpolicy_network import SubPolicy
 from mlsh_code.observation_network import Features
@@ -93,13 +93,13 @@ def start(callback, workerseed, rank, comm):
 
     #Uncomment to test with 3Dof robot
     #env.init_3dof_robot()
-    #env.realgoal= [0.3325683, 0.0657366, 0.3746] # center of the H
+    #env.realgoal= [0.3325683, 0.0657366, 0.3746] # center of the O
     #env.realgoal= [0.3305805, -0.1326121, 0.3746] # center of the H
 
     #Uncomment to test with 4Dof robot
     env.init_4dof_robot()
-    #env.realgoal = [0.3325683, 0.0657366, 0.4868] # center of O
-    env.realgoal = [0.3305805, -0.1326121, 0.4868] # center of the H
+    env.realgoal = [0.3325683, 0.0657366, 0.4868] # center of O
+    # env.realgoal = [0.3305805, -0.1326121, 0.4868] # center of the H
 
     shared_goal = comm.bcast(env.realgoal, root=0)
     print("The goal to %s" % (env.realgoal))
@@ -132,8 +132,9 @@ def callback(it):
             U.save_state(fname)
     if it == 0:
         print("CALLBACK")
-        fname = '/tmp/rosrl/mlsh/saved_models/00310'
+        # fname = '/tmp/rosrl/mlsh/saved_models/00310'
         #fname = '/tmp/rosrl/GazeboModularScara4and3DOF/saved_models/00310'
+        fname = '/home/rkojcev/baselines_networks/nora_networks/00046'
         subvars = []
         for i in range(num_subs-1):
             subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i+1))
