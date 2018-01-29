@@ -18,7 +18,7 @@ import time
 import time
 import gym_gazebo
 
-import mlsh_code.rollouts_robotics as rollouts
+import mlsh_code.rollouts_robotics_mult as rollouts
 from mlsh_code.policy_network import Policy
 from mlsh_code.subpolicy_network import SubPolicy
 from mlsh_code.observation_network import Features
@@ -30,10 +30,11 @@ import pickle
 savename = 'ScaraTest'
 replay_bool= 'True'
 macro_duration = 10
+# num_subs = 4
 num_subs = 6
 num_rollouts = 2500
-warmup_time = 30 #1 # 30
-train_time = 200 #2 # 200
+warmup_time = 1 #1 # 30
+train_time = 2 #2 # 200
 force_subpolicy=None
 store=True
 
@@ -53,12 +54,16 @@ LOGDIR = osp.join('/root/results' if sys.platform.startswith('linux') else '/tmp
 
 def start(callback, workerseed, rank, comm):
     env = gym.make('GazeboModularScara3DOF-v3')
+    env.init_time(slowness= 2, slowness_unit='sec', reset_jnts=False)
     env.seed(workerseed)
     np.random.seed(workerseed)
     ob_space = env.observation_space
     ac_space = env.action_space
-    stochastic=True
+    stochastic=False
+    #env.init_4dof_robot()
 
+
+    #env.init_time(6, 'sec')## Set time to 10 seconds
     # num_subs = args.num_subs
     # macro_duration = args.macro_duration
     # num_rollouts = args.num_rollouts
@@ -76,43 +81,70 @@ def start(callback, workerseed, rank, comm):
     old_sub_policies = [SubPolicy(name="old_sub_policy_%i" % x, ob=ob, ac_space=ac_space, hid_size=32, num_hid_layers=2) for x in range(num_subs)]
 
     learner = Learner(env, policy, old_policy, sub_policies, old_sub_policies, comm, clip_param=0.2, entcoeff=0, optim_epochs=10, optim_stepsize=3e-5, optim_batchsize=64)
-    rollout = rollouts.traj_segment_generator(policy, sub_policies, env, macro_duration, num_rollouts, replay, force_subpolicy, stochastic=True)
+    rollout = rollouts.traj_segment_generator(policy, sub_policies, env, macro_duration, num_rollouts, replay, force_subpolicy, stochastic=False)
     #
+
     callback(0)
     learner.syncSubpolicies()
     policy.reset()
     learner.syncMasterPolicies()
-    env.randomizeCorrect()
+    #env.randomizeCorrect()
+    #env.randomizeRobot()
+
+    #Uncomment to test with 3Dof robot
+    #env.init_3dof_robot()
+    # env.realgoal= [0.3325683, 0.0657366, 0.3746] # center of the O
+    # env.realgoal= [0.3305805, -0.1326121, 0.3746] # center of the H
+    # env.realgoal= [0.3605360, 0.1234167, 0.3746] # S lowest left
+    # env.realgoal =[0.3349774, 0.1570571, 0.3746] #not trained point
+
+    # env.realgoal = [0.3305805, -0.1326121, 0.3746] # center of the H
+    # env.realgoal = [0.3733744, -0.1646508, 0.3746] # center of H left
+    # env.realgoal = [0.3325683, 0.0657366, 0.3746] # center of O
+    # env.realgoal = [0.3355224, 0.0344309, 0.3746] # center of O left
+    # env.realgoal = [0.3013209, 0.1647450, 0.3746] # S top right
+    # env.realgoal = [0.3349774, 0.1570571, 0.3746] # S midlle
+    env.realgoal = [0.2877867, -0.1005370, 0.3746] # - middle
+
+    #Uncomment to test with 4Dof robot
+    # env.init_4dof_robot()
+    # env.realgoal = [0.3325683, 0.0657366, 0.4868] # center of O
+    # env.realgoal = [0.3305805, -0.1326121, 0.4868] # center of the H
+
     shared_goal = comm.bcast(env.realgoal, root=0)
     print("The goal to %s" % (env.realgoal))
+    print("which robot? ", env.choose_robot)
     obs=env.reset()
-    print("OBS")
+    print("OBS: ", obs)
     t = 0
 
-    time.sleep(10)
+    time.sleep(1)
     while True:
+        # env.init_3dof_robot()
         #print("t", t)
         if t % macro_duration == 0:
             cur_subpolicy, macro_vpred = policy.act(stochastic, obs)
 
-        ac, vpred = sub_policies[1].act(stochastic, obs)
+        ac, vpred = sub_policies[cur_subpolicy].act(stochastic, obs)
 
         obs, rew, new, info = env.step(ac)
 
-        if new:
-            print("ENVIRONMENT SOLVED")
-            time.sleep(20)
+        # if new:
+        #     print("ENVIRONMENT SOLVED")
+        #     time.sleep(100)
         t += 1
 
 
 def callback(it):
     if MPI.COMM_WORLD.Get_rank()==0:
-        if it % 5 == 0 and it > 3: # and not replay:
+        if it % 2 == 0 and it > 3: # and not replay:
             fname = osp.join("savedir/", 'checkpoints', '%.5i'%it)
             U.save_state(fname)
     if it == 0:
         print("CALLBACK")
-        fname = '/home/rkojcev/baselines_networks/mlsh/saved_models/00040'
+        # fname = '/tmp/rosrl/mlsh/saved_models/00310'
+        #fname = '/tmp/rosrl/GazeboModularScara4and3DOF/saved_models/00310'
+        fname = '/home/rkojcev/baselines_networks/mlsh_6subpoliceis/saved_models/00084'
         subvars = []
         for i in range(num_subs-1):
             subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i+1))
@@ -130,6 +162,10 @@ def load():
     workerseed = seed + 1000 * MPI.COMM_WORLD.Get_rank()
     rank = MPI.COMM_WORLD.Get_rank()
     set_global_seeds(workerseed)
+
+    # if rank != 0:
+    #     logger.set_level(logger.DISABLED)
+    # logger.log("rank %i" % MPI.COMM_WORLD.Get_rank())
 
     world_group = MPI.COMM_WORLD.Get_group()
     mygroup = rank % 10
