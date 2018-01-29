@@ -49,7 +49,7 @@ LOGDIR = osp.join('/root/results' if sys.platform.startswith('linux') else '/tmp
 def callback(it):
     if MPI.COMM_WORLD.Get_rank()==0:
         # RK change back to 5
-        if it % 5 == 0 and it > 1 and not replay:
+        if it % 2 == 0 and it > 1 and not replay:
             basePath = '/tmp/rosrl/mlsh/'
             if not os.path.exists(basePath):
                 os.makedirs(basePath)
