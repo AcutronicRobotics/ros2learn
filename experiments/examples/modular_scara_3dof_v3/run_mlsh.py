@@ -95,16 +95,17 @@ def start(callback, workerseed, rank, comm):
     #env.init_3dof_robot()
     # env.realgoal= [0.3325683, 0.0657366, 0.3746] # center of the O
     # env.realgoal= [0.3305805, -0.1326121, 0.3746] # center of the H
-    # env.realgoal= [0.3605360, 0.1234167, 0.3746] # S lowest left
-    # env.realgoal =[0.3349774, 0.1570571, 0.3746] #not trained point
 
     # env.realgoal = [0.3305805, -0.1326121, 0.3746] # center of the H
+    # env.realgoal = [0.3305805, -0.0985179, 0.3746] # center of H right
     # env.realgoal = [0.3733744, -0.1646508, 0.3746] # center of H left
+
+    #does not work
     # env.realgoal = [0.3325683, 0.0657366, 0.3746] # center of O
     # env.realgoal = [0.3355224, 0.0344309, 0.3746] # center of O left
     # env.realgoal = [0.3013209, 0.1647450, 0.3746] # S top right
-    # env.realgoal = [0.3349774, 0.1570571, 0.3746] # S midlle
-    env.realgoal = [0.2877867, -0.1005370, 0.3746] # - middle
+    env.realgoal = [0.3349774, 0.1570571, 0.3746] # S midlle
+    # env.realgoal = [0.2877867, -0.1005370, 0.3746] # - middle
 
     #Uncomment to test with 4Dof robot
     # env.init_4dof_robot()
@@ -144,7 +145,7 @@ def callback(it):
         print("CALLBACK")
         # fname = '/tmp/rosrl/mlsh/saved_models/00310'
         #fname = '/tmp/rosrl/GazeboModularScara4and3DOF/saved_models/00310'
-        fname = '/home/rkojcev/baselines_networks/mlsh_6subpoliceis/saved_models/00084'
+        fname = '/home/rkojcev/baselines_networks/mlsh_6subpoliceis/saved_models/00074'
         subvars = []
         for i in range(num_subs-1):
             subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i+1))
