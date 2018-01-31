@@ -11,7 +11,7 @@ from baselines import bench, logger
 from baselines.common import set_global_seeds
 from baselines.common.vec_env.vec_normalize import VecNormalize
 from baselines.ppo2 import ppo2
-from baselines.ppo2.policies import MlpPolicy
+from baselines.ppo2.policies import LstmMlpPolicy, MlpPolicy
 import tensorflow as tf
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 import joblib
@@ -39,7 +39,7 @@ sess.__enter__()
 
 def make_env():
     env = gym.make('GazeboModularScara3DOF-v3')
-    env.init_time(slowness= 2, slowness_unit='sec', reset_jnts=False)
+    env.init_time(slowness= 1000000, slowness_unit='nsec', reset_jnts=False)
     # logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
     # logger.configure(os.path.abspath(logdir))
     # print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
@@ -68,7 +68,7 @@ lam=0.95
 
 dones = [False for _ in range(nenvs)]
 
-policy = MlpPolicy
+policy = LstmMlpPolicy
 make_model = lambda : ppo2.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train,
                 nsteps=nsteps, ent_coef=ent_coef, vf_coef=vf_coef,
                 max_grad_norm=max_grad_norm)

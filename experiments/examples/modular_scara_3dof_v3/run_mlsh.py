@@ -29,7 +29,7 @@ import pickle
 # here we define the parameters necessary to launch
 savename = 'ScaraTest'
 replay_bool= 'True'
-macro_duration = 10
+macro_duration = 1
 # num_subs = 4
 num_subs = 2
 num_rollouts = 2500
@@ -98,7 +98,7 @@ def start(callback, workerseed, rank, comm):
     # env.realgoal= [0.3305805, -0.1326121, 0.3746] # center of the H
 
     # env.realgoal = [0.3305805, -0.1326121, 0.3746] # center of the H
-    env.realgoal = [0.3305805, -0.0985179, 0.3746] # center of H right
+    # env.realgoal = [0.3305805, -0.0985179, 0.3746] # center of H right
     # env.realgoal = [0.3733744, -0.1646508, 0.3746] # center of H left
 
     #does not work
@@ -106,7 +106,7 @@ def start(callback, workerseed, rank, comm):
     # env.realgoal = [0.3355224, 0.0344309, 0.3746] # center of O left
     # env.realgoal = [0.3013209, 0.1647450, 0.3746] # S top right
     # env.realgoal = [0.2877867, -0.1005370, 0.3746] # - middle
-    # env.realgoal = [0.3349774, 0.1570571, 0.3746] # S midlle
+    env.realgoal = [0.3349774, 0.1570571, 0.3746] # S midlle
 
     #Uncomment to test with 4Dof robot
     # env.init_4dof_robot()
@@ -120,18 +120,21 @@ def start(callback, workerseed, rank, comm):
     print("OBS: ", obs)
     t = 0
 
-    time.sleep(1)
+    # time.sleep(1)
     while True:
         # env.init_3dof_robot()
         #print("t", t)
         if t % macro_duration == 0:
             cur_subpolicy, macro_vpred = policy.act(stochastic, obs)
-            # print("cur_subpolicy", cur_subpolicy)
+        # print("cur_subpolicy", cur_subpolicy)
+        ac, vpred = sub_policies[cur_subpolicy].act(stochastic_subpolicy, obs)
+        obs, rew, new, info = env.step(ac)
+        print(env.realgoal)
         # print("cur_subpolicy", cur_subpolicy)
 
-        ac, vpred = sub_policies[cur_subpolicy].act(stochastic_subpolicy, obs)
 
-        obs, rew, new, info = env.step(ac)
+
+
 
         # if new:
         #     print("ENVIRONMENT SOLVED")
@@ -148,7 +151,7 @@ def callback(it):
         print("CALLBACK")
         # fname = '/tmp/rosrl/mlsh/saved_models/00310'
         #fname = '/tmp/rosrl/GazeboModularScara4and3DOF/saved_models/00310'
-        fname = '/tmp/rosrl/mlsh/saved_models/00048'
+        fname = '/tmp/rosrl/mlsh/saved_models/00052'
         subvars = []
         for i in range(num_subs-1):
             subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i+1))
