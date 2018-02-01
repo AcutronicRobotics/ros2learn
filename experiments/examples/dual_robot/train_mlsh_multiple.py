@@ -76,18 +76,18 @@ def callback(it):
             # fname = osp.join("savedir/", 'checkpoints', '%.5i'%it)
             # # logger.log('Saving model to %s'%fname)
             # U.save_state(fname)
-    if it == 0 and continue_iter is not None:
-        #fname = osp.join(""+args.savename+"/checkpoints/", str(args.continue_iter))
-        fname = osp.join(""+savename+"/checkpoints/", str(continue_iter))
-        U.load_state(fname)
-
-        # fname = osp.join(""+args.savename+"/checkpoints/", args.continue_iter)
-        # subvars = []
-        # for i in range(args.num_subs-1):
-        #     subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i+1))
-        # print([v.name for v in subvars])
-        # U.load_state(fname, subvars)
-        pass
+    # if it == 0 and continue_iter is not None:
+    #     #fname = osp.join(""+args.savename+"/checkpoints/", str(args.continue_iter))
+    #     fname = osp.join(""+savename+"/checkpoints/", str(continue_iter))
+    #     U.load_state(fname)
+    #
+    #     # fname = osp.join(""+args.savename+"/checkpoints/", args.continue_iter)
+    #     # subvars = []
+    #     # for i in range(args.num_subs-1):
+    #     #     subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i+1))
+    #     # print([v.name for v in subvars])
+    #     # U.load_state(fname, subvars)
+    #     pass
 
 def train(env, savename, replay, macro_duration, num_subs,  num_rollouts, warmup_time, train_time, force_subpolicy, store):
     num_timesteps=1e9
@@ -109,6 +109,8 @@ def train(env, savename, replay, macro_duration, num_subs,  num_rollouts, warmup
     comm = MPI.COMM_WORLD.Create(theta_group)
     comm.Barrier()
     # comm = MPI.COMM_WORLD
+
+    print("\nENV", env)
     master_robotics.start(callback, env, savename, replay, macro_duration, num_subs,  num_rollouts, warmup_time, train_time, force_subpolicy, store, workerseed=workerseed, rank=rank, comm=comm)
 
 #def main(job_id, env, savename, replay, macro_duration, num_subs,  num_rollouts, warmup_time, train_time, force_subpolicy, store):
@@ -135,7 +137,8 @@ if __name__ == '__main__':
     savename = 'ScaraTest'
     replay=False
     macro_duration = 10
-    num_subs = 4
+    #num_subs = 4
+    num_subs = 2
     num_rollouts = 2500
     warmup_time = 30 #1 # 30
     train_time = 200 #2 # 200

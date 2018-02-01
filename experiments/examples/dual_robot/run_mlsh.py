@@ -115,7 +115,7 @@ def start(callback, workerseed, rank, comm):
         if t % macro_duration == 0:
             cur_subpolicy, macro_vpred = policy.act(stochastic, obs)
 
-        ac, vpred = sub_policies[cur_subpolicy].act(stochastic, obs)
+        ac, vpred = sub_policies[2].act(stochastic, obs)
 
         obs, rew, new, info = env.step(ac)
 
@@ -133,8 +133,8 @@ def callback(it):
     if it == 0:
         print("CALLBACK")
         #fname = '/tmp/rosrl/mlsh/saved_models/00310'
-        #fname = '/tmp/rosrl/GazeboModularScara4and3DOF/saved_models/00310'
-        fname = '/tmp/rosrl/mlsh/saved_models/00024'
+        fname = '/tmp/rosrl/GazeboModularScara4and3DOF/saved_models/00310'
+        #fname = '/tmp/rosrl/mlsh/saved_models/00024'
         subvars = []
         for i in range(num_subs-1):
             subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i+1))
