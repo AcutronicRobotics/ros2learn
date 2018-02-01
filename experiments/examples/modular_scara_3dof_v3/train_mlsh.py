@@ -85,9 +85,6 @@ def train(env, savename, save_dir,  replay, macro_duration, num_subs,  num_rollo
     rank = MPI.COMM_WORLD.Get_rank()
     set_global_seeds(workerseed)
 
-    # if rank != 0:
-    #     logger.set_level(logger.DISABLED)
-    # logger.log("rank %i" % MPI.COMM_WORLD.Get_rank())
 
     world_group = MPI.COMM_WORLD.Get_group()
     mygroup = rank % 10
