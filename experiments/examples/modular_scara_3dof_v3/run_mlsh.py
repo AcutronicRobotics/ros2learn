@@ -33,8 +33,8 @@ macro_duration = 1
 # num_subs = 4
 num_subs = 2
 num_rollouts = 2500
-warmup_time = 1 #1 # 30
-train_time = 2 #2 # 200
+# warmup_time = 1 #1 # 30
+# train_time = 2 #2 # 200
 force_subpolicy=None
 store=True
 
@@ -106,7 +106,11 @@ def start(callback, workerseed, rank, comm):
     # env.realgoal = [0.3355224, 0.0344309, 0.3746] # center of O left
     # env.realgoal = [0.3013209, 0.1647450, 0.3746] # S top right
     # env.realgoal = [0.2877867, -0.1005370, 0.3746] # - middle
-    env.realgoal = [0.3349774, 0.1570571, 0.3746] # S midlle
+    # env.realgoal = [0.3349774, 0.1570571, 0.3746] # S center
+
+    # env.realgoal = [0.3341184, 0.0126104, 0.3746] # R middle right
+    # env.realgoal = [0.3731659, -0.0065453, 0.3746] # R down right
+    # env.realgoal = [0.2250708, -0.0422738, 0.3746] # R top left
 
     #Uncomment to test with 4Dof robot
     # env.init_4dof_robot()
@@ -129,7 +133,7 @@ def start(callback, workerseed, rank, comm):
         # print("cur_subpolicy", cur_subpolicy)
         ac, vpred = sub_policies[cur_subpolicy].act(stochastic_subpolicy, obs)
         obs, rew, new, info = env.step(ac)
-        print(env.realgoal)
+        # print(env.realgoal)
         # print("cur_subpolicy", cur_subpolicy)
 
 
@@ -151,13 +155,13 @@ def callback(it):
         print("CALLBACK")
         # fname = '/tmp/rosrl/mlsh/saved_models/00310'
         #fname = '/tmp/rosrl/GazeboModularScara4and3DOF/saved_models/00310'
-        fname = '/tmp/rosrl/mlsh/saved_models/00052'
+        fname = '/home/rkojcev/baselines_networks/mlsh_params_eval/mlsh_macro_duration_10/saved_models/00076'
         subvars = []
         for i in range(num_subs-1):
             subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i+1))
         print([v.name for v in subvars])
         U.load_state(fname, subvars)
-        time.sleep(5)
+        # time.sleep(5)
         pass
 
 def load():
