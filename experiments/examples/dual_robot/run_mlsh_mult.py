@@ -60,6 +60,7 @@ def start(callback, workerseed, rank, comm):
     ob_space = env.observation_space
     ac_space = env.action_space
     stochastic=False
+    stochastic_subp = False
     #env.init_4dof_robot()
 
 
@@ -81,7 +82,7 @@ def start(callback, workerseed, rank, comm):
     old_sub_policies = [SubPolicy(name="old_sub_policy_%i" % x, ob=ob, ac_space=ac_space, hid_size=32, num_hid_layers=2) for x in range(num_subs)]
 
     learner = Learner(env, policy, old_policy, sub_policies, old_sub_policies, comm, clip_param=0.2, entcoeff=0, optim_epochs=10, optim_stepsize=3e-5, optim_batchsize=64)
-    rollout = rollouts.traj_segment_generator(policy, sub_policies, env, macro_duration, num_rollouts, replay, force_subpolicy, stochastic=False)
+    rollout = rollouts.traj_segment_generator(policy, sub_policies, env, macro_duration, num_rollouts, replay, force_subpolicy, False)
     #
 
     callback(0)
@@ -98,8 +99,8 @@ def start(callback, workerseed, rank, comm):
 
     #Uncomment to test with 4Dof robot
     env.init_4dof_robot()
-    env.realgoal = [0.3325683, 0.0657366, 0.4868] # center of O
-    # env.realgoal = [0.3305805, -0.1326121, 0.4868] # center of the H
+    #env.realgoal = [0.3325683, 0.0657366, 0.4868] # center of O
+    env.realgoal = [0.3305805, -0.1326121, 0.4868] # center of the H
 
     shared_goal = comm.bcast(env.realgoal, root=0)
     print("The goal to %s" % (env.realgoal))
@@ -114,8 +115,9 @@ def start(callback, workerseed, rank, comm):
         #print("t", t)
         if t % macro_duration == 0:
             cur_subpolicy, macro_vpred = policy.act(stochastic, obs)
+            print("\n cur_subpolicy", cur_subpolicy)
 
-        ac, vpred = sub_policies[cur_subpolicy].act(stochastic, obs)
+        ac, vpred = sub_policies[cur_subpolicy].act(stochastic_subp, obs)
 
         obs, rew, new, info = env.step(ac)
 
@@ -134,7 +136,7 @@ def callback(it):
         print("CALLBACK")
         # fname = '/tmp/rosrl/mlsh/saved_models/00310'
         #fname = '/tmp/rosrl/GazeboModularScara4and3DOF/saved_models/00310'
-        fname = '/home/rkojcev/baselines_networks/nora_networks/00046'
+        fname = '/media/erle/RL/networks/dual_env_mult_targets/00046'
         subvars = []
         for i in range(num_subs-1):
             subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i+1))

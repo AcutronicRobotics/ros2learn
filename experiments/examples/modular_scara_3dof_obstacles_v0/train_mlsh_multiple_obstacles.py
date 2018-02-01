@@ -36,7 +36,7 @@ import mlsh_code.master_robotics_mult_obst as master_robotics
 # import mlsh_code.master as master
 import gym_gazebo
 from baselines import bench, logger
-import os
+import os,time
 
 from baselines import logger
 
@@ -128,7 +128,8 @@ if __name__ == '__main__':
     # parser.add_argument('--optimize', type=bool)
     # args = parser.parse_args()
     #
-    env = 'GazeboModularScaraObstacles3DOF-v0'
+    env = 'GazeboModularScaraStaticObstacle3DOF-v0'
+
 
 
     # if 'optimize' == True:
