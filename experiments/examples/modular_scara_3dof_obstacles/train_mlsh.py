@@ -1,25 +1,6 @@
 import argparse
 import tensorflow as tf
 
-
-#export GYM_GAZEBO_ENV_SCARA3="/home/erle/ros_rl/environments/gym-gazebo/gym_gazebo/envs/installation/../assets/worlds/scara_basic_obst.world"
-
-
-# python main.py --task MovementBandits-v0 --num_subs 2 --macro_duration 10 --num_rollouts 1000 --warmup_time 60 --train_time 1 --replay True test
-# parser = argparse.ArgumentParser()
-# parser.add_argument('savename', type=str)
-# parser.add_argument('--task', type=str)
-# parser.add_argument('--num_subs', type=int)
-# parser.add_argument('--macro_duration', type=int)
-# parser.add_argument('--num_rollouts', type=int)
-# parser.add_argument('--warmup_time', type=int)
-# parser.add_argument('--train_time', type=int)
-# parser.add_argument('--force_subpolicy', type=int)
-# parser.add_argument('--replay', type=str)
-# parser.add_argument('-s', action='store_true')
-# parser.add_argument('--continue_iter', type=str)
-# args = parser.parse_args()
-
 from mpi4py import MPI
 from rl_algs.common import set_global_seeds, tf_util as U
 import os.path as osp
@@ -37,8 +18,10 @@ import mlsh_code.master_robotics_mult_obst as master_robotics
 import gym_gazebo
 from baselines import bench, logger
 import os,time
+import argparse
 
-from baselines import logger
+
+# from baselines import logger
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
@@ -128,23 +111,24 @@ if __name__ == '__main__':
     # parser.add_argument('--optimize', type=bool)
     # args = parser.parse_args()
     #
-    env = 'GazeboModularScaraStaticObstacle3DOF-v0'
 
+    # env = 'GazeboModularScaraStaticObstacle3DOF-v1'
+    env = gym.make('GazeboModularScaraStaticObstacle3DOF-v1')
+    env.init_time(slowness= 1000000, slowness_unit='nsec', reset_jnts=False)
 
+    logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/mlsh/' #' + str(args.slowness) + '_' + str(args.slowness_unit) + '/
+    # logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/'
+    logger.configure(os.path.abspath(logdir))
+    print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
 
-    # if 'optimize' == True:
-    #     main(job_id, env, savename, replay, params['macro_duration'], params['num_subs'], params['num_rollouts'], params['warmup_time'],  params['train_time'], force_subpolicy, store)
-    # else:
-    #     #Parameters set by user
-    #     job_id = None
     savename = 'ScaraTest'
     replay=False
-    macro_duration = 10
+    macro_duration = 5
     num_subs = 2
     num_rollouts = 2500
-    warmup_time = 50 #1 # 30
+    warmup_time = 5 #1 # 30
     #warmup_time = 3
-    train_time = 250 #2 # 200
+    train_time = 200 #2 # 200
     #train_time = 2 #2 # 200
     force_subpolicy=None
     store=True

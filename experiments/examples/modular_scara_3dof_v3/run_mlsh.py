@@ -33,9 +33,9 @@ macro_duration = 1
 # num_subs = 4
 num_subs = 2
 num_rollouts = 2500
-# warmup_time = 1 #1 # 30
-# train_time = 2 #2 # 200
-force_subpolicy=None
+warmup_time = 1 #1 # 30
+train_time = 2 #2 # 200
+force_subpolicy = None
 store=True
 
 def str2bool(v):
@@ -54,7 +54,7 @@ LOGDIR = osp.join('/root/results' if sys.platform.startswith('linux') else '/tmp
 
 def start(callback, workerseed, rank, comm):
     env = gym.make('GazeboModularScara3DOF-v3')
-    env.init_time(slowness= 2, slowness_unit='sec', reset_jnts=False)
+    env.init_time(slowness= 1, slowness_unit='sec', reset_jnts=False)
     env.seed(workerseed)
     np.random.seed(workerseed)
     ob_space = env.observation_space
@@ -74,6 +74,7 @@ def start(callback, workerseed, rank, comm):
     # num_batches = 15
 
     # observation in.
+    savedir = " "
     ob = U.get_placeholder(name="ob", dtype=tf.float32, shape=[None, ob_space.shape[0]])
     policy = Policy(name="policy", ob=ob, ac_space=ac_space, hid_size=32, num_hid_layers=2, num_subpolicies=num_subs)
     old_policy = Policy(name="old_policy", ob=ob, ac_space=ac_space, hid_size=32, num_hid_layers=2, num_subpolicies=num_subs)
@@ -82,7 +83,7 @@ def start(callback, workerseed, rank, comm):
     old_sub_policies = [SubPolicy(name="old_sub_policy_%i" % x, ob=ob, ac_space=ac_space, hid_size=32, num_hid_layers=2) for x in range(num_subs)]
 
     learner = Learner(env, policy, old_policy, sub_policies, old_sub_policies, comm, clip_param=0.2, entcoeff=0, optim_epochs=10, optim_stepsize=3e-5, optim_batchsize=64)
-    rollout = rollouts.traj_segment_generator(policy, sub_policies, env, macro_duration, num_rollouts, replay, force_subpolicy, stochastic=False)
+    rollout = rollouts.traj_segment_generator(policy, sub_policies, env, macro_duration,num_rollouts, replay, savedir,force_subpolicy, stochastic=False)
     #
 
     callback(0)
@@ -94,7 +95,7 @@ def start(callback, workerseed, rank, comm):
 
     #Uncomment to test with 3Dof robot
     #env.init_3dof_robot()
-    # env.realgoal= [0.3325683, 0.0657366, 0.3746] # center of the O
+    env.realgoal= [0.3325683, 0.0657366, 0.3746] # center of the O
     # env.realgoal= [0.3305805, -0.1326121, 0.3746] # center of the H
 
     # env.realgoal = [0.3305805, -0.1326121, 0.3746] # center of the H
@@ -155,7 +156,7 @@ def callback(it):
         print("CALLBACK")
         # fname = '/tmp/rosrl/mlsh/saved_models/00310'
         #fname = '/tmp/rosrl/GazeboModularScara4and3DOF/saved_models/00310'
-        fname = '/home/rkojcev/baselines_networks/mlsh_params_eval/mlsh_macro_duration_10/saved_models/00076'
+        fname = '/home/rkojcev/baselines_networks/mlsh_params_eval/two_random_targets_parameters/macro_5_warmup_0_train_200/saved_models/00036'
         subvars = []
         for i in range(num_subs-1):
             subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i+1))

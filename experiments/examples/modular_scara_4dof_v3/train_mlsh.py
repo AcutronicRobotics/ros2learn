@@ -121,7 +121,9 @@ if __name__ == '__main__':
     # parser.add_argument('--optimize', type=bool)
     # args = parser.parse_args()
     #
-    env = 'GazeboModularScara4DOF-v3'
+    # env = 'GazeboModularScara4DOF-v3'
+    env = gym.make('GazeboModularScara3DOF-v3')
+    env.init_time(slowness= 1000000, slowness_unit='nsec', reset_jnts=False)
     logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/mlsh/logger/'
     logger.configure(os.path.abspath(logdir))
     print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))

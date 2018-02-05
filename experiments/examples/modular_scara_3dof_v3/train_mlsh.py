@@ -110,7 +110,9 @@ if __name__ == '__main__':
     # parser.add_argument('--optimize', type=bool)
     # args = parser.parse_args()
     #
-    env = 'GazeboModularScara3DOF-v3'
+    # env = 'GazeboModularScara3DOF-v3'
+    env = gym.make('GazeboModularScara3DOF-v3')
+    env.init_time(slowness= 1000000, slowness_unit='nsec', reset_jnts=False)
 
     # if 'optimize' == True:
     #     main(job_id, env, savename, replay, params['macro_duration'], params['num_subs'], params['num_rollouts'], params['warmup_time'],  params['train_time'], force_subpolicy, store)
