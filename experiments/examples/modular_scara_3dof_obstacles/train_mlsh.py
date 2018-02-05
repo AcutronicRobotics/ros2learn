@@ -13,7 +13,7 @@ import sys
 import shutil
 import subprocess
 #import mlsh_code.master_robotics as master_robotics
-import mlsh_code.master_robotics_mult_obst as master_robotics
+import mlsh_code.master_robotics_mult as master_robotics
 # import mlsh_code.master as master
 import gym_gazebo
 from baselines import bench, logger
@@ -53,11 +53,11 @@ def callback(it):
     if MPI.COMM_WORLD.Get_rank()==0:
         # RK change back to 5
         if it % 2 == 0 and it > 1 and not replay:
-            basePath = '/tmp/rosrl/mlsh/'
+            # basePath = '/tmp/rosrl/mlsh/'
             if not os.path.exists(basePath):
                 os.makedirs(basePath)
             # print("calling the save network from here: ")
-            modelF= basePath + "/saved_models/" + str('%.5i'%it) # + ".model"
+            modelF= logger.get_dir() + "/saved_models/" + str('%.5i'%it) # + ".model"
             U.save_state(modelF)
             logger.log("Saved model to file :{}".format(modelF))
             # fname = osp.join("savedir/", 'checkpoints', '%.5i'%it)
@@ -96,10 +96,10 @@ def train(env, savename, replay, macro_duration, num_subs,  num_rollouts, warmup
     comm = MPI.COMM_WORLD.Create(theta_group)
     comm.Barrier()
     # comm = MPI.COMM_WORLD
-    master_robotics.start(callback, env, savename, replay, macro_duration, num_subs,  num_rollouts, warmup_time, train_time, force_subpolicy, store, workerseed=workerseed, rank=rank, comm=comm)
+    master_robotics.start(callback, env, savename,save_dir, replay, macro_duration, num_subs,  num_rollouts, warmup_time, train_time, force_subpolicy, store, workerseed=workerseed, rank=rank, comm=comm)
 
 #def main(job_id, env, savename, replay, macro_duration, num_subs,  num_rollouts, warmup_time, train_time, force_subpolicy, store):
-def main(env, savename, replay, macro_duration, num_subs, num_rollouts, warmup_time, train_time, force_subpolicy, store):
+def main(env, savename, savedir, replay, macro_duration, num_subs, num_rollouts, warmup_time, train_time, force_subpolicy, store):
     if MPI.COMM_WORLD.Get_rank() == 0 and osp.exists(LOGDIR):
         shutil.rmtree(LOGDIR)
     MPI.COMM_WORLD.Barrier()
@@ -121,7 +121,7 @@ if __name__ == '__main__':
     logger.configure(os.path.abspath(logdir))
     print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
 
-    savename = 'ScaraTest'
+    savename = 'Scara3DoF_obstacles'
     replay=False
     macro_duration = 5
     num_subs = 2
@@ -132,5 +132,6 @@ if __name__ == '__main__':
     #train_time = 2 #2 # 200
     force_subpolicy=None
     store=True
-
-    main(env, savename, replay, macro_duration, num_subs, num_rollouts, warmup_time, train_time, force_subpolicy, store)
+    save_dir = logger.get_dir()
+    # main(env, savename, replay, macro_duration, num_subs, num_rollouts, warmup_time, train_time, force_subpolicy, store)
+    main(env, savename, save_dir, replay, macro_duration, num_subs, num_rollouts, warmup_time, train_time, force_subpolicy, store)
