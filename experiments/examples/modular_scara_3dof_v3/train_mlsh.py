@@ -114,6 +114,9 @@ if __name__ == '__main__':
     env = gym.make('GazeboModularScara3DOF-v3')
     env.init_time(slowness= 1000000, slowness_unit='nsec', reset_jnts=False)
 
+    logger.configure(os.path.abspath(logdir))
+    print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
+
     # if 'optimize' == True:
     #     main(job_id, env, savename, replay, params['macro_duration'], params['num_subs'], params['num_rollouts'], params['warmup_time'],  params['train_time'], force_subpolicy, store)
     # else:

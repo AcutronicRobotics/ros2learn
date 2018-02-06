@@ -114,7 +114,8 @@ if __name__ == '__main__':
 
     # env = 'GazeboModularScaraStaticObstacle3DOF-v1'
     env = gym.make('GazeboModularScaraStaticObstacle3DOF-v1')
-    env.init_time(slowness= 1000000, slowness_unit='nsec', reset_jnts=False)
+    # env.init_time(slowness= 1000000, slowness_unit='nsec', reset_jnts=False)
+    env.init_time(slowness= 1, slowness_unit='sec', reset_jnts=False)
 
     logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/mlsh/' #' + str(args.slowness) + '_' + str(args.slowness_unit) + '/
     # logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/'
@@ -128,7 +129,7 @@ if __name__ == '__main__':
     num_rollouts = 2500
     warmup_time = 5 #1 # 30
     #warmup_time = 3
-    train_time = 200 #2 # 200
+    train_time = 10 #2 # 200
     #train_time = 2 #2 # 200
     force_subpolicy=None
     store=True
