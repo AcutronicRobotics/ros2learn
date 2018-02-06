@@ -41,14 +41,16 @@ config = tf.ConfigProto(allow_soft_placement=True,
 config.gpu_options.allow_growth = True #pylint: disable=E1101
 
 tf.Session(config=config).__enter__()
+# def make_env(rank):
 def make_env():
     env = gym.make('GazeboModularScara3DOF-v3')
     env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit, reset_jnts=args.reset_jnts)
     logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
     logger.configure(os.path.abspath(logdir))
     print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
+    # env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir(), str(rank)), allow_early_resets=True)
     env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True)
-    env.render()
+    # env.render()
     return env
 
 
@@ -62,7 +64,7 @@ env = VecNormalize(env)
 # env.render()
 seed = 0
 set_global_seeds(seed)
-policy = MlpPolicy
+policy = LstmMlpPolicy
 # ppo2.learn(policy=policy, env=env, nsteps=512, nminibatches=4,
 #     lam=0.95, gamma=0.99, noptepochs=15, log_interval=1,
 #     ent_coef=0.0,

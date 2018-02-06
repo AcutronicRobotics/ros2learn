@@ -35,7 +35,7 @@ print("Initial obs: ", obs)
 # env.seed(seed)
 # time.sleep(5)
 pi = policy_fn('pi', env.observation_space, env.action_space)
-tf.train.Saver().restore(sess, '/home/rkojcev/baselines_networks/ros1_ppo1_test_H/saved_models/ros1_ppo1_test_H_afterIter_487.model') # for the H
+tf.train.Saver().restore(sess, '/home/rkojcev/GazeboModularScara3DOFv3Env-std0,3/ppo1/1000000_nsec/models/3dof_ppo1_test_H_afterIter_409.model') # for the H
 # loadPath = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/'
 # tf.train.Saver().restore(sess, loadPath + 'ros1_ppo1_H_afterIter_263.model')
 # tf.train.Saver().restore(sess, '/home/rkojcev/baselines_networks/ros1_ppo1_test_O/saved_models/ros1_ppo1_test_O_afterIter_421.model') # for the O
