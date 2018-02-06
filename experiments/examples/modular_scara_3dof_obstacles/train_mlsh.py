@@ -53,9 +53,9 @@ def callback(it):
     if MPI.COMM_WORLD.Get_rank()==0:
         # RK change back to 5
         if it % 2 == 0 and it > 1 and not replay:
-            # basePath = '/tmp/rosrl/mlsh/'
-            if not os.path.exists(basePath):
-                os.makedirs(basePath)
+            # # basePath = '/tmp/rosrl/mlsh/'
+            # if not os.path.exists(basePath):
+            #     os.makedirs(basePath)
             # print("calling the save network from here: ")
             modelF= logger.get_dir() + "/saved_models/" + str('%.5i'%it) # + ".model"
             U.save_state(modelF)
