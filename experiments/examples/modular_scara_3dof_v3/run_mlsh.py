@@ -52,14 +52,14 @@ replay = str2bool(replay_bool)
 RELPATH = osp.join(savename)
 LOGDIR = osp.join('/root/results' if sys.platform.startswith('linux') else '/tmp', RELPATH)
 
-def start(callback, workerseed, rank, comm):
+def start(callback,session, workerseed, rank, comm):
     env = gym.make('GazeboModularScara3DOF-v3')
     env.init_time(slowness= 1, slowness_unit='sec', reset_jnts=False)
     env.seed(workerseed)
     np.random.seed(workerseed)
     ob_space = env.observation_space
     ac_space = env.action_space
-    stochastic= True
+    stochastic= False
     stochastic_subpolicy=False
     #env.init_4dof_robot()
 
@@ -86,7 +86,7 @@ def start(callback, workerseed, rank, comm):
     rollout = rollouts.traj_segment_generator(policy, sub_policies, env, macro_duration,num_rollouts, replay, savedir,force_subpolicy, stochastic=False)
     #
 
-    callback(0)
+    callback(session)
     learner.syncSubpolicies()
     policy.reset()
     learner.syncMasterPolicies()
@@ -95,7 +95,7 @@ def start(callback, workerseed, rank, comm):
 
     #Uncomment to test with 3Dof robot
     #env.init_3dof_robot()
-    env.realgoal= [0.3325683, 0.0657366, 0.3746] # center of the O
+    # env.realgoal= [0.3325683, 0.0657366, 0.3746] # center of the O
     # env.realgoal= [0.3305805, -0.1326121, 0.3746] # center of the H
 
     # env.realgoal = [0.3305805, -0.1326121, 0.3746] # center of the H
@@ -109,7 +109,7 @@ def start(callback, workerseed, rank, comm):
     # env.realgoal = [0.2877867, -0.1005370, 0.3746] # - middle
     # env.realgoal = [0.3349774, 0.1570571, 0.3746] # S center
 
-    # env.realgoal = [0.3341184, 0.0126104, 0.3746] # R middle right
+    env.realgoal = [0.3341184, 0.0126104, 0.3746] # R middle right
     # env.realgoal = [0.3731659, -0.0065453, 0.3746] # R down right
     # env.realgoal = [0.2250708, -0.0422738, 0.3746] # R top left
 
@@ -134,36 +134,31 @@ def start(callback, workerseed, rank, comm):
         # print("cur_subpolicy", cur_subpolicy)
         ac, vpred = sub_policies[cur_subpolicy].act(stochastic_subpolicy, obs)
         obs, rew, new, info = env.step(ac)
-        # print(env.realgoal)
-        # print("cur_subpolicy", cur_subpolicy)
-
-
-
-
-
-        # if new:
-        #     print("ENVIRONMENT SOLVED")
-        #     time.sleep(100)
         t += 1
 
 
-def callback(it):
-    if MPI.COMM_WORLD.Get_rank()==0:
-        if it % 2 == 0 and it > 3: # and not replay:
-            fname = osp.join("savedir/", 'checkpoints', '%.5i'%it)
-            U.save_state(fname)
-    if it == 0:
-        print("CALLBACK")
-        # fname = '/tmp/rosrl/mlsh/saved_models/00310'
-        #fname = '/tmp/rosrl/GazeboModularScara4and3DOF/saved_models/00310'
-        fname = '/home/rkojcev/baselines_networks/mlsh_params_eval/two_random_targets_parameters/macro_5_warmup_0_train_200/saved_models/00036'
-        subvars = []
-        for i in range(num_subs-1):
-            subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i+1))
-        print([v.name for v in subvars])
-        U.load_state(fname, subvars)
-        # time.sleep(5)
-        pass
+def callback(session):
+    # if MPI.COMM_WORLD.Get_rank()==0:
+    #     if it % 2 == 0 and it > 3: # and not replay:
+    #         fname = osp.join("savedir/", 'checkpoints', '%.5i'%it)
+    #         U.save_state(fname)
+    # if it == 0:
+    print("CALLBACK")
+    # fname = '/tmp/rosrl/mlsh/saved_models/00310'
+    #fname = '/tmp/rosrl/GazeboModularScara4and3DOF/saved_models/00310'
+    fname = '/home/rkojcev/baselines_networks/mlsh_params_eval/two_random_targets_parameters/macro_5_warmup_0_train_200/saved_models/00036'
+    # subvars = []
+    # subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_0")
+    # for i in range(num_subs-1):
+    #     subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i))
+    #     print("subvars:", subvars)
+    # # subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i))
+    # subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="policy")
+    # print([v.name for v in subvars])
+    tf.train.Saver().restore(session, fname)
+    # U.load_state(fname, subvars)
+    # time.sleep(5)
+    pass
 
 def load():
     num_timesteps=1e9
@@ -187,7 +182,7 @@ def load():
     # comm = MPI.COMM_WORLD
 
     #master_robotics.start(callback, args=args, workerseed=workerseed, rank=rank, comm=comm)
-    start(callback, workerseed=workerseed, rank=rank, comm=comm)
+    start(callback,sess, workerseed=workerseed, rank=rank, comm=comm)
 
 def main():
     if MPI.COMM_WORLD.Get_rank() == 0 and osp.exists(LOGDIR):
