@@ -87,9 +87,9 @@ def start(callback,session, workerseed, rank, comm):
     #
 
     callback(session)
-    learner.syncSubpolicies()
+    # learner.syncSubpolicies()
     policy.reset()
-    learner.syncMasterPolicies()
+    # learner.syncMasterPolicies()
     #env.randomizeCorrect()
     #env.randomizeRobot()
 
@@ -113,10 +113,6 @@ def start(callback,session, workerseed, rank, comm):
     # env.realgoal = [0.3731659, -0.0065453, 0.3746] # R down right
     # env.realgoal = [0.2250708, -0.0422738, 0.3746] # R top left
 
-    #Uncomment to test with 4Dof robot
-    # env.init_4dof_robot()
-    # env.realgoal = [0.3325683, 0.0657366, 0.4868] # center of O
-    # env.realgoal = [0.3305805, -0.1326121, 0.4868] # center of the H
 
     shared_goal = comm.bcast(env.realgoal, root=0)
     print("The goal to %s" % (env.realgoal))
@@ -131,7 +127,7 @@ def start(callback,session, workerseed, rank, comm):
         #print("t", t)
         if t % macro_duration == 0:
             cur_subpolicy, macro_vpred = policy.act(stochastic, obs)
-        # print("cur_subpolicy", cur_subpolicy)
+        print("cur_subpolicy", cur_subpolicy)
         ac, vpred = sub_policies[cur_subpolicy].act(stochastic_subpolicy, obs)
         obs, rew, new, info = env.step(ac)
         t += 1
@@ -146,7 +142,7 @@ def callback(session):
     print("CALLBACK")
     # fname = '/tmp/rosrl/mlsh/saved_models/00310'
     #fname = '/tmp/rosrl/GazeboModularScara4and3DOF/saved_models/00310'
-    fname = '/home/rkojcev/baselines_networks/mlsh_params_eval/two_random_targets_parameters/macro_5_warmup_0_train_200/saved_models/00036'
+    fname = '/home/rkojcev/baselines_networks/mlsh_params_eval/macro_dur_5_warmup_time_20/saved_models/00048'
     # subvars = []
     # subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_0")
     # for i in range(num_subs-1):
