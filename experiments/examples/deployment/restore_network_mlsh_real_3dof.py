@@ -27,7 +27,7 @@ import rl_algs.common.tf_util as U
 import pickle
 
 sys.path.append('/home/rkojcev/devel/baselines')
-from baselines.agent.scara_arm.agent_scara_real import AgentSCARAROS
+from baselines.agent.scara_arm.agent_scara_real_mlsh import AgentSCARAROS
 from baselines.agent.utility.general_utils import get_ee_points, get_position
 
 import rclpy
@@ -90,11 +90,11 @@ class ScaraJntsEnv(AgentSCARAROS):
             JOINT_PUBLISHER = '/scara_controller/command'
             JOINT_SUBSCRIBER = '/scara_controller/state'
 
-            # EE_POS_TGT = np.asmatrix([0.3325683, 0.0657366, 0.3746]) # center of the O
+            EE_POS_TGT = np.asmatrix([0.3325683, 0.0657366, 0.3746]) # center of the O
             # EE_POS_TGT = np.asmatrix([0.3305805, -0.1326121, 0.3746]) # center of the H
             # EE_POS_TGT = np.asmatrix([0.3013209, 0.1647450, 0.3746]) # S top right
             # EE_POS_TGT = np.asmatrix( [0.2877867, -0.1005370, 0.3746]) # - middle
-            EE_POS_TGT = np.asmatrix([0.3349774, 0.1570571, 0.3746]) # S center
+            # EE_POS_TGT = np.asmatrix([0.3349774, 0.1570571, 0.3746]) # S center
 
             # env.realgoal = [0.3341184, 0.0126104, 0.3746] # R middle right
             # env.realgoal = [0.3731659, -0.0065453, 0.3746] # R down right
@@ -193,33 +193,16 @@ class ScaraJntsEnv(AgentSCARAROS):
                 'num_samples': SAMPLE_COUNT,
                 'goal_vel': 0.03,
             }
-    def start(self,callback, workerseed, rank, comm):
-        # self.spec = {'timestep_limit': 5,
-        # 'reward_threshold':  950.0,}
-        self.max_episode_steps = 1000
-
-        env = self
-
-        # env.init_time(slowness= 2, slowness_unit='sec', reset_jnts=False)
+    def start(callback,session, workerseed, rank, comm):
+        env = gym.make('GazeboModularScara3DOF-v3')
+        env.init_time(slowness= 6, slowness_unit='sec', reset_jnts=False)
         env.seed(workerseed)
         np.random.seed(workerseed)
-        # if self.choose_robot == 0:
-        #     low = -np.pi/2.0 * np.ones(4) #hardcode for now, I know: bad bad bad
-        #     high = np.pi/2.0 * np.ones(4) #hardcode for now, I know: bad bad bad
-        #     ac_space = spaces.Box(low, high)
-        #
-        #     high = np.inf*np.ones(10)
-        #     low = -high
-        #     ob_space = spaces.Box(low, high)
-        #     print("3dof increase ob space",ob_space)
-        # else:
         ob_space = env.observation_space
         ac_space = env.action_space
-
         stochastic= True
         stochastic_subpolicy=False
 
-        # observation in.
         # observation in.
         savedir = " "
         ob = U.get_placeholder(name="ob", dtype=tf.float32, shape=[None, ob_space.shape[0]])
@@ -233,83 +216,77 @@ class ScaraJntsEnv(AgentSCARAROS):
         rollout = rollouts.traj_segment_generator(policy, sub_policies, env, macro_duration,num_rollouts, replay, savedir,force_subpolicy, stochastic=False)
         #
 
-        self.callback(0)
-        learner.syncSubpolicies()
+        callback(session)
+        # learner.syncSubpolicies()
         policy.reset()
-        learner.syncMasterPolicies()
-
         shared_goal = comm.bcast(env.realgoal, root=0)
         print("The goal to %s" % (env.realgoal))
         print("which robot? ", env.choose_robot)
         obs=env.reset()
-        # if self.choose_robot is 0:
-        #     obs = np.insert(obs, 3, 0.)
-        #     print("obs_extended", obs)
-
-        # print("OBS: ", obs)
-
+        print("OBS: ", obs)
         t = 0
 
         # time.sleep(1)
-        # env.init_3dof_robot()
+        new_test = True
         while True:
             # env.init_3dof_robot()
             #print("t", t)
             if t % macro_duration == 0:
-                print("obs in restore: ", obs)
                 cur_subpolicy, macro_vpred = policy.act(stochastic, obs)
 
+            # if np.random.uniform() < 0.1:
+            #         cur_subpolicy = np.random.randint(0, len(sub_policies))
+            # print("cur_subpolicy", cur_subpolicy)
             ac, vpred = sub_policies[cur_subpolicy].act(stochastic_subpolicy, obs)
+            # print("obs[0:3]:",obs[0:3])
+            # print("ac:",ac)
 
-            obs, rew, new, info = env.step(ac)
-            # if self.choose_robot is 0:
-            #     obs = np.insert(obs, 3, 0.)
-            #     print("obs_extended", obs)
+            nodes = np.array( [ [obs[0], obs[1], obs[2]], [ac[0], ac[1], ac[2]]] )
+            j1 = nodes[:,0]
+            j2 = nodes[:,1]
+            j3 = nodes[:,2]
+            tick,u = interpolate.splprep([j1,j2,j3], k=1)
+            j1_new,j2_new, j3_new  = interpolate.splev( np.linspace( 0, 0.01, 10 ), tick,der = 0)
+
+
+            ac_new = [j1_new[9], j2_new[9], j3_new[9]]
+            # file_endeffector.write(str(ac[0]) + ", " + str(ac[1]) + ", " + str(ac[2]) + ", " +  str(ac_new[0]) + ", " + str(ac_new[1]) + ", " + str(ac_new[2]) + "\n")
+            obs, rew, new, info = env.step(ac_new)
+
             t += 1
 
-    def callback(self,it):
-            if MPI.COMM_WORLD.Get_rank()==0:
-                if it % 5 == 0 and it > 3: # and not replay:
-                    fname = osp.join("savedir/", 'checkpoints', '%.5i'%it)
-                    U.save_state(fname)
-            if it == 0:
-                print("CALLBACK")
-                # fname = '/tmp/rosrl/mlsh/saved_models/00310'
-                #fname = '/tmp/rosrl/GazeboModularScara4and3DOF/saved_models/00310'
-                fname = '/home/rkojcev/baselines_networks/mlsh_params_eval/macro_dur_5_warmup_time_20/saved_models/00048'
-                # fname = '/home/rkojcev/baselines_networks/mlsh_networks_test/00046'
-                # fname = '/home/rkojcev/baselines_networks/mlsh_params_eval/macro_dur_5_warmup_time_5/00038'
-                subvars = []
-                for i in range(num_subs-1):
-                    subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i+1))
-                print([v.name for v in subvars])
-                U.load_state(fname, subvars)
-                # time.sleep(5)
-                pass
+    def callback(session):
 
-    def load(self):
-            num_timesteps=1e9
-            seed = 1401
-            rank = MPI.COMM_WORLD.Get_rank()
-            sess = U.single_threaded_session()
-            sess.__enter__()
-            workerseed = seed + 1000 * MPI.COMM_WORLD.Get_rank()
-            rank = MPI.COMM_WORLD.Get_rank()
-            set_global_seeds(workerseed)
+        print("CALLBACK")
+        # fname = '/home/rkojcev/baselines_networks/mlsh_params_eval/macro_dur_5_warmup_time_5/00038'
+        fname = '/home/rkojcev/baselines_networks/mlsh_params_eval/macro_dur_5_warmup_time_20/saved_models/00048'
+        tf.train.Saver().restore(session, fname)
 
-            # if rank != 0:
-            #     logger.set_level(logger.DISABLED)
-            # logger.log("rank %i" % MPI.COMM_WORLD.Get_rank())
+        pass
 
-            world_group = MPI.COMM_WORLD.Get_group()
-            mygroup = rank % 10
-            theta_group = world_group.Incl([x for x in range(MPI.COMM_WORLD.size) if (x % 10 == mygroup)])
-            comm = MPI.COMM_WORLD.Create(theta_group)
-            comm.Barrier()
-            # comm = MPI.COMM_WORLD
+    def load():
+        num_timesteps=1e9
+        seed = 1401
+        rank = MPI.COMM_WORLD.Get_rank()
+        sess = U.single_threaded_session()
+        sess.__enter__()
+        workerseed = seed + 1000 * MPI.COMM_WORLD.Get_rank()
+        rank = MPI.COMM_WORLD.Get_rank()
+        set_global_seeds(workerseed)
 
-            #master_robotics.start(callback, args=args, workerseed=workerseed, rank=rank, comm=comm)
-            self.start(self.callback, workerseed=workerseed, rank=rank, comm=comm)
+        # if rank != 0:
+        #     logger.set_level(logger.DISABLED)
+        # logger.log("rank %i" % MPI.COMM_WORLD.Get_rank())
+
+        world_group = MPI.COMM_WORLD.Get_group()
+        mygroup = rank % 10
+        theta_group = world_group.Incl([x for x in range(MPI.COMM_WORLD.size) if (x % 10 == mygroup)])
+        comm = MPI.COMM_WORLD.Create(theta_group)
+        comm.Barrier()
+        # comm = MPI.COMM_WORLD
+
+        #master_robotics.start(callback, args=args, workerseed=workerseed, rank=rank, comm=comm)
+        start(callback,sess, workerseed=workerseed, rank=rank, comm=comm)
 
 if __name__ == '__main__':
     ScaraJntsEnv()
