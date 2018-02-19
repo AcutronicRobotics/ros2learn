@@ -1,9 +1,4 @@
 #!/bin/sh
-
-
-
-
-
 SLOWNESS_UNIT='nsec'
 TARGET=1
 PENALIZED_REWARD=1

@@ -26,14 +26,15 @@ args = parser.parse_args()
 
 target=1
 pen_reward=1
-
+# slowness = 1000000
+# slowness_unit= 'nsec'
 env = gym.make('GazeboModularScaraStaticObstacle3DOF-v1')
-env.init_time(slowness= 100000000, slowness_unit='nsec')
-env.set_target_and_reward(target=args.target, pen_reward=args.penalization)
+env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit)
+# env.set_target_and_reward(target=args.target, pen_reward=args.penalization)
 
 
-#logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/obstacle_test/' + str(slowness) + '_' + str(slowness_unit) + '/'
-logdir = '/media/erle/RL/networks/GazeboModularScaraStaticObstacle3DOF-v1/ppo/'+str(target) + '_' + str(pen_reward) + '/'
+logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/obstacle_test/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
+# logdir = '/tmp/rosrl/GazeboModularScaraStaticObstacle3DOF-v1/ppo/'+str(target) + '_' + str(pen_reward) + '/'
 # logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/'
 logger.configure(os.path.abspath(logdir))
 print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
