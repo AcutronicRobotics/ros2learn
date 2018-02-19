@@ -22,6 +22,7 @@ parser.add_argument('--slowness', help='time for executing trajectory', type=int
 parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='sec')
 parser.add_argument('--target', help='target', type=int, default=1)
 parser.add_argument('--penalization', help='penalized-reward',type=int, default=0)
+parser.add_argument('--mod', help='penalized-mod',type=int, default=100)
 args = parser.parse_args()
 
 target=1
@@ -29,11 +30,13 @@ pen_reward=1
 # slowness = 1000000
 # slowness_unit= 'nsec'
 env = gym.make('GazeboModularScaraStaticObstacle3DOF-v1')
-env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit)
+#env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit)
+env.init_time(slowness= 10000000, slowness_unit='nsec')
+env.setPenalizationMod(pen_mod=args.mod)
 # env.set_target_and_reward(target=args.target, pen_reward=args.penalization)
-
-
-logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/obstacle_test/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
+print("MOD", args.mod)
+logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/1_sec_th_0_05_'+str(args.mod)+'/'
+#logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/obstacle_test/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
 # logdir = '/tmp/rosrl/GazeboModularScaraStaticObstacle3DOF-v1/ppo/'+str(target) + '_' + str(pen_reward) + '/'
 # logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/'
 logger.configure(os.path.abspath(logdir))
