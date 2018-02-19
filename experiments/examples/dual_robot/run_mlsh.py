@@ -31,7 +31,7 @@ savename = 'ScaraTest'
 replay_bool= 'True'
 macro_duration = 10
 # num_subs = 4
-num_subs = 2
+num_subs = 4
 num_rollouts = 2500
 warmup_time = 1 #1 # 30
 train_time = 2 #2 # 200
@@ -92,14 +92,14 @@ def start(callback, workerseed, rank, comm):
     #env.randomizeRobot()
 
     #Uncomment to test with 3Dof robot
-    #env.init_3dof_robot()
-    #env.realgoal= [0.3325683, 0.0657366, 0.3746] # center of the H
-    #env.realgoal= [0.3305805, -0.1326121, 0.3746] # center of the H
+    # env.init_3dof_robot()
+    # env.realgoal= [0.3325683, 0.0657366, 0.3746] # center of the O
+    # env.realgoal= [0.3305805, -0.1326121, 0.3746] # center of the H
 
     #Uncomment to test with 4Dof robot
     env.init_4dof_robot()
-    #env.realgoal = [0.3325683, 0.0657366, 0.4868] # center of O
-    env.realgoal = [0.3305805, -0.1326121, 0.4868] # center of the H
+    env.realgoal = [0.3325683, 0.0657366, 0.4868] # center of O
+    # env.realgoal = [0.3305805, -0.1326121, 0.4868] # center of the H
 
     shared_goal = comm.bcast(env.realgoal, root=0)
     print("The goal to %s" % (env.realgoal))
@@ -109,20 +109,23 @@ def start(callback, workerseed, rank, comm):
     t = 0
 
     time.sleep(1)
+    file_endeffector = open('end_effector_3dof_mlsh_simulation_dualrobot_center_o.csv', 'w')
     while True:
         # env.init_3dof_robot()
         #print("t", t)
         if t % macro_duration == 0:
             cur_subpolicy, macro_vpred = policy.act(stochastic, obs)
 
-        ac, vpred = sub_policies[2].act(stochastic, obs)
+        ac, vpred = sub_policies[cur_subpolicy].act(stochastic, obs)
 
-        obs, rew, new, info = env.step(ac)
+        obs, rew, new, info, ee_point_temp, distance = env.step(ac)
+        file_endeffector.write(str(rew) + ", " + str(ee_point_temp[0]) + ", " + str(ee_point_temp[1]) + ", " + str(ee_point_temp[2]) + ", " +  str(distance) + "\n")
 
         # if new:
         #     print("ENVIRONMENT SOLVED")
         #     time.sleep(100)
         t += 1
+    file_endeffector.close()
 
 
 def callback(it):
@@ -133,12 +136,14 @@ def callback(it):
     if it == 0:
         print("CALLBACK")
         #fname = '/tmp/rosrl/mlsh/saved_models/00310'
-        fname = '/tmp/rosrl/GazeboModularScara4and3DOF/saved_models/00310'
+        fname = '/home/rkojcev/baselines_networks/mlsh_networks_test/00046'
         #fname = '/tmp/rosrl/mlsh/saved_models/00024'
         subvars = []
         for i in range(num_subs-1):
-            subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i+1))
+            subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i))
+            print("subvars:", subvars)
         print([v.name for v in subvars])
+
         U.load_state(fname, subvars)
         time.sleep(5)
         pass

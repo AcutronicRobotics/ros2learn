@@ -54,7 +54,7 @@ LOGDIR = osp.join('/root/results' if sys.platform.startswith('linux') else '/tmp
 
 def start(callback, workerseed, rank, comm):
     env = gym.make('GazeboModularScaraArm4And3DOF-v1')
-    env.init_time(slowness= 2, slowness_unit='sec', reset_jnts=False)
+    env.init_time(slowness= 6, slowness_unit='sec', reset_jnts=False)
     env.seed(workerseed)
     np.random.seed(workerseed)
     ob_space = env.observation_space
@@ -74,6 +74,7 @@ def start(callback, workerseed, rank, comm):
     # num_batches = 15
 
     # observation in.
+    savedir = " "
     ob = U.get_placeholder(name="ob", dtype=tf.float32, shape=[None, ob_space.shape[0]])
     policy = Policy(name="policy", ob=ob, ac_space=ac_space, hid_size=32, num_hid_layers=2, num_subpolicies=num_subs)
     old_policy = Policy(name="old_policy", ob=ob, ac_space=ac_space, hid_size=32, num_hid_layers=2, num_subpolicies=num_subs)
@@ -82,8 +83,7 @@ def start(callback, workerseed, rank, comm):
     old_sub_policies = [SubPolicy(name="old_sub_policy_%i" % x, ob=ob, ac_space=ac_space, hid_size=32, num_hid_layers=2) for x in range(num_subs)]
 
     learner = Learner(env, policy, old_policy, sub_policies, old_sub_policies, comm, clip_param=0.2, entcoeff=0, optim_epochs=10, optim_stepsize=3e-5, optim_batchsize=64)
-    rollout = rollouts.traj_segment_generator(policy, sub_policies, env, macro_duration, num_rollouts, replay, force_subpolicy, False)
-    #
+    rollout = rollouts.traj_segment_generator(policy, sub_policies, env, macro_duration,num_rollouts, replay, savedir,force_subpolicy, stochastic=False)
 
     callback(0)
     learner.syncSubpolicies()
@@ -93,13 +93,13 @@ def start(callback, workerseed, rank, comm):
     #env.randomizeRobot()
 
     #Uncomment to test with 3Dof robot
-    #env.init_3dof_robot()
-    #env.realgoal= [0.3325683, 0.0657366, 0.3746] # center of the O
-    #env.realgoal= [0.3305805, -0.1326121, 0.3746] # center of the H
+    # env.init_3dof_robot()
+    # env.realgoal= [0.3325683, 0.0657366, 0.3746] # center of the O
+    # env.realgoal= [0.3305805, -0.1326121, 0.3746] # center of the H
 
     #Uncomment to test with 4Dof robot
     env.init_4dof_robot()
-    #env.realgoal = [0.3325683, 0.0657366, 0.4868] # center of O
+    # env.realgoal = [0.3325683, 0.0657366, 0.4868] # center of O
     env.realgoal = [0.3305805, -0.1326121, 0.4868] # center of the H
 
     shared_goal = comm.bcast(env.realgoal, root=0)
@@ -109,7 +109,7 @@ def start(callback, workerseed, rank, comm):
     print("OBS: ", obs)
     t = 0
 
-    time.sleep(1)
+    time.sleep(5)
     while True:
         # env.init_3dof_robot()
         #print("t", t)
@@ -119,7 +119,7 @@ def start(callback, workerseed, rank, comm):
 
         ac, vpred = sub_policies[cur_subpolicy].act(stochastic_subp, obs)
 
-        obs, rew, new, info = env.step(ac)
+        obs, rew, new, info, ee_point_temp, distance = env.step(ac)
 
         # if new:
         #     print("ENVIRONMENT SOLVED")
@@ -135,8 +135,8 @@ def callback(it):
     if it == 0:
         print("CALLBACK")
         # fname = '/tmp/rosrl/mlsh/saved_models/00310'
-        #fname = '/tmp/rosrl/GazeboModularScara4and3DOF/saved_models/00310'
-        fname = '/media/erle/RL/networks/dual_env_mult_targets/00046'
+        # fname = '/home/rkojcev/baselines_networks/mlsh_networks_test/00310'
+        fname = '/home/rkojcev/baselines_networks/mlsh_networks_test/00046'
         subvars = []
         for i in range(num_subs-1):
             subvars += tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope="sub_policy_%i" % (i+1))
