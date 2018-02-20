@@ -17,10 +17,24 @@ from baselines.acktr.acktr_cont import learn
 from baselines.agent.utility.general_utils import get_ee_points, get_position
 from baselines.ppo1 import mlp_policy, pposgd_simple
 
+# parser
+parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1)
+parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='sec')
+parser.add_argument('--target', help='target', type=int, default=1)
+parser.add_argument('--penalization', help='penalized-reward',type=int, default=0)
+parser.add_argument('--mod', help='penalized-mod',type=int, default=100)
+args = parser.parse_args()
 
-env = gym.make('GazeboModularScara3DOF-v3')
-initial_observation = env.reset()
-print("Initial observation: ", initial_observation)
+
+env = gym.make('GazeboModularScaraStaticObstacle3DOF-v1')
+slowness = 2
+slowness_unit= 'sec'
+env.init_time(slowness= slowness, slowness_unit=slowness_unit)
+env.setPenalizationMod(pen_mod=args.mod)
+# initial_observation = env.reset()
+# print("Initial observation: ", initial_observation)
+env.addObstacle()
 env.render()
 seed = 0
 
@@ -36,7 +50,7 @@ print("Initial obs: ", obs)
 # env.seed(seed)
 # time.sleep(5)
 pi = policy_fn("pi", env.observation_space, env.action_space)
-tf.train.Saver().restore(sess, '/home/rkojcev/baseline_networks/GazeboModularScaraStaticObstacle3DOF-v1/ppo/2_1/models/3dof_ppo1_test_H_afterIter_480.model') # for the H
+tf.train.Saver().restore(sess, '/tmp/rosrl/GazeboModularScara3DOFStaticObstaclev1Env/ppo1/10000000_nsec/100/models/3dof_ppo1_test_H_afterIter_70.model') # for the H
 done = False
 while True:
     action = pi.act(True, obs)[0]

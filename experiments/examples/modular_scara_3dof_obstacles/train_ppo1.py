@@ -30,12 +30,12 @@ pen_reward=1
 # slowness = 1000000
 # slowness_unit= 'nsec'
 env = gym.make('GazeboModularScaraStaticObstacle3DOF-v1')
-#env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit)
-env.init_time(slowness= 10000000, slowness_unit='nsec')
+env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit)
+# env.init_time(slowness= 10000000, slowness_unit='nsec')
 env.setPenalizationMod(pen_mod=args.mod)
 # env.set_target_and_reward(target=args.target, pen_reward=args.penalization)
 print("MOD", args.mod)
-logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/1_sec_th_0_05_'+str(args.mod)+'/'
+logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/' + str(args.mod)+'/'
 #logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/obstacle_test/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
 # logdir = '/tmp/rosrl/GazeboModularScaraStaticObstacle3DOF-v1/ppo/'+str(target) + '_' + str(pen_reward) + '/'
 # logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/'
