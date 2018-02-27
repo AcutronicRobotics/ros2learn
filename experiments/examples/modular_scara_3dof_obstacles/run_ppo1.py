@@ -28,7 +28,7 @@ args = parser.parse_args()
 
 
 env = gym.make('GazeboModularScaraStaticObstacle3DOF-v1')
-slowness = 2
+slowness = 1
 slowness_unit= 'sec'
 env.init_time(slowness= slowness, slowness_unit=slowness_unit)
 env.setPenalizationMod(pen_mod=args.mod)
@@ -50,9 +50,9 @@ print("Initial obs: ", obs)
 # env.seed(seed)
 # time.sleep(5)
 pi = policy_fn("pi", env.observation_space, env.action_space)
-tf.train.Saver().restore(sess, '/tmp/rosrl/GazeboModularScara3DOFStaticObstaclev1Env/ppo1/10000000_nsec/100/models/3dof_ppo1_test_H_afterIter_70.model') # for the H
+tf.train.Saver().restore(sess, '/tmp/rosrl/GazeboModularScara3DOFStaticObstaclev1Env/ppo1/100000000_nsec/100/models/3dof_ppo1_test_H_afterIter_450.model') # for the H
 done = False
 while True:
     action = pi.act(True, obs)[0]
     obs, reward, done, info = env.step(action)
-    print(action)
+    # print(action)
