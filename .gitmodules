@@ -19,3 +19,6 @@
 [submodule "algorithms/mlsh"]
 	path = algorithms/mlsh
 	url = https://github.com/erlerobot/mlsh.git
+[submodule "algorithms/tensorflow-vgg"]
+	path = algorithms/tensorflow-vgg
+	url = https://github.com/erlerobot/tensorflow-vgg.git
