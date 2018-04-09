@@ -14,11 +14,11 @@ import sys
 import shutil
 import subprocess
 import mlsh_code.master_robotics_mult as master_robotics
-# import mlsh_code.master as master
 import gym_gazebo
 from baselines import bench, logger
 import os
 
+from baselines import logger
 
 
 # parser
@@ -110,10 +110,10 @@ if __name__ == '__main__':
     # args = parser.parse_args()
     #
     # env = 'GazeboModularScara3DOF-v3'
-    env = gym.make('GazeboModularScara3DOF-v3')
+    env = gym.make('HansArticulated-v1')
     env.init_time(slowness= 1000000, slowness_unit='nsec', reset_jnts=False)
     logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/mlsh/'
-    
+
     logger.configure(os.path.abspath(logdir))
     print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
 
@@ -122,7 +122,7 @@ if __name__ == '__main__':
     # else:
     #     #Parameters set by user
     #     job_id = None
-    savename = 'ScaraTest'
+    savename = 'HansArticulatedTest'
     replay=False
 
     #macro_duration = 5
