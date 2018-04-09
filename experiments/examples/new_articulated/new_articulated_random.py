@@ -1,6 +1,6 @@
 import gym
 import gym_gazebo
-env = gym.make('HansArticulated-v1')
+env = gym.make('NewArticulated-v1')
 env.reset()
 
 # Check the env limits:

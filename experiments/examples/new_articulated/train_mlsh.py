@@ -110,7 +110,7 @@ if __name__ == '__main__':
     # args = parser.parse_args()
     #
     # env = 'GazeboModularScara3DOF-v3'
-    env = gym.make('HansArticulated-v1')
+    env = gym.make('NewArticulated-v1')
     env.init_time(slowness= 1000000, slowness_unit='nsec', reset_jnts=False)
     logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/mlsh/'
 
@@ -122,7 +122,7 @@ if __name__ == '__main__':
     # else:
     #     #Parameters set by user
     #     job_id = None
-    savename = 'HansArticulatedTest'
+    savename = 'NewArticulatedTest'
     replay=False
 
     #macro_duration = 5

@@ -53,7 +53,7 @@ RELPATH = osp.join(savename)
 LOGDIR = osp.join('/root/results' if sys.platform.startswith('linux') else '/tmp', RELPATH)
 
 def start(callback, workerseed, rank, comm):
-    env = gym.make("HansArticulated-v1")
+    env = gym.make("NewArticulated-v1")
     env.seed(workerseed)
     np.random.seed(workerseed)
     ob_space = env.observation_space
