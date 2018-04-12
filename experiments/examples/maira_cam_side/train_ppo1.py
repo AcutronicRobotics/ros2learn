@@ -22,7 +22,7 @@ parser.add_argument('--slowness', help='time for executing trajectory', type=int
 parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='sec')
 args = parser.parse_args()
 
-env = gym.make('NewArticulated-v1')
+env = gym.make('MAIRASide3DOF-v0')
 env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit)
 logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
 # logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/'

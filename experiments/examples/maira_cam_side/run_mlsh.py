@@ -26,7 +26,7 @@ import rl_algs.common.tf_util as U
 import pickle
 
 # here we define the parameters necessary to launch
-savename = 'ScaraTest'
+savename = 'MAIRA_CAM_SIDE'
 replay=False
 macro_duration = 10
 num_subs = 2
@@ -53,7 +53,7 @@ RELPATH = osp.join(savename)
 LOGDIR = osp.join('/root/results' if sys.platform.startswith('linux') else '/tmp', RELPATH)
 
 def start(callback, workerseed, rank, comm):
-    env = gym.make("NewArticulated-v1")
+    env = gym.make("'MAIRASide3DOF-v0'")
     env.seed(workerseed)
     np.random.seed(workerseed)
     ob_space = env.observation_space

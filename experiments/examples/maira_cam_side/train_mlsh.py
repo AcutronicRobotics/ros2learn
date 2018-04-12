@@ -37,7 +37,7 @@ def str2bool(v):
     else:
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
-savename = 'ScaraTest'
+savename = 'MAIRASide3DOF-v0'
 continue_iter = None
 RELPATH = osp.join(savename)
 LOGDIR = osp.join('/root/results' if sys.platform.startswith('linux') else '/tmp', RELPATH)
@@ -110,7 +110,7 @@ if __name__ == '__main__':
     # args = parser.parse_args()
     #
     # env = 'GazeboModularScara3DOF-v3'
-    env = gym.make('NewArticulated-v1')
+    env = gym.make('MAIRASide3DOF-v0')
     env.init_time(slowness= 1000000, slowness_unit='nsec', reset_jnts=False)
     logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/mlsh/'
 
@@ -122,7 +122,7 @@ if __name__ == '__main__':
     # else:
     #     #Parameters set by user
     #     job_id = None
-    savename = 'NewArticulatedTest'
+    savename = 'MAIRASide3DOF-v0'
     replay=False
 
     #macro_duration = 5
