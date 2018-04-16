@@ -35,12 +35,12 @@ print("Initial obs: ", obs)
 # env.seed(seed)
 # time.sleep(5)
 pi = policy_fn('pi', env.observation_space, env.action_space)
-tf.train.Saver().restore(sess, '/tmp/rosrl/MAIRATop3DOF-v0/ppo1/1000000_nsec/models/New_ppo1_test_H_afterIter_440.model') # for the H
+tf.train.Saver().restore(sess, '/tmp/rosrl/GazeboMAIRATop3DOFv0Env/ppo1/1000000_nsec/models/new_ppo1_test_H_afterIter_480.model') # for the H
 # loadPath = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/'
 # tf.train.Saver().restore(sess, loadPath + 'ros1_ppo1_H_afterIter_263.model')
 # tf.train.Saver().restore(sess, '/home/rkojcev/baselines_networks/ros1_ppo1_test_O/saved_models/ros1_ppo1_test_O_afterIter_421.model') # for the O
 done = False
 while True:
-    action = pi.act(True, obs)[0]
+    action = pi.act(False, obs)[0]
     obs, reward, done, info = env.step(action)
-    print(action)
+    # print(action)
