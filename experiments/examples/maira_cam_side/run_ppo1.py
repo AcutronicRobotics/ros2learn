@@ -41,6 +41,6 @@ tf.train.Saver().restore(sess, '/tmp/rosrl/MAIRATop3DOF-v0/ppo1/1000000_nsec/mod
 # tf.train.Saver().restore(sess, '/home/rkojcev/baselines_networks/ros1_ppo1_test_O/saved_models/ros1_ppo1_test_O_afterIter_421.model') # for the O
 done = False
 while True:
-    action = pi.act(True, obs)[0]
+    action = pi.act(False, obs)[0]
     obs, reward, done, info = env.step(action)
     print(action)
