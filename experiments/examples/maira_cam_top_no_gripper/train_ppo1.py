@@ -22,7 +22,7 @@ parser.add_argument('--slowness', help='time for executing trajectory', type=int
 parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='sec')
 args = parser.parse_args()
 
-env = gym.make('MAIRATop3DOF-v0')
+env = gym.make('MAIRANoGripper-v0')
 env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit, reset_jnts=False)
 logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
 # logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/'
@@ -53,9 +53,9 @@ def policy_fn(name, ob_space, ac_space):
 pposgd_simple.learn(env, policy_fn,
                     max_timesteps=1e6,
                     timesteps_per_actorbatch=2048,
-                    clip_param=0.2, entcoeff=0.0,
-                    optim_epochs=10, optim_stepsize=3e-4, gamma=0.99,
-                    optim_batchsize=64, lam=0.95, schedule='linear', save_model_with_prefix='maira_ppo1_test', outdir=logger.get_dir()) #
+                    clip_param=0.1, entcoeff=0.0,
+                    optim_epochs=20, optim_stepsize=3e-4, gamma=0.99,
+                    optim_batchsize=64, lam=0.95, schedule='constant', save_model_with_prefix='maira_ppo1_test', outdir=logger.get_dir()) #
 
 env.close()
 
