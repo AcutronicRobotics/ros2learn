@@ -25,3 +25,6 @@
 [submodule "environments/docker/maira"]
 	path = environments/docker/maira
 	url = https://github.com/erlerobot/maira
+[submodule "environments/docker/modular_articulated_arm"]
+	path = environments/docker/modular_articulated_arm
+	url = https://github.com/erlerobot/modular_articulated_arm
