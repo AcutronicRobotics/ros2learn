@@ -22,3 +22,6 @@
 [submodule "algorithms/tensorflow-vgg"]
 	path = algorithms/tensorflow-vgg
 	url = https://github.com/erlerobot/tensorflow-vgg.git
+[submodule "environments/docker/maira"]
+	path = environments/docker/maira
+	url = https://github.com/erlerobot/maira
