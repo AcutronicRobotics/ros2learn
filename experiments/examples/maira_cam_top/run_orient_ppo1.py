@@ -18,7 +18,7 @@ from baselines.agent.utility.general_utils import get_ee_points, get_position
 from baselines.ppo1 import mlp_policy, pposgd_simple
 
 
-env = gym.make('MAIRATop3DOF-v0')
+env = gym.make('MAIRAOrient-v0')
 initial_observation = env.reset()
 print("Initial observation: ", initial_observation)
 # env.render()
@@ -35,7 +35,7 @@ print("Initial obs: ", obs)
 # env.seed(seed)
 # time.sleep(5)
 pi = policy_fn('pi', env.observation_space, env.action_space)
-tf.train.Saver().restore(sess, '/tmp/rosrl/GazeboMAIRATop3DOFv0Env/ppo1/1000000_nsec/models/maira_ppo1_test_afterIter_680.model') # for the H
+tf.train.Saver().restore(sess, '/tmp/rosrl/GazeboMAIRATopOrientv0Env/ppo1/1000000_nsec/models/maira_orient_ppo1_test_afterIter_1100.model') # for the H
 # loadPath = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/'
 # tf.train.Saver().restore(sess, loadPath + 'ros1_ppo1_H_afterIter_263.model')
 # tf.train.Saver().restore(sess, '/home/rkojcev/baselines_networks/ros1_ppo1_test_O/saved_models/ros1_ppo1_test_O_afterIter_421.model') # for the O

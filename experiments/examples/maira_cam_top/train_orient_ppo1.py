@@ -15,6 +15,8 @@ from baselines.ppo1 import mlp_policy, pposgd_simple
 import os
 
 from baselines.common import tf_util as U
+
+import time
 # parser
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1)
@@ -28,11 +30,16 @@ logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/' + str(args.slowne
 logger.configure(os.path.abspath(logdir))
 print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
 # env = Monitor(env, logger.get_dir(),  allow_early_resets=True)
+
 seed = 0
 env.seed(seed)
 set_global_seeds(seed)
-initial_observation = env.reset()
-print("Initial observation: ", initial_observation)
+
+env.goToInit()
+time.sleep(3)
+
+# initial_observation = env.reset()
+# print("Initial observation: ", initial_observation)
 
 U.make_session(num_cpu=1).__enter__()
 
