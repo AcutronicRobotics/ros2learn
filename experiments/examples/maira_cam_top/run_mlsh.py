@@ -96,7 +96,7 @@ def start(callback, workerseed, rank, comm):
         if t % macro_duration == 0:
             cur_subpolicy, macro_vpred = policy.act(stochastic, obs)
 
-        ac, vpred = sub_policies[1].act(stochastic, obs)
+        ac, vpred = sub_policies[cur_subpolicy].act(stochastic, obs)
 
         obs, rew, new, info = env.step(ac)
 
