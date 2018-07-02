@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro"
+       name="mara" >
+
+  <!-- common stuff -->
+  <xacro:include filename="$(find mara_description)/urdf/common.gazebo.xacro" />
+
+  <!-- mara -->
+  <xacro:include filename="$(find mara_description)/urdf/mara.urdf.xacro" />
+
+  <!-- robotiq 140 gripper -->
+  <xacro:include filename="$(find mara_description)/urdf/robotiq_gripper.urdf.xacro" />
+
+  <xacro:include filename="$(find mara_description)/urdf/table.urdf.xacro" />
+
+  <!-- arm -->
+  <xacro:mara_robot prefix="" joint_limited="false"/>
+  <xacro:robotiq_gripper prefix="" />
+  <xacro:table prefix="" />
+
+  <link name="world" />
+
+  <joint name="end_effector_adapter_to_robotiq" type="fixed">
+    <origin rpy="0 0 1.57" xyz=" 0 0 0.065"/>
+    <parent link="motor6_link"/>
+    <child link="robotiq_arg2f_base_link"/>
+  </joint>
+
+  <joint name="world_to_table_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0.02"/>
+    <parent link="world"/>
+    <child link="table"/>
+  </joint>
+
+  <joint name="table_to_base_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0.65"/>
+    <parent link="table"/>
+    <child link="base_link"/>
+  </joint>
+
+</robot>

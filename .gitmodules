@@ -22,9 +22,9 @@
 [submodule "algorithms/tensorflow-vgg"]
 	path = algorithms/tensorflow-vgg
 	url = https://github.com/erlerobot/tensorflow-vgg.git
-[submodule "environments/docker/maira"]
-	path = environments/docker/maira
-	url = https://github.com/erlerobot/maira
+[submodule "environments/docker/mara"]
+	path = environments/docker/mara
+	url = https://github.com/erlerobot/mara
 [submodule "environments/docker/modular_articulated_arm"]
 	path = environments/docker/modular_articulated_arm
 	url = https://github.com/erlerobot/modular_articulated_arm
