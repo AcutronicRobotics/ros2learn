@@ -16,7 +16,8 @@ from baselines.common import set_global_seeds, tf_util as U
 from baselines.acktr.acktr_cont import learn
 from baselines.agent.utility.general_utils import get_ee_points, get_position
 from baselines.ppo1 import mlp_policy, pposgd_simple
-
+from baselines.ppo2 import ppo2
+from baselines.ppo2.policies import LstmMlpPolicy, MlpPolicy
 
 env = gym.make('MARAOrient-v0')
 initial_observation = env.reset()
@@ -27,7 +28,7 @@ seed = 0
 sess = U.make_session(num_cpu=1)
 sess.__enter__()
 def policy_fn(name, ob_space, ac_space):
-    return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,
+    return policies.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,
     hid_size=64, num_hid_layers=2)
 # gym.logger.setLevel(logging.WARN)
 obs = env.reset()
