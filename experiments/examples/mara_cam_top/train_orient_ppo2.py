@@ -64,16 +64,16 @@ env = VecNormalize(env)
 # env.render()
 seed = 0
 set_global_seeds(seed)
-policy = LstmMlpPolicy
-ppo2.learn(policy=policy, env=env, nsteps=512, nminibatches=1,
-    lam=0.95, gamma=0.99, noptepochs=15, log_interval=1,
-    ent_coef=0.0,
-    lr=3e-4,
-    cliprange=0.2,
-    total_timesteps=1e6, save_interval=10, outdir=logger.get_dir())
-# ppo2.learn(policy=policy, env=env, nsteps=2048, nminibatches=32,
-#     lam=0.95, gamma=0.99, noptepochs=10, log_interval=1,
+policy = MlpPolicy
+# ppo2.learn(policy=policy, env=env, nsteps=2048, nminibatches=1,
+#     lam=0.95, gamma=0.99, noptepochs=15, log_interval=1,
 #     ent_coef=0.0,
 #     lr=3e-4,
 #     cliprange=0.2,
 #     total_timesteps=1e6, save_interval=10, outdir=logger.get_dir())
+ppo2.learn(policy=policy, env=env, nsteps=2048, nminibatches=64,
+    lam=0.95, gamma=0.99, noptepochs=10, log_interval=1,
+    ent_coef=0.0,
+    lr=3e-4,
+    cliprange=0.2,
+    total_timesteps=1e6, save_interval=10, outdir=logger.get_dir())
