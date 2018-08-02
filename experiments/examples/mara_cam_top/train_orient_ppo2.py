@@ -64,7 +64,7 @@ env = VecNormalize(env)
 # env.render()
 seed = 0
 set_global_seeds(seed)
-policy = MlpPolicy
+policy = LstmMlpPolicy
 # ppo2.learn(policy=policy, env=env, nsteps=2048, nminibatches=1,
 #     lam=0.95, gamma=0.99, noptepochs=15, log_interval=1,
 #     ent_coef=0.0,

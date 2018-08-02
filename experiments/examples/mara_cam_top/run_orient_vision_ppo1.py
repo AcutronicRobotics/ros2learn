@@ -1,20 +1,21 @@
-#!/usr/bin/env python3
+import numpy as np
+import sys
 
 import gym
 import gym_gazebo
+
 import tensorflow as tf
+
 import argparse
 import copy
-import sys
-import numpy as np
+import time
 
-from mpi4py import MPI
-
-from baselines import bench, logger
-from baselines.bench import Monitor
+from baselines import logger
 from baselines.common import set_global_seeds, tf_util as U
+
+from baselines.acktr.acktr_cont import learn
+from baselines.agent.utility.general_utils import get_ee_points, get_position
 from baselines.ppo1 import mlp_policy, pposgd_simple
-import os
 
 from sensor_msgs.msg import Image as ImageMsg
 # ROS Image message -> OpenCV2 image converter
@@ -33,6 +34,7 @@ from darkflow.utils.utils import *
 import rospy
 
 import yaml
+# import xml.etree.ElementTree as ET
 import glob
 
 import quaternion as quat
@@ -53,6 +55,7 @@ def _observation_image_callback(msg):
     except CvBridgeError as e:
         print(e)
     else:
+        # Save your OpenCV2 image as a jpeg
         result = tfnet.return_predict(cv2_img)
 
         font = cv2.FONT_HERSHEY_SIMPLEX
@@ -126,8 +129,8 @@ def _observation_image_callback(msg):
             cv2.circle(cv2_img,(int(result[result_max_iter]['point_8']['x']),int(result[result_max_iter]['point_8']['y'])), 4, (255,255,0), -1)
             # cv2.putText(rgb_image,'8',(int(result[result_max_iter]['point_8']['x']),int(result[result_max_iter]['point_8']['y'])), font, 0.8,(0,255,0),2,cv2.LINE_AA)
             cv2.circle(cv2_img,(int(result[result_max_iter]['point_9']['x']),int(result[result_max_iter]['point_9']['y'])), 4, (0,0,255), -1)
-            # cv2.putText(imgcv,'center',(int(result[0]['point_9']['x']),int(result[0]['point_9']['y'])), font, 0.8,(255,255,255),2,cv2.LINE_AA)
-            # cv2.imshow("depth camera", depth_map)
+        #     # cv2.putText(imgcv,'center',(int(result[0]['point_9']['x']),int(result[0]['point_9']['y'])), font, 0.8,(255,255,255),2,cv2.LINE_AA)
+        # cv2.imshow("depth camera", depth_map)
             # cv2.putText(rgb_image,result[result_max_iter]['label'],(int(result[result_max_iter]['point_1']['x']-30),int(result[result_max_iter]['point_1']['y']-30)), font, 1.0,(255,255,255),2,cv2.LINE_AA)
             cv2.putText(cv2_img,label_human_readable,(int(result[result_max_iter]['point_1']['x']-30),int(result[result_max_iter]['point_1']['y']-30)), font, 0.8,(255,255,255),2,cv2.LINE_AA)
 
@@ -172,6 +175,7 @@ def _observation_image_callback(msg):
             #now here publish the detected target position from the vision system. And calculate camera to world so we get the final point to the world:
             # is it good idea for this to be detected on the first time we load something? or streem continiously.
             #If we stream continiously when the robot covers the cube we cant detect anything and if the target is updated at that time
+
             #uncomment if we want to use like servoing every time, just wont work if the robot is in front of the object!!!
             cam_pose_x = -0.5087683179567231 # random.uniform(-0.25, -0.6)#-0.5087683179567231#0.0 #random.uniform(-0.25, -0.6)#-0.5087683179567231#random.uniform(-0.3, -0.6)#random.uniform(-0.25, -0.6) # -0.5087683179567231#
             cam_pose_y = 0.013376#random.uniform(0.0, -0.2)
@@ -194,20 +198,27 @@ def _observation_image_callback(msg):
         cv2.imshow("Image window", cv2_img)
         cv2.waitKey(3)
 
-parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1)
-parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='sec')
-args = parser.parse_args()
+
 
 env = gym.make('MARAVisionOrient-v0')
-env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit, reset_jnts=False)
-logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
+initial_observation = env.reset()
+print("Initial observation: ", initial_observation)
+# env.render()
+seed = 0
 
-logger.configure(os.path.abspath(logdir))
-print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
+sess = U.make_session(num_cpu=1)
+sess.__enter__()
+def policy_fn(name, ob_space, ac_space):
+    return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,
+    hid_size=128, num_hid_layers=3)
+# gym.logger.setLevel(logging.WARN)
+obs = env.reset()
+print("Initial obs: ", obs)
+# env.seed(seed)
+# time.sleep(5)
+pi = policy_fn('pi', env.observation_space, env.action_space)
+tf.train.Saver().restore(sess, '/tmp/rosrl/GazeboMARATopOrientVisionv0Env/ppo1/1000000_nsec/models/mara_orient_ppo1_test_afterIter_1303.model') # for the H
 
-
-# rate = rospy.Rate(0.3) # 10hz
 
 dumps = list()
 # points_3d = list()
@@ -239,56 +250,8 @@ internal_calibration = get_camera_intrinsic()
 _sub_image = rospy.Subscriber("/mara/rgb/image_raw", ImageMsg, _observation_image_callback)
 _pub_target = rospy.Publisher(TARGET_PUBLISHER, Pose)
 
-# env = Monitor(env, logger.get_dir(),  allow_early_resets=True)
-
-rank = MPI.COMM_WORLD.Get_rank()
-sess = U.single_threaded_session()
-sess.__enter__()
-
-# # remove seeds for now
-seed = 0
-workerseed = seed + 10000 * rank
-set_global_seeds(workerseed)
-env.seed(seed)
-
-
-# seed = 0
-# set_global_seeds(seed)
-
-env.goToInit()
-time.sleep(3)
-
-# initial_observation = env.reset()
-# print("Initial observation: ", initial_observation)
-
-# U.make_session(num_cpu=1).__enter__()
-
-
-env.seed(seed)
-
-def policy_fn(name, ob_space, ac_space):
-    return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,
-        hid_size=128, num_hid_layers=3)
-
-pposgd_simple.learn(env, policy_fn,
-                    max_timesteps=1e8,
-                    timesteps_per_actorbatch=2048,
-                    clip_param=0.2, entcoeff=0.0,
-                    optim_epochs=10, optim_stepsize=3e-4, gamma=0.99,
-                    optim_batchsize=128, lam=0.95, schedule='linear', save_model_with_prefix='mara_orient_ppo1_test', outdir=logger.get_dir()) #
-
-# def policy_fn(name, ob_space, ac_space):
-#     return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,
-#         hid_size=256, num_hid_layers=3)
-
-# pposgd_simple.learn(env, policy_fn,
-#                     max_timesteps=1e8,
-#                     timesteps_per_actorbatch=2048,
-#                     clip_param=0.2, entcoeff=0.0,
-#                     optim_epochs=10, optim_stepsize=3e-4, gamma=0.99,
-#                     optim_batchsize=256, lam=0.95, schedule='linear', save_model_with_prefix='mara_orient_ppo1_test', outdir=logger.get_dir()) #
-
-env.close()
-
-
-# env.monitor.close()
+done = False
+while True:
+    action = pi.act(False, obs)[0]
+    obs, reward, done, info = env.step(action)
+    # print(action)
