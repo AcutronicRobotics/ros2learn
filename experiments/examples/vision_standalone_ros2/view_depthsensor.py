@@ -168,7 +168,8 @@ def color_callback(msg):
             # uncomment this if we want to do like servoing
 
             # print("Rt_pred: \n", Rt_pred)
-            print("Pose in world: ", pose_target)
+            # print("Pose in world: ", pose_target)
+            publisher_pose.publish(pose_target)
 
 def main(args=None):
     rclpy.init(args=args)
@@ -177,6 +178,7 @@ def main(args=None):
 
     subscription_depth = node.create_subscription(Image, '/hros_sensing_depthsensor_00FA35000222/depth', depth_callback,  qos_profile=qos_profile_sensor_data)
     subscription_color = node.create_subscription(Image, '/hros_sensing_depthsensor_00FA35000222/rgb', color_callback,  qos_profile=qos_profile_sensor_data)
+
 
     executor = MultiThreadedExecutor(num_threads=8)
     executor.add_node(node)
@@ -194,8 +196,11 @@ def main(args=None):
     global cam_pose_x
     global cam_pose_y
     global cam_pose_z
+    global publisher_pose
 
     internal_calibration = get_camera_intrinsic()
+
+    publisher_pose = node.create_publisher(Pose, '/mara/target')
 
     cam_pose_x = -0.5087683179567231 # random.uniform(-0.25, -0.6)#-0.5087683179567231#0.0 #random.uniform(-0.25, -0.6)#-0.5087683179567231#random.uniform(-0.3, -0.6)#random.uniform(-0.25, -0.6) # -0.5087683179567231#
     cam_pose_y = 0.013376#random.uniform(0.0, -0.2)
