@@ -1,47 +1,180 @@
-import numpy as np
-import sys
-
 import gym
 import gym_gazebo
-
 import tensorflow as tf
-
 import argparse
 import copy
+import sys
+import numpy as np
+
+from baselines import bench, logger
+
+from baselines.common.vec_env.vec_normalize import VecNormalize
+from baselines.ppo2 import ppo2
+import tensorflow as tf
+from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
+from baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
+
+from baselines.common.cmd_util import common_arg_parser, parse_unknown_args
+
+import functools
+import os.path as osp
+from collections import deque
+from baselines.common import explained_variance, set_global_seeds
+from baselines.common.policies import build_policy
+from baselines.common.runners import AbstractEnvRunner
+from baselines.common.tf_util import get_session, save_variables, load_variables
+from baselines.common.mpi_adam_optimizer import MpiAdamOptimizer
+
+from importlib import import_module
+import multiprocessing
+
+try:
+    from mpi4py import MPI
+except ImportError:
+    MPI = None
+
+import os
 import time
 
-from baselines import logger
-from baselines.common import set_global_seeds, tf_util as U
 
-from baselines.acktr.acktr_cont import learn
-from baselines.agent.utility.general_utils import get_ee_points, get_position
-from baselines.ppo1 import mlp_policy, pposgd_simple
-from baselines.ppo2 import ppo2
-from baselines.ppo2.policies import LstmMlpPolicy, MlpPolicy
+def get_alg_module(alg, submodule=None):
+    submodule = submodule or alg
+    try:
+        # first try to import the alg module from baselines
+        alg_module = import_module('.'.join(['baselines', alg, submodule]))
+    except ImportError:
+        # then from rl_algs
+        alg_module = import_module('.'.join(['rl_' + 'algs', alg, submodule]))
 
-env = gym.make('MARAOrient-v0')
-initial_observation = env.reset()
-print("Initial observation: ", initial_observation)
-# env.render()
-seed = 0
+    return alg_module
 
-sess = U.make_session(num_cpu=1)
-sess.__enter__()
-def policy_fn(name, ob_space, ac_space):
-    return policies.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,
-    hid_size=64, num_hid_layers=2)
-# gym.logger.setLevel(logging.WARN)
+
+def get_learn_function(alg):
+    return get_alg_module(alg).learn
+
+def get_learn_function_defaults(alg, env_type):
+    try:
+        alg_defaults = get_alg_module(alg, 'defaults')
+        kwargs = getattr(alg_defaults, env_type)()
+    except (ImportError, AttributeError):
+        kwargs = {}
+    return kwargs
+
+def constfn(val):
+    def f(_):
+        return val
+    return f
+
+def make_env():
+    env = gym.make('MARAOrient-v0')
+    env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit, reset_jnts=args.reset_jnts)
+    logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
+    logger.configure(os.path.abspath(logdir))
+    print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
+    # env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir(), str(rank)), allow_early_resets=True)
+    env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True)
+    # env.render()
+    return env
+
+
+# parser
+parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1)
+parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='sec')
+parser.add_argument('--reset-jnts', help='reset the enviroment',type=bool, default=True)
+args = parser.parse_args()
+
+ncpu = multiprocessing.cpu_count()
+if sys.platform == 'darwin': ncpu //= 2
+
+print("ncpu: ", ncpu)
+# ncpu = 1
+config = tf.ConfigProto(allow_soft_placement=True,
+                        intra_op_parallelism_threads=ncpu,
+                        inter_op_parallelism_threads=ncpu,
+                        log_device_placement=False)
+config.gpu_options.allow_growth = True #pylint: disable=E1101
+
+tf.Session(config=config).__enter__()
+# def make_env(rank):
+
+nenvs = 1
+# env = SubprocVecEnv([make_env(i) for i in range(nenvs)])
+env = DummyVecEnv([make_env])
+env = VecNormalize(env)
+alg='ppo2'
+env_type = 'mujoco'
+learn = get_learn_function('ppo2')
+
+alg_kwargs ={
+'num_layers': 2,
+'num_hidden': 64
+
+}
+# alg_kwargs.append('num_layers')
+# alg_kwargs.append('num_hidden')
+# alg_kwargs['num_hidden'] = 64
+# alg_kwargs['num'] = get_learn_function_defaults('ppo2', env_type)
+
+print("alg_kwargs: ",alg_kwargs)
+
+nsteps = 1 # default
+nbatch = nenvs * nsteps
+nminibatches=4
+
+nbatch_train = nbatch // nminibatches
+vf_coef=0.5
+max_grad_norm=0.5
+ent_coef=0.0
+
+gamma=0.99
+lam=0.95
+lr=3e-4
+cliprange=0.2
+seed=0
+total_timesteps = 1e6
+
+network = 'mlp'
+# alg_kwargs['network'] = 'mlp'
+rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
+
+
+set_global_seeds(seed)
+if isinstance(lr, float): lr = constfn(lr)
+else: assert callable(lr)
+if isinstance(cliprange, float): cliprange = constfn(cliprange)
+else: assert callable(cliprange)
+total_timesteps = int(total_timesteps)
+
+policy = build_policy(env, network, **alg_kwargs)
+
+nenvs = env.num_envs
+ob_space = env.observation_space
+ac_space = env.action_space
+nbatch_train = nbatch // nminibatches
+
+
+dones = [False for _ in range(nenvs)]
+
+load_path='/tmp/rosrl/GazeboMARATopOrientVisionv0Env/ppo2/1000000_nsec/checkpoints/00480'
+
+
+make_model = lambda : ppo2.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train,
+                nsteps=nsteps, ent_coef=ent_coef, vf_coef=vf_coef,
+                max_grad_norm=max_grad_norm)
+
+model = make_model()
+if load_path is not None:
+    print("Loading model from: ", load_path)
+    model.load(load_path)
+runner = ppo2.Runner(env=env, model=model, nsteps=nsteps, gamma=gamma, lam=lam)
+
+
 obs = env.reset()
-print("Initial obs: ", obs)
-# env.seed(seed)
-# time.sleep(5)
-pi = policy_fn('pi', env.observation_space, env.action_space)
-tf.train.Saver().restore(sess, '/tmp/rosrl/GazeboMARATopOrientv0Env/ppo1/1000000_nsec/models/mara_orient_ppo1_test_afterIter_410.model') # for the H
-# loadPath = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/'
-# tf.train.Saver().restore(sess, loadPath + 'ros1_ppo1_H_afterIter_263.model')
-# tf.train.Saver().restore(sess, '/home/rkojcev/baselines_networks/ros1_ppo1_test_O/saved_models/ros1_ppo1_test_O_afterIter_421.model') # for the O
-done = False
+
 while True:
-    action = pi.act(True, obs)[0]
-    obs, reward, done, info = env.step(action)
-    # print(action)
+    actions = model.step(obs)[0]
+    obs, _, done, _  = env.step(actions)
+    # env.render()
+    # if done:
+    #     obs = env.reset()

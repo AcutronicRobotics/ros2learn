@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import gym
 import gym_gazebo
 import tensorflow as tf
@@ -8,13 +6,28 @@ import copy
 import sys
 import numpy as np
 
-from mpi4py import MPI
-
 from baselines import bench, logger
-from baselines.bench import Monitor
-from baselines.common import set_global_seeds, tf_util as U
-from baselines.ppo1 import mlp_policy, pposgd_simple
+
+from baselines.common import set_global_seeds
+from baselines.common.vec_env.vec_normalize import VecNormalize
+from baselines.ppo2 import ppo2
+# from baselines.ppo2.policies import MlpPolicy, LstmPolicy, LnLstmPolicy, LstmMlpPolicy
+import tensorflow as tf
+from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
+from baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
+
+from baselines.common.cmd_util import common_arg_parser, parse_unknown_args
+
+from importlib import import_module
+import multiprocessing
+
+try:
+    from mpi4py import MPI
+except ImportError:
+    MPI = None
+
 import os
+import time
 
 from sensor_msgs.msg import Image as ImageMsg
 # ROS Image message -> OpenCV2 image converter
@@ -26,7 +39,6 @@ import threading # Used for time locks to synchronize position data.
 
 import cv2
 from darkflow.net.build import TFNet
-import time
 
 from darkflow.utils.utils import *
 
@@ -36,33 +48,6 @@ import yaml
 import glob
 
 import quaternion as quat
-
-# RK: Long Version
-# dumps = list()
-# # points_3d = list()
-# cur_dir = os.getcwd()
-# #models info for now is hardcoded to a particular folder:
-# models_file = '/home/rkojcev/devel/darkflow/models_info/'
-# os.chdir(models_file)
-# annotations = sorted(os.listdir('.'))
-# for i, file in enumerate(annotations):
-#     print(i, file)
-#     if not os.path.isdir(file):
-#         print("annotations: ", file)
-#         models_file_path = file
-#         model_file = open(file)
-#         yaml_model=yaml.load(model_file)
-#         models_info = yaml_model
-#         annotations.remove(file)
-#
-# print("models_info: ", models_info)
-
-# Short version of loading models file
-model_file = open('/home/rkojcev/devel/darkflow/models_info/models_info.yml')
-yaml_model=yaml.load(model_file)
-models_info = yaml_model
-print("models_info: ", models_info)
-
 
 def _observation_image_callback(msg):
     """
@@ -93,8 +78,7 @@ def _observation_image_callback(msg):
                     result_max_iter = i
                     # print(result[i]['label'])
 
-            print("Label is: ",result[result_max_iter]['label'])
-            # print(result_max_iter)
+            # print("Label is: ",result[result_max_iter]['label'])
 
             if(result[result_max_iter]['label'] is "1"):
                 label_human_readable = "coffe cup"
@@ -105,8 +89,6 @@ def _observation_image_callback(msg):
 
             if(result[result_max_iter]['label'] is "3"):
                 label_human_readable = "rubik cube"
-            print(int(result[result_max_iter]['label'])
-            print(models_info[int(result[result_max_iter]['label'])]['min_x'])
 
             corner_3D_1 = [models_info[int(result[result_max_iter]['label'])]['min_x'], models_info[int(result[result_max_iter]['label'])]['min_y'], models_info[int(result[result_max_iter]['label'])]['min_z']] # bottom left back
             corner_3D_2 = [models_info[int(result[result_max_iter]['label'])]['min_x'], models_info[int(result[result_max_iter]['label'])]['min_y'] + models_info[int(result[result_max_iter]['label'])]['size_y'], models_info[int(result[result_max_iter]['label'])]['min_z']] # bottom right back
@@ -223,20 +205,81 @@ def _observation_image_callback(msg):
         cv2.imshow("Image window", cv2_img)
         cv2.waitKey(3)
 
+
+def get_alg_module(alg, submodule=None):
+    submodule = submodule or alg
+    try:
+        # first try to import the alg module from baselines
+        alg_module = import_module('.'.join(['baselines', alg, submodule]))
+    except ImportError:
+        # then from rl_algs
+        alg_module = import_module('.'.join(['rl_' + 'algs', alg, submodule]))
+
+    return alg_module
+
+
+def get_learn_function(alg):
+    return get_alg_module(alg).learn
+
+def get_learn_function_defaults(alg, env_type):
+    try:
+        alg_defaults = get_alg_module(alg, 'defaults')
+        kwargs = getattr(alg_defaults, env_type)()
+    except (ImportError, AttributeError):
+        kwargs = {}
+    return kwargs
+
+def make_env():
+    env = gym.make('MARAVisionOrient-v0')
+    env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit, reset_jnts=args.reset_jnts)
+    logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
+    logger.configure(os.path.abspath(logdir))
+    print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
+    # env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir(), str(rank)), allow_early_resets=True)
+    env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True)
+    # env.render()
+    return env
+
+# parser
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1)
 parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='sec')
+parser.add_argument('--reset-jnts', help='reset the enviroment',type=bool, default=True)
 args = parser.parse_args()
 
-env = gym.make('MARAVisionOrient-v0')
-env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit, reset_jnts=False)
-logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
+# arg_parser = common_arg_parser()
+# args, unknown_args = arg_parser.parse_known_args()
+# extra_args = {k: parse(v) for k,v in parse_unknown_args(unknown_args).items()}
 
-logger.configure(os.path.abspath(logdir))
-print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
+"""
+ROS and Vision stuff goes here
+"""
 
+# RK: Long Version
+# dumps = list()
+# # points_3d = list()
+# cur_dir = os.getcwd()
+# #models info for now is hardcoded to a particular folder:
+# models_file = '/home/rkojcev/devel/darkflow/models_info/'
+# os.chdir(models_file)
+# annotations = sorted(os.listdir('.'))
+# for i, file in enumerate(annotations):
+#     print(i, file)
+#     if not os.path.isdir(file):
+#         print("annotations: ", file)
+#         models_file_path = file
+#         model_file = open(file)
+#         yaml_model=yaml.load(model_file)
+#         models_info = yaml_model
+#         annotations.remove(file)
+#
+# print("models_info: ", models_info)
 
-# rate = rospy.Rate(0.3) # 10hz
+# Short version of loading models file
+model_file = open('/home/rkojcev/devel/darkflow/models_info/models_info.yml')
+yaml_model=yaml.load(model_file)
+models_info = yaml_model
+print("models_info: ", models_info)
 
 
 options = {"pbLoad": "/home/rkojcev/devel/darkflow/built_graph/yolo-new.pb", "metaLoad": "/home/rkojcev/devel/darkflow/built_graph/yolo-new.meta", "threshold": 0.02, "gpu": 1.00}
@@ -249,56 +292,42 @@ internal_calibration = get_camera_intrinsic()
 _sub_image = rospy.Subscriber("/mara/rgb/image_raw", ImageMsg, _observation_image_callback)
 _pub_target = rospy.Publisher(TARGET_PUBLISHER, Pose)
 
-# env = Monitor(env, logger.get_dir(),  allow_early_resets=True)
 
-rank = MPI.COMM_WORLD.Get_rank()
-sess = U.single_threaded_session()
-sess.__enter__()
+ncpu = multiprocessing.cpu_count()
+if sys.platform == 'darwin': ncpu //= 2
 
-# # remove seeds for now
+print("ncpu: ", ncpu)
+# ncpu = 1
+config = tf.ConfigProto(allow_soft_placement=True,
+                        intra_op_parallelism_threads=ncpu,
+                        inter_op_parallelism_threads=ncpu,
+                        log_device_placement=False)
+config.gpu_options.allow_growth = True #pylint: disable=E1101
+
+tf.Session(config=config).__enter__()
+
+nenvs = 1
+# env = SubprocVecEnv([make_env(i) for i in range(nenvs)])
+env = DummyVecEnv([make_env])
+env = VecNormalize(env)
+alg='ppo2'
+env_type = 'mujoco'
+learn = get_learn_function('ppo2')
+alg_kwargs = get_learn_function_defaults('ppo2', env_type)
+# alg_kwargs.update(extra_args)
+
 seed = 0
-workerseed = seed + 10000 * rank
-set_global_seeds(workerseed)
-env.seed(seed)
+set_global_seeds(seed)
+network = 'mlp'
+alg_kwargs['network'] = 'mlp'
+rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
 
+save_path =  '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/'
 
-# seed = 0
-# set_global_seeds(seed)
+model, _ = learn(env=env,
+    seed=seed,
+    total_timesteps=1e8, save_interval=10, **alg_kwargs) #, outdir=logger.get_dir()
 
-env.goToInit()
-time.sleep(3)
-
-# initial_observation = env.reset()
-# print("Initial observation: ", initial_observation)
-
-# U.make_session(num_cpu=1).__enter__()
-
-
-env.seed(seed)
-
-def policy_fn(name, ob_space, ac_space):
-    return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,
-        hid_size=64, num_hid_layers=3)
-
-pposgd_simple.learn(env, policy_fn,
-                    max_timesteps=1e8,
-                    timesteps_per_actorbatch=2048,
-                    clip_param=0.2, entcoeff=0.0,
-                    optim_epochs=10, optim_stepsize=3e-4, gamma=0.99,
-                    optim_batchsize=256, lam=0.95, schedule='linear', save_model_with_prefix='mara_orient_ppo1_test', outdir=logger.get_dir()) #
-
-# def policy_fn(name, ob_space, ac_space):
-#     return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,
-#         hid_size=256, num_hid_layers=3)
-
-# pposgd_simple.learn(env, policy_fn,
-#                     max_timesteps=1e8,
-#                     timesteps_per_actorbatch=2048,
-#                     clip_param=0.2, entcoeff=0.0,
-#                     optim_epochs=10, optim_stepsize=3e-4, gamma=0.99,
-#                     optim_batchsize=256, lam=0.95, schedule='linear', save_model_with_prefix='mara_orient_ppo1_test', outdir=logger.get_dir()) #
-
-env.close()
-
-
-# env.monitor.close()
+if save_path is not None and rank == 0:
+        save_path = osp.expanduser(args.save_path)
+        model.save(save_path)

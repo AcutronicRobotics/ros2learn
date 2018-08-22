@@ -1,5 +1,6 @@
 import numpy as np
 import sys
+import os
 
 import gym
 import gym_gazebo
@@ -40,6 +41,7 @@ import glob
 import quaternion as quat
 
 
+
 def _observation_image_callback(msg):
     """
     Code for processing the results of the vision CNN
@@ -48,6 +50,7 @@ def _observation_image_callback(msg):
     # print("Received an image!")
     result_max = 0.
     result_max_iter = 0
+    # global models_info
 
     try:
         # Convert your ROS Image message to OpenCV2
@@ -179,7 +182,7 @@ def _observation_image_callback(msg):
             #uncomment if we want to use like servoing every time, just wont work if the robot is in front of the object!!!
             cam_pose_x = -0.5087683179567231 # random.uniform(-0.25, -0.6)#-0.5087683179567231#0.0 #random.uniform(-0.25, -0.6)#-0.5087683179567231#random.uniform(-0.3, -0.6)#random.uniform(-0.25, -0.6) # -0.5087683179567231#
             cam_pose_y = 0.013376#random.uniform(0.0, -0.2)
-            cam_pose_z = 1.4808068867058566
+            cam_pose_z = 1.3808068867058566
 
             pose_target = Pose()
             pose_target.position.x = -t_pred[0]/3.0 + cam_pose_x
@@ -200,6 +203,40 @@ def _observation_image_callback(msg):
 
 
 
+dumps = list()
+# RK: Long version to load the model file
+# points_3d = list()
+# cur_dir = os.getcwd()
+#models info for now is hardcoded to a particular folder:
+# models_file = '/home/rkojcev/devel/darkflow/models_info'
+# print("models_file: ", models_file)
+# os.chdir(models_file)
+# # Check current working directory.
+# retval = os.getcwd()
+#
+# print("Directory changed successfully %s" % retval)
+#
+# annotations = sorted(os.listdir(retval))
+# for i, file in enumerate(annotations):
+#     print(i, file)
+#     if not os.path.isdir(file):
+#         print("annotations: ", file)
+#         if file is 'log.txt':
+#             annotations.remove(file)
+#         models_file_path = file
+#         model_file = open(file)
+#         yaml_model=yaml.load(model_file)
+#         models_info = yaml_model
+#         annotations.remove(file)
+
+
+# Short version to load the model file, with hardcoded path:
+# models_file = '/home/rkojcev/devel/darkflow/models_info/models_info.yml'
+model_file = open('/home/rkojcev/devel/darkflow/models_info/models_info.yml')
+yaml_model=yaml.load(model_file)
+models_info = yaml_model
+print("models_info: ", models_info)
+
 env = gym.make('MARAVisionOrient-v0')
 initial_observation = env.reset()
 print("Initial observation: ", initial_observation)
@@ -217,27 +254,8 @@ print("Initial obs: ", obs)
 # env.seed(seed)
 # time.sleep(5)
 pi = policy_fn('pi', env.observation_space, env.action_space)
-tf.train.Saver().restore(sess, '/tmp/rosrl/GazeboMARATopOrientVisionv0Env/ppo1/1000000_nsec/models/mara_orient_ppo1_test_afterIter_1303.model') # for the H
-
-
-dumps = list()
-# points_3d = list()
-cur_dir = os.getcwd()
-#models info for now is hardcoded to a particular folder:
-models_file = '/home/rkojcev/devel/darkflow/models_info/'
-os.chdir(models_file)
-annotations = sorted(os.listdir('.'))
-for i, file in enumerate(annotations):
-    print(i, file)
-    if not os.path.isdir(file):
-        print("annotations: ", file)
-        models_file_path = file
-        model_file = open(file)
-        yaml_model=yaml.load(model_file)
-        models_info = yaml_model
-        annotations.remove(file)
-
-print("models_info: ", models_info)
+tf.train.Saver().restore(sess, '/media/rkojcev/Data_Networks/ppo_vision/GazeboMARATopOrientVisionv0Env/ppo1/1000000_nsec/models/mara_orient_ppo1_test_afterIter_361.model') # for the H
+# global models_info
 
 
 options = {"pbLoad": "/home/rkojcev/devel/darkflow/built_graph/yolo-new.pb", "metaLoad": "/home/rkojcev/devel/darkflow/built_graph/yolo-new.meta", "threshold": 0.02, "gpu": 1.00}

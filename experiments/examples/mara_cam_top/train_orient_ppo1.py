@@ -40,7 +40,7 @@ rank = MPI.COMM_WORLD.Get_rank()
 sess = U.single_threaded_session()
 sess.__enter__()
 
-seed = 2
+seed = 0
 workerseed = seed + 10000 * rank
 set_global_seeds(workerseed)
 env.seed(seed)
@@ -61,7 +61,7 @@ time.sleep(3)
 env.seed(seed)
 def policy_fn(name, ob_space, ac_space):
     return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,
-        hid_size=256, num_hid_layers=3)
+        hid_size=64, num_hid_layers=3)
 
 pposgd_simple.learn(env, policy_fn,
                     max_timesteps=1e8,
