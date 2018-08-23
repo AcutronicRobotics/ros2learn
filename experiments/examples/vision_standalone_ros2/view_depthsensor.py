@@ -208,22 +208,31 @@ def main(args=None):
 
 
     dumps = list()
-    # points_3d = list()
-    cur_dir = os.getcwd()
-    #models info for now is hardcoded to a particular folder:
-    models_file = '/home/rkojcev/devel/darkflow/models_info/'
-    os.chdir(models_file)
-    annotations = sorted(os.listdir('.'))
-    for i, file in enumerate(annotations):
-        print(i, file)
-        if not os.path.isdir(file):
-            print("annotations: ", file)
-            models_file_path = file
-            model_file = open(file)
-            yaml_model=yaml.load(model_file)
-            models_info = yaml_model
-            annotations.remove(file)
 
+    # RK: Long Version
+    # dumps = list()
+    # # points_3d = list()
+    # cur_dir = os.getcwd()
+    # #models info for now is hardcoded to a particular folder:
+    # models_file = '/home/rkojcev/devel/darkflow/models_info/'
+    # os.chdir(models_file)
+    # annotations = sorted(os.listdir('.'))
+    # for i, file in enumerate(annotations):
+    #     print(i, file)
+    #     if not os.path.isdir(file):
+    #         print("annotations: ", file)
+    #         models_file_path = file
+    #         model_file = open(file)
+    #         yaml_model=yaml.load(model_file)
+    #         models_info = yaml_model
+    #         annotations.remove(file)
+    #
+    # print("models_info: ", models_info)
+
+    # Short version of loading models file
+    model_file = open('/home/rkojcev/devel/darkflow/models_info/models_info.yml')
+    yaml_model=yaml.load(model_file)
+    models_info = yaml_model
     print("models_info: ", models_info)
 
 
