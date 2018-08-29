@@ -37,6 +37,8 @@ import glob
 
 import quaternion as quat
 
+import csv
+
 # RK: Long Version
 # dumps = list()
 # # points_3d = list()
@@ -63,6 +65,7 @@ yaml_model=yaml.load(model_file)
 models_info = yaml_model
 print("models_info: ", models_info)
 
+take_point_once = 1
 
 def _observation_image_callback(msg):
     """
@@ -72,6 +75,8 @@ def _observation_image_callback(msg):
     # print("Received an image!")
     result_max = 0.
     result_max_iter = 0
+
+    global take_point_once
 
     try:
         # Convert your ROS Image message to OpenCV2
@@ -93,7 +98,7 @@ def _observation_image_callback(msg):
                     result_max_iter = i
                     # print(result[i]['label'])
 
-            print("Label is: ",result[result_max_iter]['label'])
+            # print("Label is: ",result[result_max_iter]['label'])
             # print(result_max_iter)
 
             if(result[result_max_iter]['label'] is "1"):
@@ -105,8 +110,6 @@ def _observation_image_callback(msg):
 
             if(result[result_max_iter]['label'] is "3"):
                 label_human_readable = "rubik cube"
-            print(int(result[result_max_iter]['label'])
-            print(models_info[int(result[result_max_iter]['label'])]['min_x'])
 
             corner_3D_1 = [models_info[int(result[result_max_iter]['label'])]['min_x'], models_info[int(result[result_max_iter]['label'])]['min_y'], models_info[int(result[result_max_iter]['label'])]['min_z']] # bottom left back
             corner_3D_2 = [models_info[int(result[result_max_iter]['label'])]['min_x'], models_info[int(result[result_max_iter]['label'])]['min_y'] + models_info[int(result[result_max_iter]['label'])]['size_y'], models_info[int(result[result_max_iter]['label'])]['min_z']] # bottom right back
@@ -196,6 +199,8 @@ def _observation_image_callback(msg):
 
             Rt_pred = np.concatenate((R_pred, t_pred), axis=1)
 
+            # note to RK: here you need to multiply the camera transformation with the Rt_pred and take that parameters in the final calculation
+
             # print("Rt_pred: ", Rt_pred)
 
             #now here publish the detected target position from the vision system. And calculate camera to world so we get the final point to the world:
@@ -203,13 +208,17 @@ def _observation_image_callback(msg):
             #If we stream continiously when the robot covers the cube we cant detect anything and if the target is updated at that time
             #uncomment if we want to use like servoing every time, just wont work if the robot is in front of the object!!!
             cam_pose_x = -0.5087683179567231 # random.uniform(-0.25, -0.6)#-0.5087683179567231#0.0 #random.uniform(-0.25, -0.6)#-0.5087683179567231#random.uniform(-0.3, -0.6)#random.uniform(-0.25, -0.6) # -0.5087683179567231#
-            cam_pose_y = 0.013376#random.uniform(0.0, -0.2)
-            cam_pose_z = 1.4808068867058566
+            cam_pose_y = -0.013376#random.uniform(0.0, -0.2)
+            cam_pose_z = 1.3808068867058566 #1.4808068867058566
+
+            # HACK 
+            if t_pred[2] > 0.0:
+                t_pred[2] = -t_pred[2]
 
             pose_target = Pose()
             pose_target.position.x = -t_pred[0]/3.0 + cam_pose_x
             pose_target.position.y = -t_pred[1]/3.0 - cam_pose_y
-            pose_target.position.z = -t_pred[2]/3.0 + cam_pose_z
+            pose_target.position.z =  t_pred[2]/3.0 + cam_pose_z
 
             q_rubik = quat.from_rotation_matrix(R_pred)
             # print("q_rubik: ", q_rubik.x, q_rubik.y, q_r
@@ -219,6 +228,14 @@ def _observation_image_callback(msg):
             pose_target.orientation.w = q_rubik.w#0.0#q_rubik[3]
             # uncomment this if we want to do like servoing
             _pub_target.publish(pose_target)
+
+            if take_point_once is 1:
+                f_tgt = open(logger.get_dir() + '/target.csv', 'w')#
+                TFields = ['EE_POS_TGT','EE_ROT_TGT']
+                writer_tgt = csv.DictWriter(f_tgt, fieldnames=TFields)
+                writer_tgt.writeheader()
+                writer_tgt.writerow({'EE_POS_TGT': str(np.asarray([pose_target.position.x, pose_target.position.y, pose_target.position.z])),'EE_ROT_TGT': str(R_pred)})
+                take_point_once = 0
 
         cv2.imshow("Image window", cv2_img)
         cv2.waitKey(3)
@@ -258,7 +275,7 @@ sess.__enter__()
 # # remove seeds for now
 seed = 0
 workerseed = seed + 10000 * rank
-set_global_seeds(workerseed)
+set_global_seeds(seed)
 env.seed(seed)
 
 
@@ -282,10 +299,10 @@ def policy_fn(name, ob_space, ac_space):
 
 pposgd_simple.learn(env, policy_fn,
                     max_timesteps=1e8,
-                    timesteps_per_actorbatch=2048,
+                    timesteps_per_actorbatch=1024,
                     clip_param=0.2, entcoeff=0.0,
                     optim_epochs=10, optim_stepsize=3e-4, gamma=0.99,
-                    optim_batchsize=256, lam=0.95, schedule='linear', save_model_with_prefix='mara_orient_ppo1_test', outdir=logger.get_dir()) #
+                    optim_batchsize=64, lam=0.95, schedule='linear', save_model_with_prefix='mara_orient_ppo1_test', outdir=logger.get_dir()) #
 
 # def policy_fn(name, ob_space, ac_space):
 #     return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,

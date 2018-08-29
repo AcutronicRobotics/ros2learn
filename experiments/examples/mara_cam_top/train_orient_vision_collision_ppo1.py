@@ -1,22 +1,20 @@
-import numpy as np
-import sys
-import os
+#!/usr/bin/env python3
 
 import gym
 import gym_gazebo
-
 import tensorflow as tf
-
 import argparse
 import copy
-import time
+import sys
+import numpy as np
 
-from baselines import logger
+from mpi4py import MPI
+
+from baselines import bench, logger
+from baselines.bench import Monitor
 from baselines.common import set_global_seeds, tf_util as U
-
-from baselines.acktr.acktr_cont import learn
-from baselines.agent.utility.general_utils import get_ee_points, get_position
 from baselines.ppo1 import mlp_policy, pposgd_simple
+import os
 
 from sensor_msgs.msg import Image as ImageMsg
 # ROS Image message -> OpenCV2 image converter
@@ -35,12 +33,39 @@ from darkflow.utils.utils import *
 import rospy
 
 import yaml
-# import xml.etree.ElementTree as ET
 import glob
 
 import quaternion as quat
 
+import csv
 
+# RK: Long Version
+# dumps = list()
+# # points_3d = list()
+# cur_dir = os.getcwd()
+# #models info for now is hardcoded to a particular folder:
+# models_file = '/home/rkojcev/devel/darkflow/models_info/'
+# os.chdir(models_file)
+# annotations = sorted(os.listdir('.'))
+# for i, file in enumerate(annotations):
+#     print(i, file)
+#     if not os.path.isdir(file):
+#         print("annotations: ", file)
+#         models_file_path = file
+#         model_file = open(file)
+#         yaml_model=yaml.load(model_file)
+#         models_info = yaml_model
+#         annotations.remove(file)
+#
+# print("models_info: ", models_info)
+
+# Short version of loading models file
+model_file = open('/home/rkojcev/devel/darkflow/models_info/models_info.yml')
+yaml_model=yaml.load(model_file)
+models_info = yaml_model
+print("models_info: ", models_info)
+
+take_point_once = 1
 
 def _observation_image_callback(msg):
     """
@@ -50,7 +75,8 @@ def _observation_image_callback(msg):
     # print("Received an image!")
     result_max = 0.
     result_max_iter = 0
-    # global models_info
+
+    global take_point_once
 
     try:
         # Convert your ROS Image message to OpenCV2
@@ -58,7 +84,6 @@ def _observation_image_callback(msg):
     except CvBridgeError as e:
         print(e)
     else:
-        # Save your OpenCV2 image as a jpeg
         result = tfnet.return_predict(cv2_img)
 
         font = cv2.FONT_HERSHEY_SIMPLEX
@@ -74,6 +99,7 @@ def _observation_image_callback(msg):
                     # print(result[i]['label'])
 
             # print("Label is: ",result[result_max_iter]['label'])
+            # print(result_max_iter)
 
             if(result[result_max_iter]['label'] is "1"):
                 label_human_readable = "coffe cup"
@@ -132,8 +158,8 @@ def _observation_image_callback(msg):
             cv2.circle(cv2_img,(int(result[result_max_iter]['point_8']['x']),int(result[result_max_iter]['point_8']['y'])), 4, (255,255,0), -1)
             # cv2.putText(rgb_image,'8',(int(result[result_max_iter]['point_8']['x']),int(result[result_max_iter]['point_8']['y'])), font, 0.8,(0,255,0),2,cv2.LINE_AA)
             cv2.circle(cv2_img,(int(result[result_max_iter]['point_9']['x']),int(result[result_max_iter]['point_9']['y'])), 4, (0,0,255), -1)
-        #     # cv2.putText(imgcv,'center',(int(result[0]['point_9']['x']),int(result[0]['point_9']['y'])), font, 0.8,(255,255,255),2,cv2.LINE_AA)
-        # cv2.imshow("depth camera", depth_map)
+            # cv2.putText(imgcv,'center',(int(result[0]['point_9']['x']),int(result[0]['point_9']['y'])), font, 0.8,(255,255,255),2,cv2.LINE_AA)
+            # cv2.imshow("depth camera", depth_map)
             # cv2.putText(rgb_image,result[result_max_iter]['label'],(int(result[result_max_iter]['point_1']['x']-30),int(result[result_max_iter]['point_1']['y']-30)), font, 1.0,(255,255,255),2,cv2.LINE_AA)
             cv2.putText(cv2_img,label_human_readable,(int(result[result_max_iter]['point_1']['x']-30),int(result[result_max_iter]['point_1']['y']-30)), font, 0.8,(255,255,255),2,cv2.LINE_AA)
 
@@ -173,21 +199,25 @@ def _observation_image_callback(msg):
 
             Rt_pred = np.concatenate((R_pred, t_pred), axis=1)
 
+            # note to RK: here you need to multiply the camera transformation with the Rt_pred and take that parameters in the final calculation
+
             # print("Rt_pred: ", Rt_pred)
 
             #now here publish the detected target position from the vision system. And calculate camera to world so we get the final point to the world:
             # is it good idea for this to be detected on the first time we load something? or streem continiously.
             #If we stream continiously when the robot covers the cube we cant detect anything and if the target is updated at that time
-
             #uncomment if we want to use like servoing every time, just wont work if the robot is in front of the object!!!
             cam_pose_x = -0.5087683179567231 # random.uniform(-0.25, -0.6)#-0.5087683179567231#0.0 #random.uniform(-0.25, -0.6)#-0.5087683179567231#random.uniform(-0.3, -0.6)#random.uniform(-0.25, -0.6) # -0.5087683179567231#
-            cam_pose_y = 0.013376#random.uniform(0.0, -0.2)
-            cam_pose_z = 1.3808068867058566
+            cam_pose_y = -0.013376#random.uniform(0.0, -0.2)
+            cam_pose_z = 1.3808068867058566 #1.4808068867058566
+
+            if t_pred[2] > 0.0:
+                t_pred[2] = -t_pred[2]
 
             pose_target = Pose()
             pose_target.position.x = -t_pred[0]/3.0 + cam_pose_x
             pose_target.position.y = -t_pred[1]/3.0 - cam_pose_y
-            pose_target.position.z =  t_pred[2]/3.0 - cam_pose_z
+            pose_target.position.z = t_pred[2]/3.0 + cam_pose_z
 
             q_rubik = quat.from_rotation_matrix(R_pred)
             # print("q_rubik: ", q_rubik.x, q_rubik.y, q_r
@@ -198,64 +228,31 @@ def _observation_image_callback(msg):
             # uncomment this if we want to do like servoing
             _pub_target.publish(pose_target)
 
+            if take_point_once is 1:
+                f_tgt = open(logger.get_dir() + '/target.csv', 'w')#
+                TFields = ['EE_POS_TGT','EE_ROT_TGT']
+                writer_tgt = csv.DictWriter(f_tgt, fieldnames=TFields)
+                writer_tgt.writeheader()
+                writer_tgt.writerow({'EE_POS_TGT': str(np.asarray([pose_target.position.x, pose_target.position.y, pose_target.position.z])),'EE_ROT_TGT': str(R_pred)})
+                take_point_once = 0
+
         cv2.imshow("Image window", cv2_img)
         cv2.waitKey(3)
 
+parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1)
+parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='sec')
+args = parser.parse_args()
+
+env = gym.make('MARAVisionOrientCollision-v0')
+env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit, reset_jnts=False)
+logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
+
+logger.configure(os.path.abspath(logdir))
+print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
 
 
-dumps = list()
-# RK: Long version to load the model file
-# points_3d = list()
-# cur_dir = os.getcwd()
-#models info for now is hardcoded to a particular folder:
-# models_file = '/home/rkojcev/devel/darkflow/models_info'
-# print("models_file: ", models_file)
-# os.chdir(models_file)
-# # Check current working directory.
-# retval = os.getcwd()
-#
-# print("Directory changed successfully %s" % retval)
-#
-# annotations = sorted(os.listdir(retval))
-# for i, file in enumerate(annotations):
-#     print(i, file)
-#     if not os.path.isdir(file):
-#         print("annotations: ", file)
-#         if file is 'log.txt':
-#             annotations.remove(file)
-#         models_file_path = file
-#         model_file = open(file)
-#         yaml_model=yaml.load(model_file)
-#         models_info = yaml_model
-#         annotations.remove(file)
-
-
-# Short version to load the model file, with hardcoded path:
-# models_file = '/home/rkojcev/devel/darkflow/models_info/models_info.yml'
-model_file = open('/home/rkojcev/devel/darkflow/models_info/models_info.yml')
-yaml_model=yaml.load(model_file)
-models_info = yaml_model
-print("models_info: ", models_info)
-
-env = gym.make('MARAVisionOrient-v0')
-initial_observation = env.reset()
-print("Initial observation: ", initial_observation)
-# env.render()
-seed = 0
-
-sess = U.make_session(num_cpu=1)
-sess.__enter__()
-def policy_fn(name, ob_space, ac_space):
-    return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,
-    hid_size=64, num_hid_layers=3)
-# gym.logger.setLevel(logging.WARN)
-obs = env.reset()
-print("Initial obs: ", obs)
-# env.seed(seed)
-# time.sleep(5)
-pi = policy_fn('pi', env.observation_space, env.action_space)
-tf.train.Saver().restore(sess, '/tmp/rosrl/GazeboMARATopOrientVisionCollisionv0Env/ppo1/1000000_nsec/models/mara_orient_ppo1_test_afterIter_4802.model') # for the H
-# global models_info
+# rate = rospy.Rate(0.3) # 10hz
 
 
 options = {"pbLoad": "/home/rkojcev/devel/darkflow/built_graph/yolo-new.pb", "metaLoad": "/home/rkojcev/devel/darkflow/built_graph/yolo-new.meta", "threshold": 0.02, "gpu": 1.00}
@@ -268,8 +265,56 @@ internal_calibration = get_camera_intrinsic()
 _sub_image = rospy.Subscriber("/mara/rgb/image_raw", ImageMsg, _observation_image_callback)
 _pub_target = rospy.Publisher(TARGET_PUBLISHER, Pose)
 
-done = False
-while True:
-    action = pi.act(False, obs)[0]
-    obs, reward, done, info = env.step(action)
-    # print(action)
+# env = Monitor(env, logger.get_dir(),  allow_early_resets=True)
+
+rank = MPI.COMM_WORLD.Get_rank()
+sess = U.single_threaded_session()
+sess.__enter__()
+
+# # remove seeds for now
+seed = 0
+workerseed = seed + 10000 * rank
+set_global_seeds(seed)
+env.seed(seed)
+
+
+# seed = 0
+# set_global_seeds(seed)
+
+env.goToInit()
+time.sleep(3)
+
+# initial_observation = env.reset()
+# print("Initial observation: ", initial_observation)
+
+# U.make_session(num_cpu=1).__enter__()
+
+
+env.seed(seed)
+
+def policy_fn(name, ob_space, ac_space):
+    return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,
+        hid_size=64, num_hid_layers=3)
+
+pposgd_simple.learn(env, policy_fn,
+                    max_timesteps=1e8,
+                    timesteps_per_actorbatch=1024,
+                    clip_param=0.2, entcoeff=0.0,
+                    optim_epochs=10, optim_stepsize=3e-4, gamma=0.99,
+                    optim_batchsize=64, lam=0.95, schedule='linear', save_model_with_prefix='mara_orient_ppo1_test', outdir=logger.get_dir()) #
+
+# def policy_fn(name, ob_space, ac_space):
+#     return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,
+#         hid_size=256, num_hid_layers=3)
+
+# pposgd_simple.learn(env, policy_fn,
+#                     max_timesteps=1e8,
+#                     timesteps_per_actorbatch=2048,
+#                     clip_param=0.2, entcoeff=0.0,
+#                     optim_epochs=10, optim_stepsize=3e-4, gamma=0.99,
+#                     optim_batchsize=256, lam=0.95, schedule='linear', save_model_with_prefix='mara_orient_ppo1_test', outdir=logger.get_dir()) #
+
+env.close()
+
+
+# env.monitor.close()

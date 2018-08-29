@@ -185,13 +185,13 @@ def _observation_image_callback(msg):
             #If we stream continiously when the robot covers the cube we cant detect anything and if the target is updated at that time
             #uncomment if we want to use like servoing every time, just wont work if the robot is in front of the object!!!
             cam_pose_x = -0.5087683179567231 # random.uniform(-0.25, -0.6)#-0.5087683179567231#0.0 #random.uniform(-0.25, -0.6)#-0.5087683179567231#random.uniform(-0.3, -0.6)#random.uniform(-0.25, -0.6) # -0.5087683179567231#
-            cam_pose_y = 0.013376#random.uniform(0.0, -0.2)
-            cam_pose_z = 1.4808068867058566
+            cam_pose_y = -0.013376#random.uniform(0.0, -0.2)
+            cam_pose_z = 1.3808068867058566 #1.4808068867058566
 
             pose_target = Pose()
             pose_target.position.x = -t_pred[0]/3.0 + cam_pose_x
             pose_target.position.y = -t_pred[1]/3.0 - cam_pose_y
-            pose_target.position.z = -t_pred[2]/3.0 + cam_pose_z
+            pose_target.position.z =  t_pred[2]/3.0 + cam_pose_z
 
             q_rubik = quat.from_rotation_matrix(R_pred)
             # print("q_rubik: ", q_rubik.x, q_rubik.y, q_r

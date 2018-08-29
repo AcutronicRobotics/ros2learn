@@ -118,7 +118,7 @@ alg_kwargs ={
 
 print("alg_kwargs: ",alg_kwargs)
 
-nsteps = 1 # default
+nsteps = 2048 # default
 nbatch = nenvs * nsteps
 nminibatches=4
 
@@ -154,9 +154,9 @@ ac_space = env.action_space
 nbatch_train = nbatch // nminibatches
 
 
-dones = [False for _ in range(nenvs)]
+# dones = [False for _ in range(nenvs)]
 
-load_path='/tmp/rosrl/GazeboMARATopOrientVisionv0Env/ppo2/1000000_nsec/checkpoints/00480'
+load_path='/tmp/rosrl/GazeboMARATopOrientVisionv0Env/ppo2/1000000_nsec/checkpoints/00160'
 
 
 make_model = lambda : ppo2.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train,
@@ -174,7 +174,11 @@ obs = env.reset()
 
 while True:
     actions = model.step(obs)[0]
-    obs, _, done, _  = env.step(actions)
+    # print("mode: ", mode)
+    # actions = model._evaluate(model.policy.pd.mode(), obs)
+    obs, reward, done, _  = env.step(actions)
+    print(reward)
     # env.render()
-    # if done:
-    #     obs = env.reset()
+    if done:
+        print("done: ", done)
+        obs = env.reset()
