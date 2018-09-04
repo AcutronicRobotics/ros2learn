@@ -42,7 +42,7 @@ sess.__enter__()
 
 seed = 0
 workerseed = seed + 10000 * rank
-set_global_seeds(workerseed)
+set_global_seeds(seed)
 env.seed(seed)
 
 
@@ -61,11 +61,11 @@ time.sleep(3)
 env.seed(seed)
 def policy_fn(name, ob_space, ac_space):
     return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,
-        hid_size=64, num_hid_layers=3)
+        hid_size=256, num_hid_layers=4)
 
 pposgd_simple.learn(env, policy_fn,
                     max_timesteps=1e8,
-                    timesteps_per_actorbatch=2048,
+                    timesteps_per_actorbatch=1024,
                     clip_param=0.2, entcoeff=0.0,
                     optim_epochs=10, optim_stepsize=3e-4, gamma=0.99,
                     optim_batchsize=256, lam=0.95, schedule='linear', save_model_with_prefix='mara_orient_ppo1_test', outdir=logger.get_dir()) #

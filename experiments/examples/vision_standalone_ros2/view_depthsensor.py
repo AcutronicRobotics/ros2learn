@@ -17,6 +17,8 @@ import time
 import yaml
 import quaternion as quat
 
+from transforms3d.euler import euler2mat, mat2euler
+
 
 def depth_callback(msg):
     global img_depth
@@ -56,120 +58,131 @@ def color_callback(msg):
 
                 # print("Label is: ",result[result_max_iter]['label'])
 
-            if(result[result_max_iter]['label'] is "1"):
-                label_human_readable = "coffe cup"
+        if(result[result_max_iter]['label'] is "1"):
+            label_human_readable = "coffe cup"
 
-            if(result[result_max_iter]['label'] is "2"):
-                label_human_readable = "juice box"
-
-
-            if(result[result_max_iter]['label'] is "3"):
-                label_human_readable = "rubik cube"
-
-            corner_3D_1 = [models_info[int(result[result_max_iter]['label'])]['min_x'], models_info[int(result[result_max_iter]['label'])]['min_y'], models_info[int(result[result_max_iter]['label'])]['min_z']] # bottom left back
-            corner_3D_2 = [models_info[int(result[result_max_iter]['label'])]['min_x'], models_info[int(result[result_max_iter]['label'])]['min_y'] + models_info[int(result[result_max_iter]['label'])]['size_y'], models_info[int(result[result_max_iter]['label'])]['min_z']] # bottom right back
-            corner_3D_3 = [models_info[int(result[result_max_iter]['label'])]['min_x'], models_info[int(result[result_max_iter]['label'])]['min_y'],  models_info[int(result[result_max_iter]['label'])]['min_z'] + models_info[int(result[result_max_iter]['label'])]['size_z']] # up left back
-            corner_3D_4 = [models_info[int(result[result_max_iter]['label'])]['min_x'], models_info[int(result[result_max_iter]['label'])]['min_y'] + models_info[int(result[result_max_iter]['label'])]['size_y'], models_info[int(result[result_max_iter]['label'])]['min_z']
-                          + models_info[int(result[result_max_iter]['label'])]['size_z']] #up right back
+        if(result[result_max_iter]['label'] is "2"):
+            label_human_readable = "juice box"
 
 
-            # the front rectangle of the box
+        if(result[result_max_iter]['label'] is "3"):
+            label_human_readable = "rubik cube"
 
-            corner_3D_5 = [models_info[int(result[result_max_iter]['label'])]['min_x'] + models_info[int(result[result_max_iter]['label'])]['size_x'], models_info[int(result[result_max_iter]['label'])]['min_y'],  models_info[int(result[result_max_iter]['label'])]['min_z']] #bottom left front
-            corner_3D_6 = [models_info[int(result[result_max_iter]['label'])]['min_x'] + models_info[int(result[result_max_iter]['label'])]['size_x'], models_info[int(result[result_max_iter]['label'])]['min_y'] + models_info[int(result[result_max_iter]['label'])]['size_y'], models_info[int(result[result_max_iter]['label'])]['min_z']] # bottom right front
-            corner_3D_7 = [models_info[int(result[result_max_iter]['label'])]['min_x'] + models_info[int(result[result_max_iter]['label'])]['size_x'], models_info[int(result[result_max_iter]['label'])]['min_y'],  models_info[int(result[result_max_iter]['label'])]['min_z'] + models_info[int(result[result_max_iter]['label'])]['size_z']] # up left front
-            corner_3D_8 = [models_info[int(result[result_max_iter]['label'])]['min_x'] + models_info[int(result[result_max_iter]['label'])]['size_x'], models_info[int(result[result_max_iter]['label'])]['min_y'] + models_info[int(result[result_max_iter]['label'])]['size_y'], models_info[int(result[result_max_iter]['label'])]['min_z']
-                           + models_info[int(result[result_max_iter]['label'])]['size_z']] #up right front
-
-            # here we calculate the center of the box
-            corner_3D_9 = [models_info[int(result[result_max_iter]['label'])]['min_x'] + models_info[int(result[result_max_iter]['label'])]['size_x']*0.5,
-                           models_info[int(result[result_max_iter]['label'])]['min_y'] + models_info[int(result[result_max_iter]['label'])]['size_y']*0.5,
-                           models_info[int(result[result_max_iter]['label'])]['min_z'] + models_info[int(result[result_max_iter]['label'])]['size_z']*0.5]
-            # here we assemble all 3D points
-            corners3D = np.asarray([corner_3D_1, corner_3D_2, corner_3D_3, corner_3D_4, corner_3D_5, corner_3D_6, corner_3D_7, corner_3D_8, corner_3D_9], dtype=np.float)
+        corner_3D_1 = [models_info[int(result[result_max_iter]['label'])]['min_x'], models_info[int(result[result_max_iter]['label'])]['min_y'], models_info[int(result[result_max_iter]['label'])]['min_z']] # bottom left back
+        corner_3D_2 = [models_info[int(result[result_max_iter]['label'])]['min_x'], models_info[int(result[result_max_iter]['label'])]['min_y'] + models_info[int(result[result_max_iter]['label'])]['size_y'], models_info[int(result[result_max_iter]['label'])]['min_z']] # bottom right back
+        corner_3D_3 = [models_info[int(result[result_max_iter]['label'])]['min_x'], models_info[int(result[result_max_iter]['label'])]['min_y'],  models_info[int(result[result_max_iter]['label'])]['min_z'] + models_info[int(result[result_max_iter]['label'])]['size_z']] # up left back
+        corner_3D_4 = [models_info[int(result[result_max_iter]['label'])]['min_x'], models_info[int(result[result_max_iter]['label'])]['min_y'] + models_info[int(result[result_max_iter]['label'])]['size_y'], models_info[int(result[result_max_iter]['label'])]['min_z']
+                      + models_info[int(result[result_max_iter]['label'])]['size_z']] #up right back
 
 
-            cv2.circle(img,(int(result[result_max_iter]['point_1']['x']),int(result[result_max_iter]['point_1']['y'])), 4, (255,255,0), -1)
-            # cv2.putText(rgb_image,'1',(int(result[result_max_iter]['point_1']['x']),int(result[result_max_iter]['point_1']['y'])), font, 0.8,(0,255,0),2,cv2.LINE_AA)
+        # the front rectangle of the box
 
-            cv2.circle(img,(int(result[result_max_iter]['point_2']['x']),int(result[result_max_iter]['point_2']['y'])), 4, (255,255,0), -1)
-            # cv2.putText(rgb_image,'2',(int(result[result_max_iter]['point_2']['x']),int(result[result_max_iter]['point_2']['y'])), font, 0.8,(0,255,0),2,cv2.LINE_AA)
+        corner_3D_5 = [models_info[int(result[result_max_iter]['label'])]['min_x'] + models_info[int(result[result_max_iter]['label'])]['size_x'], models_info[int(result[result_max_iter]['label'])]['min_y'],  models_info[int(result[result_max_iter]['label'])]['min_z']] #bottom left front
+        corner_3D_6 = [models_info[int(result[result_max_iter]['label'])]['min_x'] + models_info[int(result[result_max_iter]['label'])]['size_x'], models_info[int(result[result_max_iter]['label'])]['min_y'] + models_info[int(result[result_max_iter]['label'])]['size_y'], models_info[int(result[result_max_iter]['label'])]['min_z']] # bottom right front
+        corner_3D_7 = [models_info[int(result[result_max_iter]['label'])]['min_x'] + models_info[int(result[result_max_iter]['label'])]['size_x'], models_info[int(result[result_max_iter]['label'])]['min_y'],  models_info[int(result[result_max_iter]['label'])]['min_z'] + models_info[int(result[result_max_iter]['label'])]['size_z']] # up left front
+        corner_3D_8 = [models_info[int(result[result_max_iter]['label'])]['min_x'] + models_info[int(result[result_max_iter]['label'])]['size_x'], models_info[int(result[result_max_iter]['label'])]['min_y'] + models_info[int(result[result_max_iter]['label'])]['size_y'], models_info[int(result[result_max_iter]['label'])]['min_z']
+                       + models_info[int(result[result_max_iter]['label'])]['size_z']] #up right front
 
-            cv2.circle(img,(int(result[result_max_iter]['point_3']['x']),int(result[result_max_iter]['point_3']['y'])), 4, (255,255,0), -1)
-            # cv2.putText(rgb_image,'3',(int(result[result_max_iter]['point_3']['x']),int(result[result_max_iter]['point_3']['y'])), font, 0.8,(0,255,0),2,cv2.LINE_AA)
+        # here we calculate the center of the box
+        corner_3D_9 = [models_info[int(result[result_max_iter]['label'])]['min_x'] + models_info[int(result[result_max_iter]['label'])]['size_x']*0.5,
+                       models_info[int(result[result_max_iter]['label'])]['min_y'] + models_info[int(result[result_max_iter]['label'])]['size_y']*0.5,
+                       models_info[int(result[result_max_iter]['label'])]['min_z'] + models_info[int(result[result_max_iter]['label'])]['size_z']*0.5]
+        # here we assemble all 3D points
+        corners3D = np.asarray([corner_3D_1, corner_3D_2, corner_3D_3, corner_3D_4, corner_3D_5, corner_3D_6, corner_3D_7, corner_3D_8, corner_3D_9], dtype=np.float)
 
-            cv2.circle(img,(int(result[result_max_iter]['point_4']['x']),int(result[result_max_iter]['point_4']['y'])), 4, (255,255,0), -1)
-            # cv2.putText(rgb_image,'4',(int(result[result_max_iter]['point_4']['x']),int(result[result_max_iter]['point_4']['y'])), font, 0.8,(0,255,0),2,cv2.LINE_AA)
 
-            cv2.circle(img,(int(result[result_max_iter]['point_5']['x']),int(result[result_max_iter]['point_5']['y'])), 4, (255,255,0), -1)
-            # cv2.putText(rgb_image,'5',(int(result[result_max_iter]['point_5']['x']),int(result[result_max_iter]['point_5']['y'])), font, 0.8,(0,255,0),2,cv2.LINE_AA)
+        cv2.circle(img,(int(result[result_max_iter]['point_1']['x']),int(result[result_max_iter]['point_1']['y'])), 4, (255,255,0), -1)
+        # cv2.putText(rgb_image,'1',(int(result[result_max_iter]['point_1']['x']),int(result[result_max_iter]['point_1']['y'])), font, 0.8,(0,255,0),2,cv2.LINE_AA)
 
-            cv2.circle(img,(int(result[result_max_iter]['point_6']['x']),int(result[result_max_iter]['point_6']['y'])), 4, (255,255,0), -1)
-            # cv2.putText(rgb_image,'6',(int(result[result_max_iter]['point_6']['x']),int(result[result_max_iter]['point_6']['y'])), font, 0.8,(0,255,0),2,cv2.LINE_AA)
+        cv2.circle(img,(int(result[result_max_iter]['point_2']['x']),int(result[result_max_iter]['point_2']['y'])), 4, (255,255,0), -1)
+        # cv2.putText(rgb_image,'2',(int(result[result_max_iter]['point_2']['x']),int(result[result_max_iter]['point_2']['y'])), font, 0.8,(0,255,0),2,cv2.LINE_AA)
 
-            cv2.circle(img,(int(result[result_max_iter]['point_7']['x']),int(result[result_max_iter]['point_7']['y'])), 4, (255,255,0), -1)
-            # cv2.putText(rgb_image,'7',(int(result[result_max_iter]['point_7']['x']),int(result[result_max_iter]['point_7']['y'])), font, 0.8,(0,255,0),2,cv2.LINE_AA)
+        cv2.circle(img,(int(result[result_max_iter]['point_3']['x']),int(result[result_max_iter]['point_3']['y'])), 4, (255,255,0), -1)
+        # cv2.putText(rgb_image,'3',(int(result[result_max_iter]['point_3']['x']),int(result[result_max_iter]['point_3']['y'])), font, 0.8,(0,255,0),2,cv2.LINE_AA)
 
-            cv2.circle(img,(int(result[result_max_iter]['point_8']['x']),int(result[result_max_iter]['point_8']['y'])), 4, (255,255,0), -1)
-            # cv2.putText(rgb_image,'8',(int(result[result_max_iter]['point_8']['x']),int(result[result_max_iter]['point_8']['y'])), font, 0.8,(0,255,0),2,cv2.LINE_AA)
-            cv2.circle(img,(int(result[result_max_iter]['point_9']['x']),int(result[result_max_iter]['point_9']['y'])), 4, (0,0,255), -1)
-            # cv2.putText(imgcv,'center',(int(result[0]['point_9']['x']),int(result[0]['point_9']['y'])), font, 0.8,(255,255,255),2,cv2.LINE_AA)
-            # cv2.imshow("depth camera", depth_map)
-            # cv2.putText(rgb_image,result[result_max_iter]['label'],(int(result[result_max_iter]['point_1']['x']-30),int(result[result_max_iter]['point_1']['y']-30)), font, 1.0,(255,255,255),2,cv2.LINE_AA)
-            cv2.putText(img,label_human_readable,(int(result[result_max_iter]['point_1']['x']-30),int(result[result_max_iter]['point_1']['y']-30)), font, 0.8,(255,255,255),2,cv2.LINE_AA)
+        cv2.circle(img,(int(result[result_max_iter]['point_4']['x']),int(result[result_max_iter]['point_4']['y'])), 4, (255,255,0), -1)
+        # cv2.putText(rgb_image,'4',(int(result[result_max_iter]['point_4']['x']),int(result[result_max_iter]['point_4']['y'])), font, 0.8,(0,255,0),2,cv2.LINE_AA)
 
-            corner_2D_1_pred = (int(result[result_max_iter]['point_1']['x']),int(result[result_max_iter]['point_1']['y']))
-            corner_2D_2_pred = (int(result[result_max_iter]['point_2']['x']),int(result[result_max_iter]['point_2']['y']))
-            corner_2D_3_pred = (int(result[result_max_iter]['point_3']['x']),int(result[result_max_iter]['point_3']['y']))
-            corner_2D_4_pred = (int(result[result_max_iter]['point_4']['x']),int(result[result_max_iter]['point_4']['y']))
-            corner_2D_5_pred = (int(result[result_max_iter]['point_5']['x']),int(result[result_max_iter]['point_5']['y']))
-            corner_2D_6_pred = (int(result[result_max_iter]['point_6']['x']),int(result[result_max_iter]['point_6']['y']))
-            corner_2D_7_pred = (int(result[result_max_iter]['point_7']['x']),int(result[result_max_iter]['point_7']['y']))
-            corner_2D_8_pred = (int(result[result_max_iter]['point_8']['x']),int(result[result_max_iter]['point_8']['y']))
-            corner_2D_9_pred = (int(result[result_max_iter]['point_9']['x']),int(result[result_max_iter]['point_9']['y']))
+        cv2.circle(img,(int(result[result_max_iter]['point_5']['x']),int(result[result_max_iter]['point_5']['y'])), 4, (255,255,0), -1)
+        # cv2.putText(rgb_image,'5',(int(result[result_max_iter]['point_5']['x']),int(result[result_max_iter]['point_5']['y'])), font, 0.8,(0,255,0),2,cv2.LINE_AA)
 
-            corners_2D_pred = np.asarray([corner_2D_1_pred, corner_2D_2_pred,
-                               corner_2D_3_pred, corner_2D_4_pred,
-                               corner_2D_5_pred, corner_2D_6_pred,
-                               corner_2D_7_pred, corner_2D_8_pred,
-                                       corner_2D_9_pred], dtype=np.float)
+        cv2.circle(img,(int(result[result_max_iter]['point_6']['x']),int(result[result_max_iter]['point_6']['y'])), 4, (255,255,0), -1)
+        # cv2.putText(rgb_image,'6',(int(result[result_max_iter]['point_6']['x']),int(result[result_max_iter]['point_6']['y'])), font, 0.8,(0,255,0),2,cv2.LINE_AA)
 
-            cv2.line(img,corner_2D_1_pred, corner_2D_2_pred, (0,255,0))
-            cv2.line(img,corner_2D_2_pred, corner_2D_6_pred, (0,255,0))
-            cv2.line(img,corner_2D_5_pred, corner_2D_6_pred, (0,255,0))
-            cv2.line(img,corner_2D_2_pred, corner_2D_4_pred, (0,255,0))
-            cv2.line(img,corner_2D_6_pred, corner_2D_8_pred, (0,255,0))
-            cv2.line(img,corner_2D_5_pred, corner_2D_7_pred, (0,255,0))
-            cv2.line(img,corner_2D_1_pred, corner_2D_3_pred, (0,255,0))
-            cv2.line(img,corner_2D_3_pred, corner_2D_4_pred, (0,255,0))
-            cv2.line(img,corner_2D_4_pred, corner_2D_8_pred, (0,255,0))
-            cv2.line(img,corner_2D_7_pred, corner_2D_8_pred, (0,255,0))
-            cv2.line(img,corner_2D_3_pred, corner_2D_7_pred, (0,255,0))
-            cv2.line(img,corner_2D_1_pred, corner_2D_5_pred, (0,255,0))
+        cv2.circle(img,(int(result[result_max_iter]['point_7']['x']),int(result[result_max_iter]['point_7']['y'])), 4, (255,255,0), -1)
+        # cv2.putText(rgb_image,'7',(int(result[result_max_iter]['point_7']['x']),int(result[result_max_iter]['point_7']['y'])), font, 0.8,(0,255,0),2,cv2.LINE_AA)
 
-            objpoints3D = np.array(np.transpose(np.concatenate((np.zeros((3, 1)), corners3D[:3, :]), axis=1)), dtype='float32')
-            K = np.array(internal_calibration, dtype='float32')
+        cv2.circle(img,(int(result[result_max_iter]['point_8']['x']),int(result[result_max_iter]['point_8']['y'])), 4, (255,255,0), -1)
+        # cv2.putText(rgb_image,'8',(int(result[result_max_iter]['point_8']['x']),int(result[result_max_iter]['point_8']['y'])), font, 0.8,(0,255,0),2,cv2.LINE_AA)
+        cv2.circle(img,(int(result[result_max_iter]['point_9']['x']),int(result[result_max_iter]['point_9']['y'])), 4, (0,0,255), -1)
+        # cv2.putText(imgcv,'center',(int(result[0]['point_9']['x']),int(result[0]['point_9']['y'])), font, 0.8,(255,255,255),2,cv2.LINE_AA)
+        # cv2.imshow("depth camera", depth_map)
+        # cv2.putText(rgb_image,result[result_max_iter]['label'],(int(result[result_max_iter]['point_1']['x']-30),int(result[result_max_iter]['point_1']['y']-30)), font, 1.0,(255,255,255),2,cv2.LINE_AA)
+        cv2.putText(img,label_human_readable,(int(result[result_max_iter]['point_1']['x']-30),int(result[result_max_iter]['point_1']['y']-30)), font, 0.8,(255,255,255),2,cv2.LINE_AA)
 
-            R_pred, t_pred = pnp(corners3D,  corners_2D_pred, K)
+        corner_2D_1_pred = (int(result[result_max_iter]['point_1']['x']),int(result[result_max_iter]['point_1']['y']))
+        corner_2D_2_pred = (int(result[result_max_iter]['point_2']['x']),int(result[result_max_iter]['point_2']['y']))
+        corner_2D_3_pred = (int(result[result_max_iter]['point_3']['x']),int(result[result_max_iter]['point_3']['y']))
+        corner_2D_4_pred = (int(result[result_max_iter]['point_4']['x']),int(result[result_max_iter]['point_4']['y']))
+        corner_2D_5_pred = (int(result[result_max_iter]['point_5']['x']),int(result[result_max_iter]['point_5']['y']))
+        corner_2D_6_pred = (int(result[result_max_iter]['point_6']['x']),int(result[result_max_iter]['point_6']['y']))
+        corner_2D_7_pred = (int(result[result_max_iter]['point_7']['x']),int(result[result_max_iter]['point_7']['y']))
+        corner_2D_8_pred = (int(result[result_max_iter]['point_8']['x']),int(result[result_max_iter]['point_8']['y']))
+        corner_2D_9_pred = (int(result[result_max_iter]['point_9']['x']),int(result[result_max_iter]['point_9']['y']))
 
-            Rt_pred = np.concatenate((R_pred, t_pred), axis=1)
+        corners_2D_pred = np.asarray([corner_2D_1_pred, corner_2D_2_pred,
+                           corner_2D_3_pred, corner_2D_4_pred,
+                           corner_2D_5_pred, corner_2D_6_pred,
+                           corner_2D_7_pred, corner_2D_8_pred,
+                                   corner_2D_9_pred], dtype=np.float)
 
-            pose_target = Pose()
-            pose_target.position.x = float(-t_pred[0]/3.0 + cam_pose_x)
-            pose_target.position.y = float(-t_pred[1]/3.0 - cam_pose_y)
-            pose_target.position.z = float(-t_pred[2]/3.0 + cam_pose_z)
+        cv2.line(img,corner_2D_1_pred, corner_2D_2_pred, (0,255,0))
+        cv2.line(img,corner_2D_2_pred, corner_2D_6_pred, (0,255,0))
+        cv2.line(img,corner_2D_5_pred, corner_2D_6_pred, (0,255,0))
+        cv2.line(img,corner_2D_2_pred, corner_2D_4_pred, (0,255,0))
+        cv2.line(img,corner_2D_6_pred, corner_2D_8_pred, (0,255,0))
+        cv2.line(img,corner_2D_5_pred, corner_2D_7_pred, (0,255,0))
+        cv2.line(img,corner_2D_1_pred, corner_2D_3_pred, (0,255,0))
+        cv2.line(img,corner_2D_3_pred, corner_2D_4_pred, (0,255,0))
+        cv2.line(img,corner_2D_4_pred, corner_2D_8_pred, (0,255,0))
+        cv2.line(img,corner_2D_7_pred, corner_2D_8_pred, (0,255,0))
+        cv2.line(img,corner_2D_3_pred, corner_2D_7_pred, (0,255,0))
+        cv2.line(img,corner_2D_1_pred, corner_2D_5_pred, (0,255,0))
 
-            q_rubik = quat.from_rotation_matrix(R_pred)
-            # print("q_rubik: ", q_rubik.x, q_rubik.y, q_r
-            pose_target.orientation.x = q_rubik.x#0.0#q_rubik[0]
-            pose_target.orientation.y = q_rubik.y#0.0#q_rubik[1]
-            pose_target.orientation.z = q_rubik.z#0.0#q_rubik[2]
-            pose_target.orientation.w = q_rubik.w#0.0#q_rubik[3]
-            # uncomment this if we want to do like servoing
+        objpoints3D = np.array(np.transpose(np.concatenate((np.zeros((3, 1)), corners3D[:3, :]), axis=1)), dtype='float32')
+        K = np.array(internal_calibration, dtype='float32')
 
-            # print("Rt_pred: \n", Rt_pred)
-            # print("Pose in world: ", pose_target)
-            publisher_pose.publish(pose_target)
+        R_pred, t_pred = pnp(corners3D,  corners_2D_pred, K)
+
+        print("t_pred before div: \n", t_pred)
+        t_pred = t_pred/-3.0
+        # print("R_pred: \n", R_pred)
+        print("t_pred after div: \n", t_pred)
+
+
+
+        Rt_pred = np.concatenate((R_pred, t_pred), axis=1)
+
+        R_transform = Rt_pred * Rt_cam
+
+        print("R_transform: \n",R_transform)
+
+        pose_target = Pose()
+        pose_target.position.x = float(t_pred[0] + cam_pose_x)
+        pose_target.position.y = float(t_pred[1] - cam_pose_y)
+        pose_target.position.z = float(t_pred[2] + cam_pose_z)
+
+        q_rubik = quat.from_rotation_matrix(R_transform)
+        # print("q_rubik: ", q_rubik.x, q_rubik.y, q_r
+        pose_target.orientation.x = q_rubik.x#0.0#q_rubik[0]
+        pose_target.orientation.y = q_rubik.y#0.0#q_rubik[1]
+        pose_target.orientation.z = q_rubik.z#0.0#q_rubik[2]
+        pose_target.orientation.w = q_rubik.w#0.0#q_rubik[3]
+        # uncomment this if we want to do like servoing
+
+        # print("Rt_pred: \n", Rt_pred)
+        # print("Pose in world: ", pose_target)
+        publisher_pose.publish(pose_target)
 
 def main(args=None):
     rclpy.init(args=args)
@@ -177,7 +190,7 @@ def main(args=None):
     node = rclpy.create_node('hros_sensing_depthsensor_image_visualizer')
 
     subscription_depth = node.create_subscription(Image, '/hros_sensing_depthsensor_00FA35000222/depth', depth_callback,  qos_profile=qos_profile_sensor_data)
-    subscription_color = node.create_subscription(Image, '/hros_sensing_depthsensor_00FA35000222/rgb', color_callback,  qos_profile=qos_profile_sensor_data)
+    subscription_color = node.create_subscription(Image, '/hros_sensing_depthsensor_00FA35000222/rgb/image_raw', color_callback,  qos_profile=qos_profile_sensor_data)
 
 
     executor = MultiThreadedExecutor(num_threads=8)
@@ -198,13 +211,29 @@ def main(args=None):
     global cam_pose_z
     global publisher_pose
 
+    global Rt_cam
+
     internal_calibration = get_camera_intrinsic()
 
     publisher_pose = node.create_publisher(Pose, '/mara/target')
 
     cam_pose_x = -0.5087683179567231 # random.uniform(-0.25, -0.6)#-0.5087683179567231#0.0 #random.uniform(-0.25, -0.6)#-0.5087683179567231#random.uniform(-0.3, -0.6)#random.uniform(-0.25, -0.6) # -0.5087683179567231#
     cam_pose_y = 0.013376#random.uniform(0.0, -0.2)
-    cam_pose_z = 1.4808068867058566
+    cam_pose_z = 1.3808068867058566
+
+    t_cam = np.asarray([[cam_pose_x], [cam_pose_y], [cam_pose_z]])
+
+    cam_x_angle = 0.0
+    cam_y_angle = np.pi / 2
+    cam_z_angle = np.pi
+    R_cam = euler2mat(cam_x_angle, cam_y_angle, cam_z_angle, 'sxyz')
+
+    print("t_cam: \n", t_cam)
+    print("R_cam: \n", R_cam)
+
+    Rt_cam = np.concatenate((R_cam, t_cam), axis=1)
+
+    print("Rt_cam: ", Rt_cam)
 
 
     dumps = list()

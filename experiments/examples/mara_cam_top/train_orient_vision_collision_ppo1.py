@@ -207,9 +207,11 @@ def _observation_image_callback(msg):
             # is it good idea for this to be detected on the first time we load something? or streem continiously.
             #If we stream continiously when the robot covers the cube we cant detect anything and if the target is updated at that time
             #uncomment if we want to use like servoing every time, just wont work if the robot is in front of the object!!!
-            cam_pose_x = -0.5087683179567231 # random.uniform(-0.25, -0.6)#-0.5087683179567231#0.0 #random.uniform(-0.25, -0.6)#-0.5087683179567231#random.uniform(-0.3, -0.6)#random.uniform(-0.25, -0.6) # -0.5087683179567231#
-            cam_pose_y = -0.013376#random.uniform(0.0, -0.2)
-            cam_pose_z = 1.3808068867058566 #1.4808068867058566
+            cam_pose_x = -0.496768318 #+ 0.0488#-0.5087683179567231 # random.uniform(-0.25, -0.6)#-0.5087683179567231#0.0 #random.uniform(-0.25, -0.6)#-0.5087683179567231#random.uniform(-0.3, -0.6)#random.uniform(-0.25, -0.6) # -0.5087683179567231#
+            cam_pose_y = -0.013376 #+ 0.0488#-0.040128#-0.013376#random.uniform(0.0, -0.2)
+            cam_pose_z = 1.2808068867058566+0.0488 #1.4808068867058566
+
+            # print("t_pred[2]: ",t_pred)
 
             if t_pred[2] > 0.0:
                 t_pred[2] = -t_pred[2]
@@ -294,14 +296,14 @@ env.seed(seed)
 
 def policy_fn(name, ob_space, ac_space):
     return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,
-        hid_size=64, num_hid_layers=3)
+        hid_size=128, num_hid_layers=4)
 
 pposgd_simple.learn(env, policy_fn,
                     max_timesteps=1e8,
-                    timesteps_per_actorbatch=1024,
+                    timesteps_per_actorbatch=2048,
                     clip_param=0.2, entcoeff=0.0,
                     optim_epochs=10, optim_stepsize=3e-4, gamma=0.99,
-                    optim_batchsize=64, lam=0.95, schedule='linear', save_model_with_prefix='mara_orient_ppo1_test', outdir=logger.get_dir()) #
+                    optim_batchsize=128, lam=0.95, schedule='linear', save_model_with_prefix='mara_orient_ppo1_test', outdir=logger.get_dir()) #
 
 # def policy_fn(name, ob_space, ac_space):
 #     return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,
