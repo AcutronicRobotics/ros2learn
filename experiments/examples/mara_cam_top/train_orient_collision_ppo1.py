@@ -63,7 +63,7 @@ def policy_fn(name, ob_space, ac_space):
     return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,
         hid_size=128, num_hid_layers=4)
 
-pposgd_simple.learn(env, policy_fn,
+pposgd_simple_collisions.learn(env, policy_fn,
                     max_timesteps=2e6,
                     timesteps_per_actorbatch=1024,
                     clip_param=0.2, entcoeff=0.0,
