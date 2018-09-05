@@ -13,7 +13,7 @@ from mpi4py import MPI
 from baselines import bench, logger
 from baselines.bench import Monitor
 from baselines.common import set_global_seeds, tf_util as U
-from baselines.ppo1 import mlp_policy, pposgd_simple
+from baselines.ppo1 import mlp_policy, pposgd_simple_collisions
 import os
 
 # from baselines.common import tf_util as U
@@ -22,8 +22,8 @@ import os
 import time
 # parser
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1)
-parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='sec')
+parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1000000)
+parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='nsec')
 args = parser.parse_args()
 
 env = gym.make('MARAOrientCollision-v0')
@@ -61,11 +61,11 @@ time.sleep(3)
 env.seed(seed)
 def policy_fn(name, ob_space, ac_space):
     return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,
-        hid_size=64, num_hid_layers=3)
+        hid_size=128, num_hid_layers=4)
 
 pposgd_simple.learn(env, policy_fn,
-                    max_timesteps=1e8,
-                    timesteps_per_actorbatch=2048,
+                    max_timesteps=2e6,
+                    timesteps_per_actorbatch=1024,
                     clip_param=0.2, entcoeff=0.0,
                     optim_epochs=10, optim_stepsize=3e-4, gamma=0.99,
                     optim_batchsize=256, lam=0.95, schedule='linear', save_model_with_prefix='mara_orient_ppo1_test', outdir=logger.get_dir()) #
