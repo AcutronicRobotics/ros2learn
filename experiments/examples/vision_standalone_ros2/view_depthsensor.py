@@ -154,10 +154,10 @@ def color_callback(msg):
 
         R_pred, t_pred = pnp(corners3D,  corners_2D_pred, K)
 
-        print("t_pred before div: \n", t_pred)
-        t_pred = t_pred/-3.0
+        # print("t_pred before div: \n", t_pred)
+
         # print("R_pred: \n", R_pred)
-        print("t_pred after div: \n", t_pred)
+        # print("t_pred after div: \n", t_pred)
 
 
 
@@ -165,14 +165,23 @@ def color_callback(msg):
 
         R_transform = Rt_pred * Rt_cam
 
-        print("R_transform: \n",R_transform)
+        # print("R_transform: \n",R_transform)
+
+        # pose_target = Pose()
+        # pose_target.position.x = float(t_pred[0] + cam_pose_x)
+        # pose_target.position.y = float(t_pred[1] - cam_pose_y)
+        # pose_target.position.z = float(t_pred[2] + cam_pose_z)
+        t_pred[2] = t_pred[2]/3
+
+        if t_pred[2] > 0.0:
+            t_pred[2] = -t_pred[2]
 
         pose_target = Pose()
-        pose_target.position.x = float(t_pred[0] + cam_pose_x)
-        pose_target.position.y = float(t_pred[1] - cam_pose_y)
+        pose_target.position.x = float(-t_pred[0])
+        pose_target.position.y = float(t_pred[1])
         pose_target.position.z = float(t_pred[2] + cam_pose_z)
 
-        q_rubik = quat.from_rotation_matrix(R_transform)
+        q_rubik = quat.from_rotation_matrix(R_pred)
         # print("q_rubik: ", q_rubik.x, q_rubik.y, q_r
         pose_target.orientation.x = q_rubik.x#0.0#q_rubik[0]
         pose_target.orientation.y = q_rubik.y#0.0#q_rubik[1]
@@ -181,7 +190,7 @@ def color_callback(msg):
         # uncomment this if we want to do like servoing
 
         # print("Rt_pred: \n", Rt_pred)
-        # print("Pose in world: ", pose_target)
+        print("Pose in world: ", pose_target)
         publisher_pose.publish(pose_target)
 
 def main(args=None):
@@ -217,9 +226,15 @@ def main(args=None):
 
     publisher_pose = node.create_publisher(Pose, '/mara/target')
 
-    cam_pose_x = -0.5087683179567231 # random.uniform(-0.25, -0.6)#-0.5087683179567231#0.0 #random.uniform(-0.25, -0.6)#-0.5087683179567231#random.uniform(-0.3, -0.6)#random.uniform(-0.25, -0.6) # -0.5087683179567231#
-    cam_pose_y = 0.013376#random.uniform(0.0, -0.2)
-    cam_pose_z = 1.3808068867058566
+    cam_pose_x = -0.461956 #+ 0.0488#-0.5087683179567231 # random.uniform(-0.25, -0.6)#-0.5087683179567231#0.0 #random.uniform(-0.25, -0.6)#-0.5087683179567231#random.uniform(-0.3, -0.6)#random.uniform(-0.25, -0.6) # -0.5087683179567231#
+    cam_pose_y = 0.0095#-0.040128#-0.013376#random.uniform(0.0, -0.2)
+    cam_pose_z = 1.33626#+0.0488 #1.4808068867058566
+
+    cam_orientation_x = -0.707099
+    cam_orientation_y =  0.707101
+    cam_orientation_z = -0.00269089
+    cam_orientation_w =  0.00325398
+
 
     t_cam = np.asarray([[cam_pose_x], [cam_pose_y], [cam_pose_z]])
 
@@ -228,12 +243,12 @@ def main(args=None):
     cam_z_angle = np.pi
     R_cam = euler2mat(cam_x_angle, cam_y_angle, cam_z_angle, 'sxyz')
 
-    print("t_cam: \n", t_cam)
-    print("R_cam: \n", R_cam)
+    # print("t_cam: \n", t_cam)
+    # print("R_cam: \n", R_cam)
 
     Rt_cam = np.concatenate((R_cam, t_cam), axis=1)
 
-    print("Rt_cam: ", Rt_cam)
+    # print("Rt_cam: ", Rt_cam)
 
 
     dumps = list()
