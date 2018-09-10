@@ -64,11 +64,11 @@ def policy_fn(name, ob_space, ac_space):
         hid_size=128, num_hid_layers=4)
 
 pposgd_simple_collisions.learn(env, policy_fn,
-                    max_timesteps=2e6,
+                    max_timesteps=1e8,
                     timesteps_per_actorbatch=1024,
                     clip_param=0.2, entcoeff=0.0,
                     optim_epochs=10, optim_stepsize=3e-4, gamma=0.99,
-                    optim_batchsize=256, lam=0.95, schedule='linear', save_model_with_prefix='mara_orient_ppo1_test', outdir=logger.get_dir()) #
+                    optim_batchsize=128, lam=0.95, schedule='linear', save_model_with_prefix='mara_orient_ppo1_test', outdir=logger.get_dir()) #
 
 env.close()
 
