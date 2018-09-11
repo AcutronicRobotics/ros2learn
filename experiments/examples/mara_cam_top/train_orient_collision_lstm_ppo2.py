@@ -129,7 +129,7 @@ episode_len = 1024
 
 learn = lambda e: get_learn_function(alg)(
 env=e,
-network=rnn_type,
+network='lstm',
 save_interval=10,
 **kwargs
 )
