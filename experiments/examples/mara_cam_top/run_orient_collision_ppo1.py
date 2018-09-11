@@ -18,7 +18,7 @@ from baselines.agent.utility.general_utils import get_ee_points, get_position
 from baselines.ppo1 import mlp_policy, pposgd_simple
 
 
-env = gym.make('MARAOrient-v0')
+env = gym.make('MARAOrientCollision-v0')
 initial_observation = env.reset()
 print("Initial observation: ", initial_observation)
 # env.render()
