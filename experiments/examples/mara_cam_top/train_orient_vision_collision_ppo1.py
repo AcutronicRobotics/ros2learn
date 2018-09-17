@@ -197,7 +197,15 @@ def _observation_image_callback(msg):
 
             R_pred, t_pred = pnp(corners3D,  corners_2D_pred, K)
 
+            t_pred[2] = t_pred[2]/3#*0.33333
             Rt_pred = np.concatenate((R_pred, t_pred), axis=1)
+
+            # print("Rt_pred: \n",Rt_pred)
+
+            homogenious = np.asarray([0, 0, 0, 1])
+
+            T_object2cam = np.vstack([Rt_pred, homogenious])#np.concatenate((R_pred, homogenious), axis=0)
+            # print("T_object2cam: \n", T_object2cam)
 
             # note to RK: here you need to multiply the camera transformation with the Rt_pred and take that parameters in the final calculation
 
@@ -207,24 +215,64 @@ def _observation_image_callback(msg):
             # is it good idea for this to be detected on the first time we load something? or streem continiously.
             #If we stream continiously when the robot covers the cube we cant detect anything and if the target is updated at that time
             #uncomment if we want to use like servoing every time, just wont work if the robot is in front of the object!!!
-            cam_pose_x = -0.5087683179567231 # random.uniform(-0.25, -0.6)#-0.5087683179567231#0.0 #random.uniform(-0.25, -0.6)#-0.5087683179567231#random.uniform(-0.3, -0.6)#random.uniform(-0.25, -0.6) # -0.5087683179567231#
-            cam_pose_y = -0.013376#random.uniform(0.0, -0.2)
-            cam_pose_z = 1.3808068867058566 #1.4808068867058566
+            # cam_pose_x = -0.496768318 #+ 0.0488#-0.5087683179567231 # random.uniform(-0.25, -0.6)#-0.5087683179567231#0.0 #random.uniform(-0.25, -0.6)#-0.5087683179567231#random.uniform(-0.3, -0.6)#random.uniform(-0.25, -0.6) # -0.5087683179567231#
+            # cam_pose_y = -0.013376 - 0.0488#-0.040128#-0.013376#random.uniform(0.0, -0.2)
+            # cam_pose_z = 1.2108068867058566#+0.0488 #1.4808068867058566
+
+            cam_pose_x = -0.461956 #+ 0.0488#-0.5087683179567231 # random.uniform(-0.25, -0.6)#-0.5087683179567231#0.0 #random.uniform(-0.25, -0.6)#-0.5087683179567231#random.uniform(-0.3, -0.6)#random.uniform(-0.25, -0.6) # -0.5087683179567231#
+            cam_pose_y = 0.0095#-0.040128#-0.013376#random.uniform(0.0, -0.2)
+            cam_pose_z = 1.33626#+0.0488 #1.4808068867058566
+
+            cam_orientation_x = -0.707099
+            cam_orientation_y =  0.707101
+            cam_orientation_z = -0.00269089
+            cam_orientation_w =  0.00325398
+
+            q_cam_orientation = np.quaternion(cam_orientation_x, cam_orientation_y, cam_orientation_z, cam_orientation_w)
+            q_image = quat.from_euler_angles( 3.141, -1.5708, 1.57)
+
+            q_cam_orientation = q_cam_orientation*q_image
+
+            R_cam = quat.as_rotation_matrix(q_cam_orientation)
+
+            t_cam = np.asarray([[cam_pose_x], [cam_pose_y], [cam_pose_z]])
+
+            T_cam = np.concatenate((R_cam, t_cam), axis=1)
+            T_cam2world = np.vstack([T_cam, homogenious])
+
+
+
+            T_obj2world = T_object2cam * T_cam2world
+
+
+
+            # print("T_obj2world: \n", T_obj2world)
+            # print("\n")
+            #
+            # print("T_obj2world[0,3]:\n",T_obj2world[0,3])
+            # print("T_obj2world[0,3]:\n",T_obj2world[1,3])
+            # print("T_obj2world[0,3]:\n",T_obj2world[2,3])
+
+            # print("t_pred[2]: ",t_pred)
 
             if t_pred[2] > 0.0:
                 t_pred[2] = -t_pred[2]
 
             pose_target = Pose()
-            pose_target.position.x = -t_pred[0]/3.0 + cam_pose_x
-            pose_target.position.y = -t_pred[1]/3.0 - cam_pose_y
-            pose_target.position.z = t_pred[2]/3.0 + cam_pose_z
+            pose_target.position.x = -t_pred[0]
+            pose_target.position.y =  t_pred[1]
+            pose_target.position.z =  t_pred[2] + cam_pose_z
 
-            q_rubik = quat.from_rotation_matrix(R_pred)
+            # q_rubik = quat.from_rotation_matrix(R_pred)
+            # q_rubik_to_world = q_rubik * q_cam_orientation
+            # print("q_rubik_to_world :", q_rubik_to_world)
             # print("q_rubik: ", q_rubik.x, q_rubik.y, q_r
-            pose_target.orientation.x = q_rubik.x#0.0#q_rubik[0]
-            pose_target.orientation.y = q_rubik.y#0.0#q_rubik[1]
-            pose_target.orientation.z = q_rubik.z#0.0#q_rubik[2]
-            pose_target.orientation.w = q_rubik.w#0.0#q_rubik[3]
+
+            q_obj2world = quat.from_rotation_matrix(R_pred) #T_obj2world[:3,:3]
+            pose_target.orientation.x = q_obj2world.x#q_rubik_to_world.x#0.0#q_rubik[0]
+            pose_target.orientation.y = q_obj2world.y#q_rubik_to_world.y#0.0#q_rubik[1]
+            pose_target.orientation.z = q_obj2world.z#q_rubik_to_world.z#0.0#q_rubik[2]
+            pose_target.orientation.w = q_obj2world.w#q_rubik_to_world.w#0.0#q_rubik[3]
             # uncomment this if we want to do like servoing
             _pub_target.publish(pose_target)
 
@@ -294,14 +342,14 @@ env.seed(seed)
 
 def policy_fn(name, ob_space, ac_space):
     return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,
-        hid_size=64, num_hid_layers=3)
+        hid_size=128, num_hid_layers=4)
 
 pposgd_simple.learn(env, policy_fn,
                     max_timesteps=1e8,
                     timesteps_per_actorbatch=1024,
                     clip_param=0.2, entcoeff=0.0,
                     optim_epochs=10, optim_stepsize=3e-4, gamma=0.99,
-                    optim_batchsize=64, lam=0.95, schedule='linear', save_model_with_prefix='mara_orient_ppo1_test', outdir=logger.get_dir()) #
+                    optim_batchsize=128, lam=0.95, schedule='linear', save_model_with_prefix='mara_orient_ppo1_test', outdir=logger.get_dir()) #
 
 # def policy_fn(name, ob_space, ac_space):
 #     return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,

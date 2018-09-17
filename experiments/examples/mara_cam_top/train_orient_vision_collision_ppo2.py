@@ -49,6 +49,10 @@ import glob
 
 import quaternion as quat
 
+import csv
+
+take_point_once = 1
+
 def _observation_image_callback(msg):
     """
     Code for processing the results of the vision CNN
@@ -57,6 +61,8 @@ def _observation_image_callback(msg):
     # print("Received an image!")
     result_max = 0.
     result_max_iter = 0
+
+    global take_point_once
 
     try:
         # Convert your ROS Image message to OpenCV2
@@ -79,6 +85,7 @@ def _observation_image_callback(msg):
                     # print(result[i]['label'])
 
             # print("Label is: ",result[result_max_iter]['label'])
+            # print(result_max_iter)
 
             if(result[result_max_iter]['label'] is "1"):
                 label_human_readable = "coffe cup"
@@ -178,20 +185,27 @@ def _observation_image_callback(msg):
 
             Rt_pred = np.concatenate((R_pred, t_pred), axis=1)
 
+            # note to RK: here you need to multiply the camera transformation with the Rt_pred and take that parameters in the final calculation
+
             # print("Rt_pred: ", Rt_pred)
 
             #now here publish the detected target position from the vision system. And calculate camera to world so we get the final point to the world:
             # is it good idea for this to be detected on the first time we load something? or streem continiously.
             #If we stream continiously when the robot covers the cube we cant detect anything and if the target is updated at that time
             #uncomment if we want to use like servoing every time, just wont work if the robot is in front of the object!!!
-            cam_pose_x = -0.5087683179567231 # random.uniform(-0.25, -0.6)#-0.5087683179567231#0.0 #random.uniform(-0.25, -0.6)#-0.5087683179567231#random.uniform(-0.3, -0.6)#random.uniform(-0.25, -0.6) # -0.5087683179567231#
-            cam_pose_y = -0.013376#random.uniform(0.0, -0.2)
+            cam_pose_x = -0.496768318#-0.5087683179567231 # random.uniform(-0.25, -0.6)#-0.5087683179567231#0.0 #random.uniform(-0.25, -0.6)#-0.5087683179567231#random.uniform(-0.3, -0.6)#random.uniform(-0.25, -0.6) # -0.5087683179567231#
+            cam_pose_y = -0.040128#-0.013376#random.uniform(0.0, -0.2)
             cam_pose_z = 1.3808068867058566 #1.4808068867058566
+
+            # print("t_pred[2]: ",t_pred)
+
+            if t_pred[2] > 0.0:
+                t_pred[2] = -t_pred[2]
 
             pose_target = Pose()
             pose_target.position.x = -t_pred[0]/3.0 + cam_pose_x
             pose_target.position.y = -t_pred[1]/3.0 - cam_pose_y
-            pose_target.position.z =  t_pred[2]/3.0 + cam_pose_z
+            pose_target.position.z = t_pred[2]/3.0 + cam_pose_z
 
             q_rubik = quat.from_rotation_matrix(R_pred)
             # print("q_rubik: ", q_rubik.x, q_rubik.y, q_r
@@ -201,6 +215,14 @@ def _observation_image_callback(msg):
             pose_target.orientation.w = q_rubik.w#0.0#q_rubik[3]
             # uncomment this if we want to do like servoing
             _pub_target.publish(pose_target)
+
+            if take_point_once is 1:
+                f_tgt = open(logger.get_dir() + '/target.csv', 'w')#
+                TFields = ['EE_POS_TGT','EE_ROT_TGT']
+                writer_tgt = csv.DictWriter(f_tgt, fieldnames=TFields)
+                writer_tgt.writeheader()
+                writer_tgt.writerow({'EE_POS_TGT': str(np.asarray([pose_target.position.x, pose_target.position.y, pose_target.position.z])),'EE_ROT_TGT': str(R_pred)})
+                take_point_once = 0
 
         cv2.imshow("Image window", cv2_img)
         cv2.waitKey(3)
@@ -309,7 +331,7 @@ tf.Session(config=config).__enter__()
 nenvs = 1
 # env = SubprocVecEnv([make_env(i) for i in range(nenvs)])
 env = DummyVecEnv([make_env])
-env = VecNormalize(env)
+# env = VecNormalize(env)
 alg='ppo2'
 env_type = 'mujoco'
 learn = get_learn_function('ppo2')
