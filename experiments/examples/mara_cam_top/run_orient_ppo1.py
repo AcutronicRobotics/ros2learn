@@ -26,14 +26,15 @@ sess = U.make_session(num_cpu=1)
 sess.__enter__()
 def policy_fn(name, ob_space, ac_space):
     return mlp_policy.MlpPolicy(name=name, ob_space=ob_space, ac_space=ac_space,
-    hid_size=256, num_hid_layers=8)
+    hid_size=128, num_hid_layers=4)
 # gym.logger.setLevel(logging.WARN)
 obs = env.reset()
 # env.seed(seed)
 # time.sleep(5)
 pi = policy_fn('pi', env.observation_space, env.action_space)
 
-tf.train.Saver().restore(sess, '/media/rkojcev/Data_Networks/ppo_vision/ppo1_collision/need_to_test_monday/ppo1/1000000_nsec/models/mara_orient_ppo1_test_afterIter_1530.model') # for the H
+# tf.train.Saver().restore(sess, '/tmp/rosrl/GazeboMARATopOrientCollisionv0Env/ppo1/1000000_nsec/models/mara_orient_ppo1_test_afterIter_860.model') # 850, 1310
+tf.train.Saver().restore(sess, '/tmp/rosrl/GazeboMARATopOrientCollisionv0Env/ppo1/1000000_nsec/models/mara_orient_ppo1_test_afterIter_13560.model') # 850, 1310
 
 # loadPath = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/'
 # tf.train.Saver().restore(sess, loadPath + 'ros1_ppo1_H_afterIter_263.model')
