@@ -163,9 +163,9 @@ def color_callback(msg):
 
         Rt_pred = np.concatenate((R_pred, t_pred), axis=1)
 
-        R_transform = Rt_pred * Rt_cam
+        R_transform = Rt_cam * Rt_pred
 
-        # print("R_transform: \n",R_transform)
+        print("R_transform: \n",R_transform)
 
         # pose_target = Pose()
         # pose_target.position.x = float(t_pred[0] + cam_pose_x)
@@ -238,9 +238,9 @@ def main(args=None):
 
     t_cam = np.asarray([[cam_pose_x], [cam_pose_y], [cam_pose_z]])
 
-    cam_x_angle = 0.0
-    cam_y_angle = np.pi / 2
-    cam_z_angle = np.pi
+    cam_x_angle = -np.pi
+    cam_y_angle = 0.0#np.pi / 2
+    cam_z_angle = np.pi / 2
     R_cam = euler2mat(cam_x_angle, cam_y_angle, cam_z_angle, 'sxyz')
 
     # print("t_cam: \n", t_cam)
@@ -280,7 +280,7 @@ def main(args=None):
     print("models_info: ", models_info)
 
 
-    options = {"pbLoad": "/home/rkojcev/devel/darkflow/built_graph/yolo-new.pb", "metaLoad": "/home/rkojcev/devel/darkflow/built_graph/yolo-new.meta", "threshold": 0.02, "gpu": 1.00}
+    options = {"pbLoad": "/home/rkojcev/devel/darkflow/built_graph/yolo-new.pb", "metaLoad": "/home/rkojcev/devel/darkflow/built_graph/yolo-new.meta", "threshold": 0.05, "gpu": 1.00}
     tfnet = TFNet(options)
 
     while rclpy.ok():
