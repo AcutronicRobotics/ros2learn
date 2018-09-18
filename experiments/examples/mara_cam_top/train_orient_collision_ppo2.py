@@ -11,7 +11,6 @@ from baselines import bench, logger
 from baselines.common import set_global_seeds
 from baselines.common.vec_env.vec_normalize import VecNormalize
 from baselines.ppo2 import ppo2
-from baselines.common import policies, models, cmd_util
 # from baselines.ppo2.policies import MlpPolicy, LstmPolicy, LnLstmPolicy, LstmMlpPolicy
 import tensorflow as tf
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
@@ -28,19 +27,34 @@ except ImportError:
     MPI = None
 
 import os
-import os.path as osp
 import time
 
-import threading # Used for time locks to synchronize position data.
 
-import yaml
-import glob
+# parser
+parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1)
+parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='sec')
+parser.add_argument('--reset-jnts', help='reset the enviroment',type=bool, default=True)
+args = parser.parse_args()
 
-import quaternion as quat
+# arg_parser = common_arg_parser()
+# args, unknown_args = arg_parser.parse_known_args()
+# extra_args = {k: parse(v) for k,v in parse_unknown_args(unknown_args).items()}
 
-import csv
 
-take_point_once = 1
+ncpu = multiprocessing.cpu_count()
+if sys.platform == 'darwin': ncpu //= 2
+
+print("ncpu: ", ncpu)
+# ncpu = 1
+config = tf.ConfigProto(allow_soft_placement=True,
+                        intra_op_parallelism_threads=ncpu,
+                        inter_op_parallelism_threads=ncpu,
+                        log_device_placement=False)
+config.gpu_options.allow_growth = True #pylint: disable=E1101
+
+tf.Session(config=config).__enter__()
+# def make_env(rank):
 
 def get_alg_module(alg, submodule=None):
     submodule = submodule or alg
@@ -76,63 +90,38 @@ def make_env():
     # env.render()
     return env
 
-# parser
-parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1)
-parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='sec')
-parser.add_argument('--reset-jnts', help='reset the enviroment',type=bool, default=True)
-args = parser.parse_args()
-
-ncpu = multiprocessing.cpu_count()
-if sys.platform == 'darwin': ncpu //= 2
-
-print("ncpu: ", ncpu)
-# ncpu = 1
-config = tf.ConfigProto(allow_soft_placement=True,
-                        intra_op_parallelism_threads=ncpu,
-                        inter_op_parallelism_threads=ncpu,
-                        log_device_placement=False)
-config.gpu_options.allow_growth = True #pylint: disable=E1101
-
-tf.Session(config=config).__enter__()
 
 nenvs = 1
 # env = SubprocVecEnv([make_env(i) for i in range(nenvs)])
 env = DummyVecEnv([make_env])
-# env = VecNormalize(env)
+env = VecNormalize(env)
 alg='ppo2'
 env_type = 'mujoco'
+learn = get_learn_function('ppo2')
+alg_kwargs = get_learn_function_defaults('ppo2', env_type)
+# alg_kwargs.update(extra_args)
 
+# initial_observation = env.reset()
+# print("Initial observation: ", initial_observation)
+# env.render()
+seed = 0
+set_global_seeds(seed)
+network = 'mlp'
+alg_kwargs['network'] = 'mlp'
+rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
 
-common_kwargs = dict(
-    seed=0,
-    total_timesteps = 1e8
-)
+save_path =  '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/'
 
-learn_kwargs = {
-'a2c': {},
-'ppo2': dict(nsteps=1024, ent_coef=0.0, nminibatches=1)
-}
+# ppo2.learn(policy=policy, env=env, nsteps=2048, nminibatches=1,
+#     lam=0.95, gamma=0.99, noptepochs=15, log_interval=1,
+#     ent_coef=0.0,
+#     lr=3e-4,
+#     cliprange=0.2,
+#     total_timesteps=1e6, save_interval=10, outdir=logger.get_dir())
+model = learn(env=env,
+    seed=seed,
+    total_timesteps=1e6, save_interval=10, **alg_kwargs) #, outdir=logger.get_dir()
 
-alg_list = learn_kwargs.keys()
-rnn_list = ['lstm']
-
-rnn_type = {'lstm':{'nlstm':128}}
-
-alg = 'ppo2'
-
-kwargs = learn_kwargs[alg]
-kwargs.update(common_kwargs)
-
-# not relevant
-episode_len = 1024
-
-learn = lambda e: get_learn_function(alg)(
-env=e,
-network='lstm',
-value_network = 'shared',
-save_interval=10,
-**kwargs
-)
-
-model, _ = learn(env)
+if save_path is not None and rank == 0:
+        save_path = osp.expanduser(args.save_path)
+        model.save(save_path)

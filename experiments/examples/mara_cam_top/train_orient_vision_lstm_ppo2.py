@@ -361,6 +361,7 @@ episode_len = 1000
 learn = lambda e: get_learn_function(alg)(
 env=e,
 network='lstm',
+value_network = 'shared',
 save_interval=100,
 **kwargs
 )
