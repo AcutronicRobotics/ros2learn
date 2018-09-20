@@ -8,16 +8,22 @@ import numpy as np
 
 from baselines import bench, logger
 
-from baselines.common import set_global_seeds
 from baselines.common.vec_env.vec_normalize import VecNormalize
 from baselines.ppo2 import ppo2
-from baselines.common import policies, models, cmd_util
-# from baselines.ppo2.policies import MlpPolicy, LstmPolicy, LnLstmPolicy, LstmMlpPolicy
 import tensorflow as tf
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 from baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 
 from baselines.common.cmd_util import common_arg_parser, parse_unknown_args
+
+import functools
+import os.path as osp
+from collections import deque
+from baselines.common import explained_variance, set_global_seeds
+from baselines.common.policies import build_policy
+from baselines.common.runners import AbstractEnvRunner
+from baselines.common.tf_util import get_session, save_variables, load_variables
+from baselines.common.mpi_adam_optimizer import MpiAdamOptimizer
 
 from importlib import import_module
 import multiprocessing
@@ -28,19 +34,8 @@ except ImportError:
     MPI = None
 
 import os
-import os.path as osp
 import time
 
-import threading # Used for time locks to synchronize position data.
-
-import yaml
-import glob
-
-import quaternion as quat
-
-import csv
-
-take_point_once = 1
 
 def get_alg_module(alg, submodule=None):
     submodule = submodule or alg
@@ -65,16 +60,22 @@ def get_learn_function_defaults(alg, env_type):
         kwargs = {}
     return kwargs
 
+def constfn(val):
+    def f(_):
+        return val
+    return f
+
 def make_env():
-    env = gym.make('MARAOrientCollision-v0')
+    env = gym.make('MARAOrient-v0')
     env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit, reset_jnts=args.reset_jnts)
-    logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/lstm_ppo2/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
+    logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
     logger.configure(os.path.abspath(logdir))
     print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
     # env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir(), str(rank)), allow_early_resets=True)
     env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True)
     # env.render()
     return env
+
 
 # parser
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -95,45 +96,89 @@ config = tf.ConfigProto(allow_soft_placement=True,
 config.gpu_options.allow_growth = True #pylint: disable=E1101
 
 tf.Session(config=config).__enter__()
+# def make_env(rank):
 
-nenvs = 64
+nenvs = 1
 # env = SubprocVecEnv([make_env(i) for i in range(nenvs)])
 env = DummyVecEnv([make_env])
 env = VecNormalize(env)
 alg='ppo2'
 env_type = 'mujoco'
-nsteps = 2048
+learn = get_learn_function('ppo2')
 
+alg_kwargs ={
+'num_layers': 2,
+'num_hidden': 64
 
-common_kwargs = dict(
-    seed=0,
-    total_timesteps = 1e8
-)
-
-learn_kwargs = {
-'a2c': {},
-'ppo2': dict(nsteps=nsteps, ent_coef=0.0, nminibatches=1)
 }
+# alg_kwargs.append('num_layers')
+# alg_kwargs.append('num_hidden')
+# alg_kwargs['num_hidden'] = 64
+# alg_kwargs['num'] = get_learn_function_defaults('ppo2', env_type)
 
-alg_list = learn_kwargs.keys()
-rnn_list = ['lstm']
+print("alg_kwargs: ",alg_kwargs)
 
-#rnn_type = {'lstm':{'nlstm':128}}
+nsteps = 2048 # default
+nbatch = nenvs * nsteps
+nminibatches=4
 
-# alg = 'ppo2'
+nbatch_train = nbatch // nminibatches
+vf_coef=0.5
+max_grad_norm=0.5
+ent_coef=0.0
 
-kwargs = learn_kwargs[alg]
-kwargs.update(common_kwargs)
+gamma=0.99
+lam=0.95
+lr=3e-4
+cliprange=0.2
+seed=0
+total_timesteps = 1e6
 
-# not relevant
-episode_len = 1024
+network = 'mlp'
+# alg_kwargs['network'] = 'mlp'
+rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
 
-learn = lambda e: get_learn_function(alg)(
-env=e,
-network='lstm',
-value_network = 'shared',
-save_interval=10,
-**kwargs
-)
 
-model, _ = learn(env)
+set_global_seeds(seed)
+if isinstance(lr, float): lr = constfn(lr)
+else: assert callable(lr)
+if isinstance(cliprange, float): cliprange = constfn(cliprange)
+else: assert callable(cliprange)
+total_timesteps = int(total_timesteps)
+
+policy = build_policy(env, network, **alg_kwargs)
+
+nenvs = env.num_envs
+ob_space = env.observation_space
+ac_space = env.action_space
+nbatch_train = nbatch // nminibatches
+
+
+# dones = [False for _ in range(nenvs)]
+
+load_path='/tmp/rosrl/GazeboMARATopOrientVisionv0Env/ppo2/1000000_nsec/checkpoints/00160'
+
+
+make_model = lambda : ppo2.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train,
+                nsteps=nsteps, ent_coef=ent_coef, vf_coef=vf_coef,
+                max_grad_norm=max_grad_norm)
+
+model = make_model()
+if load_path is not None:
+    print("Loading model from: ", load_path)
+    model.load(load_path)
+runner = ppo2.Runner(env=env, model=model, nsteps=nsteps, gamma=gamma, lam=lam)
+
+
+obs = env.reset()
+
+while True:
+    actions = model.step(obs)[0]
+    # print("mode: ", mode)
+    # actions = model._evaluate(model.policy.pd.mode(), obs)
+    obs, reward, done, _  = env.step(actions)
+    print(reward)
+    # env.render()
+    if done:
+        print("done: ", done)
+        obs = env.reset()

@@ -120,7 +120,7 @@ save_path =  '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/'
 #     total_timesteps=1e6, save_interval=10, outdir=logger.get_dir())
 model = learn(env=env,
     seed=seed,
-    total_timesteps=1e6, save_interval=10, **alg_kwargs) #, outdir=logger.get_dir()
+    total_timesteps=1e8, save_interval=10, **alg_kwargs) #, outdir=logger.get_dir()
 
 if save_path is not None and rank == 0:
         save_path = osp.expanduser(args.save_path)

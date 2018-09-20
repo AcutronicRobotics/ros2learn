@@ -255,7 +255,7 @@ def get_learn_function_defaults(alg, env_type):
 def make_env():
     env = gym.make('MARAVisionOrientCollision-v0')
     env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit, reset_jnts=args.reset_jnts)
-    logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
+    logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/lstm_vision_ppo2/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
     logger.configure(os.path.abspath(logdir))
     print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
     # env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir(), str(rank)), allow_early_resets=True)
@@ -344,7 +344,7 @@ common_kwargs = dict(
 
 learn_kwargs = {
 'a2c': {},
-'ppo2': dict(nsteps=1024, ent_coef=0.0, nminibatches=1)
+'ppo2': dict(nsteps=2048, ent_coef=0.0, nminibatches=32)
 }
 
 alg_list = learn_kwargs.keys()
