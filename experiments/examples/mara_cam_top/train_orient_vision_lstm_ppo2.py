@@ -337,7 +337,7 @@ nenvs = 1
 env = DummyVecEnv([make_env])
 # env = VecNormalize(env)
 alg='ppo2'
-env_type = 'modcobot'
+env_type = 'mara'
 
 
 common_kwargs = dict(

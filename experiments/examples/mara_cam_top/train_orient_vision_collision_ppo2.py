@@ -336,7 +336,7 @@ nenvs = 1
 env = DummyVecEnv([make_env])
 # env = VecNormalize(env)
 alg='ppo2'
-env_type = 'mujoco'
+env_type = 'mara'
 learn = get_learn_function('ppo2')
 alg_kwargs = get_learn_function_defaults('ppo2', env_type)
 # alg_kwargs.update(extra_args)
@@ -348,6 +348,12 @@ alg_kwargs['network'] = 'mlp'
 rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
 
 save_path =  '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/'
+
+with open(logger.get_dir() + "/params.txt", 'a') as out:
+    out.write( 'num_layers = ' + str(alg_kwargs['num_layers']) + '\n'
+                + 'num_hidden = ' + str(alg_kwargs['num_hidden'])  + '\n'
+                + 'nsteps = ' + str(alg_kwargs['nsteps']) + '\n'
+                + 'nminibatches = ' + str(alg_kwargs['nminibatches']) )
 
 model, _ = learn(env=env,
     seed=seed,

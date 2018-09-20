@@ -105,7 +105,7 @@ nenvs = 64
 env = DummyVecEnv([make_env])
 env = VecNormalize(env)
 alg='ppo2'
-env_type = 'modcobot'
+env_type = 'mara'
 nsteps = 2048
 
 

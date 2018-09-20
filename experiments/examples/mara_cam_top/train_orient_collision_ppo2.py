@@ -123,10 +123,10 @@ save_path =  '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/'
 #     total_timesteps=1e6, save_interval=10, outdir=logger.get_dir())
 
 #change params from defaults.py
-alg_kwargs['num_layers'] = 4
-alg_kwargs['num_hidden'] = 128
-alg_kwargs['nsteps'] = 2048
-alg_kwargs['nminibatches'] = 256
+# alg_kwargs['num_layers'] = 4
+# alg_kwargs['num_hidden'] = 128
+# alg_kwargs['nsteps'] = 2048
+# alg_kwargs['nminibatches'] = 256
 
 with open(logger.get_dir() + "/params.txt", 'a') as out:
     out.write( 'num_layers = ' + str(alg_kwargs['num_layers']) + '\n'
