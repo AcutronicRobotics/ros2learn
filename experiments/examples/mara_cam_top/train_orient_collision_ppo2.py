@@ -32,8 +32,8 @@ import time
 
 # parser
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1)
-parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='sec')
+parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1000000)
+parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='nsec')
 parser.add_argument('--reset-jnts', help='reset the enviroment',type=bool, default=True)
 args = parser.parse_args()
 
@@ -96,7 +96,7 @@ nenvs = 1
 env = DummyVecEnv([make_env])
 env = VecNormalize(env)
 alg='ppo2'
-env_type = 'mujoco'
+env_type = 'modcobot'
 learn = get_learn_function('ppo2')
 alg_kwargs = get_learn_function_defaults('ppo2', env_type)
 # alg_kwargs.update(extra_args)
@@ -107,17 +107,30 @@ alg_kwargs = get_learn_function_defaults('ppo2', env_type)
 seed = 0
 set_global_seeds(seed)
 network = 'mlp'
-alg_kwargs['network'] = 'mlp'
+alg_kwargs['network'] = network
 rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
 
 save_path =  '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/'
 
-# ppo2.learn(policy=policy, env=env, nsteps=2048, nminibatches=1,
-#     lam=0.95, gamma=0.99, noptepochs=15, log_interval=1,
+# ppo2.learn(policy=policy, env=env, nsteps=2048, nminibatches=256,
+#     lam=0.95, gamma=0.99, noptepochs=10, log_interval=1,
 #     ent_coef=0.0,
 #     lr=3e-4,
 #     cliprange=0.2,
 #     total_timesteps=1e6, save_interval=10, outdir=logger.get_dir())
+
+#change params from defaults.py
+alg_kwargs['num_layers'] = 4
+alg_kwargs['num_hidden'] = 128
+alg_kwargs['nsteps'] = 2048
+alg_kwargs['nminibatches'] = 256
+
+with open(logger.get_dir() + "/params.txt", 'a') as out:
+    out.write( 'num_layers = ' + str(alg_kwargs['num_layers']) + '\n'
+                + 'num_hidden = ' + str(alg_kwargs['num_hidden'])  + '\n'
+                + 'nsteps = ' + str(alg_kwargs['nsteps']) + '\n'
+                + 'nminibatches = ' + str(alg_kwargs['nminibatches']) )
+
 model = learn(env=env,
     seed=seed,
     total_timesteps=1e8, save_interval=10, **alg_kwargs) #, outdir=logger.get_dir()
