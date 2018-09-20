@@ -113,7 +113,7 @@ network = 'mlp'
 alg_kwargs['network'] = network
 rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
 
-save_path =  '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/'
+# save_path =  '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/'
 
 # ppo2.learn(policy=policy, env=env, nsteps=2048, nminibatches=256,
 #     lam=0.95, gamma=0.99, noptepochs=10, log_interval=1,
@@ -138,6 +138,6 @@ model = learn(env=env,
     seed=seed,
     total_timesteps=1e8, save_interval=10, **alg_kwargs) #, outdir=logger.get_dir()
 
-if save_path is not None and rank == 0:
-        save_path = osp.expanduser(args.save_path)
-        model.save(save_path)
+# if save_path is not None and rank == 0:
+#         save_path = osp.expanduser(args.save_path)
+#         model.save(save_path)
