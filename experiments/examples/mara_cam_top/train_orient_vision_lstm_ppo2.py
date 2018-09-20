@@ -256,7 +256,10 @@ def make_env():
     env = gym.make('MARAVisionOrientCollision-v0')
     env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit, reset_jnts=args.reset_jnts)
     logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/lstm_vision_ppo2/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
-    logger.configure(os.path.abspath(logdir))
+    format_strs = os.getenv('MARA_LOG_FORMAT', 'stdout,log,csv,tensorboard').split(',')
+    print(format_strs)
+    # format_strs = 'stdout,log,csv,tensorboard'
+    logger.configure(os.path.abspath(logdir), format_strs)
     print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
     # env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir(), str(rank)), allow_early_resets=True)
     env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True)
@@ -334,7 +337,7 @@ nenvs = 1
 env = DummyVecEnv([make_env])
 # env = VecNormalize(env)
 alg='ppo2'
-env_type = 'mujoco'
+env_type = 'modcobot'
 
 
 common_kwargs = dict(
