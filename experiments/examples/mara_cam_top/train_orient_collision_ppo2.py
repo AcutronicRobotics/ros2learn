@@ -2,21 +2,20 @@ import gym
 import gym_gazebo
 import tensorflow as tf
 import argparse
-import copy
+# import copy
 import sys
-import numpy as np
+# import numpy as np
 
 from baselines import bench, logger
 
 from baselines.common import set_global_seeds
-from baselines.common.vec_env.vec_normalize import VecNormalize
-from baselines.ppo2 import ppo2
+# from baselines.ppo2 import ppo2
 # from baselines.ppo2.policies import MlpPolicy, LstmPolicy, LnLstmPolicy, LstmMlpPolicy
-import tensorflow as tf
+# from baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
-from baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
+from baselines.common.vec_env.vec_normalize import VecNormalize
 
-from baselines.common.cmd_util import common_arg_parser, parse_unknown_args
+# from baselines.common.cmd_util import common_arg_parser, parse_unknown_args
 
 from importlib import import_module
 import multiprocessing
@@ -27,8 +26,7 @@ except ImportError:
     MPI = None
 
 import os
-import time
-
+# import time
 
 # parser
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -44,9 +42,8 @@ args = parser.parse_args()
 
 ncpu = multiprocessing.cpu_count()
 if sys.platform == 'darwin': ncpu //= 2
+# print("ncpu: ", ncpu)
 
-print("ncpu: ", ncpu)
-# ncpu = 1
 config = tf.ConfigProto(allow_soft_placement=True,
                         intra_op_parallelism_threads=ncpu,
                         inter_op_parallelism_threads=ncpu,
@@ -93,8 +90,7 @@ def make_env():
     # env.render()
     return env
 
-
-nenvs = 1
+# nenvs = 1
 # env = SubprocVecEnv([make_env(i) for i in range(nenvs)])
 env = DummyVecEnv([make_env])
 env = VecNormalize(env)
@@ -107,10 +103,7 @@ alg_kwargs = get_learn_function_defaults('ppo2', env_type)
 # initial_observation = env.reset()
 # print("Initial observation: ", initial_observation)
 # env.render()
-seed = 0
-set_global_seeds(seed)
-network = 'mlp'
-alg_kwargs['network'] = network
+set_global_seeds(alg_kwargs['seed'])
 rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
 
 # save_path =  '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/'
@@ -122,21 +115,13 @@ rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
 #     cliprange=0.2,
 #     total_timesteps=1e6, save_interval=10, outdir=logger.get_dir())
 
-#change params from defaults.py
-# alg_kwargs['num_layers'] = 4
-# alg_kwargs['num_hidden'] = 128
-# alg_kwargs['nsteps'] = 2048
-# alg_kwargs['nminibatches'] = 256
-
 with open(logger.get_dir() + "/params.txt", 'a') as out:
     out.write( 'num_layers = ' + str(alg_kwargs['num_layers']) + '\n'
                 + 'num_hidden = ' + str(alg_kwargs['num_hidden'])  + '\n'
                 + 'nsteps = ' + str(alg_kwargs['nsteps']) + '\n'
                 + 'nminibatches = ' + str(alg_kwargs['nminibatches']) )
 
-model = learn(env=env,
-    seed=seed,
-    total_timesteps=1e8, save_interval=10, **alg_kwargs) #, outdir=logger.get_dir()
+model = learn(env=env, **alg_kwargs) #, outdir=logger.get_dir()
 
 # if save_path is not None and rank == 0:
 #         save_path = osp.expanduser(args.save_path)

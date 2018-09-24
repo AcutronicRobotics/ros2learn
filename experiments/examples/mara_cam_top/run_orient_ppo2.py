@@ -12,18 +12,18 @@ from baselines.common.vec_env.vec_normalize import VecNormalize
 from baselines.ppo2 import ppo2
 import tensorflow as tf
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
-from baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
+# from baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 
-from baselines.common.cmd_util import common_arg_parser, parse_unknown_args
+# from baselines.common.cmd_util import common_arg_parser, parse_unknown_args
 
-import functools
-import os.path as osp
-from collections import deque
-from baselines.common import explained_variance, set_global_seeds
+# import functools
+# import os.path as osp
+# from collections import deque
+from baselines.common import set_global_seeds#, explained_variance
 from baselines.common.policies import build_policy
-from baselines.common.runners import AbstractEnvRunner
-from baselines.common.tf_util import get_session, save_variables, load_variables
-from baselines.common.mpi_adam_optimizer import MpiAdamOptimizer
+# from baselines.common.runners import AbstractEnvRunner
+# from baselines.common.tf_util import get_session, save_variables, load_variables
+# from baselines.common.mpi_adam_optimizer import MpiAdamOptimizer
 
 from importlib import import_module
 import multiprocessing
@@ -34,7 +34,7 @@ except ImportError:
     MPI = None
 
 import os
-import time
+# import time
 
 
 def get_alg_module(alg, submodule=None):
@@ -66,7 +66,7 @@ def constfn(val):
     return f
 
 def make_env():
-    env = gym.make('MARAOrient-v0')
+    env = gym.make('MARAOrientCollision-v0')
     env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit, reset_jnts=args.reset_jnts)
     logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
     logger.configure(os.path.abspath(logdir))
@@ -86,9 +86,8 @@ args = parser.parse_args()
 
 ncpu = multiprocessing.cpu_count()
 if sys.platform == 'darwin': ncpu //= 2
+# print("ncpu: ", ncpu)
 
-print("ncpu: ", ncpu)
-# ncpu = 1
 config = tf.ConfigProto(allow_soft_placement=True,
                         intra_op_parallelism_threads=ncpu,
                         inter_op_parallelism_threads=ncpu,
@@ -98,77 +97,55 @@ config.gpu_options.allow_growth = True #pylint: disable=E1101
 tf.Session(config=config).__enter__()
 # def make_env(rank):
 
-nenvs = 1
+# nenvs = 1
 # env = SubprocVecEnv([make_env(i) for i in range(nenvs)])
 env = DummyVecEnv([make_env])
 env = VecNormalize(env)
 alg='ppo2'
-env_type = 'mujoco'
+env_type = 'mara'
 learn = get_learn_function('ppo2')
+defaults = get_learn_function_defaults('ppo2', env_type)
 
 alg_kwargs ={
-'num_layers': 2,
-'num_hidden': 64
+'num_layers': defaults['num_layers'],
+'num_hidden': defaults['num_hidden']
 
 }
-# alg_kwargs.append('num_layers')
-# alg_kwargs.append('num_hidden')
-# alg_kwargs['num_hidden'] = 64
-# alg_kwargs['num'] = get_learn_function_defaults('ppo2', env_type)
+# print("alg_kwargs: ",alg_kwargs)
 
-print("alg_kwargs: ",alg_kwargs)
-
-nsteps = 2048 # default
-nbatch = nenvs * nsteps
-nminibatches=4
-
-nbatch_train = nbatch // nminibatches
-vf_coef=0.5
-max_grad_norm=0.5
-ent_coef=0.0
-
-gamma=0.99
-lam=0.95
-lr=3e-4
-cliprange=0.2
-seed=0
-total_timesteps = 1e6
-
-network = 'mlp'
-# alg_kwargs['network'] = 'mlp'
 rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
+set_global_seeds(defaults['seed'])
 
+if isinstance(defaults['lr'], float):
+    defaults['lr'] = constfn(defaults['lr'])
+else:
+    assert callable(defaults['lr'])
+if isinstance(defaults['cliprange'], float):
+    defaults['cliprange'] = constfn(defaults['cliprange'])
+else:
+    assert callable(defaults['cliprange'])
 
-set_global_seeds(seed)
-if isinstance(lr, float): lr = constfn(lr)
-else: assert callable(lr)
-if isinstance(cliprange, float): cliprange = constfn(cliprange)
-else: assert callable(cliprange)
-total_timesteps = int(total_timesteps)
-
-policy = build_policy(env, network, **alg_kwargs)
+policy = build_policy(env, defaults['network'], **alg_kwargs)
 
 nenvs = env.num_envs
 ob_space = env.observation_space
 ac_space = env.action_space
-nbatch_train = nbatch // nminibatches
-
+nbatch = nenvs * defaults['nsteps']
+nbatch_train = nbatch // defaults['nminibatches']
 
 # dones = [False for _ in range(nenvs)]
 
-load_path='/tmp/rosrl/GazeboMARATopOrientVisionv0Env/ppo2/1000000_nsec/checkpoints/00160'
-
+load_path='/media/yue/801cfad1-b3e4-4e07-9420-cc0dd0e83458/ppo2/alex2/1000000_nsec_quat__2048_256_rewori0.5/checkpoints/01200'
 
 make_model = lambda : ppo2.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train,
-                nsteps=nsteps, ent_coef=ent_coef, vf_coef=vf_coef,
-                max_grad_norm=max_grad_norm)
+                nsteps=defaults['nsteps'], ent_coef=defaults['ent_coef'], vf_coef=defaults['vf_coef'],
+                max_grad_norm=defaults['max_grad_norm'])
 
 model = make_model()
 if load_path is not None:
     print("Loading model from: ", load_path)
     model.load(load_path)
-runner = ppo2.Runner(env=env, model=model, nsteps=nsteps, gamma=gamma, lam=lam)
-
+runner = ppo2.Runner(env=env, model=model, nsteps=defaults['nsteps'], gamma=defaults['gamma'], lam=defaults['lam'])
 
 obs = env.reset()
 
