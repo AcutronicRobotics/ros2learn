@@ -65,8 +65,8 @@ def get_alg_module(alg, submodule=None):
     return alg_module
 
 
-def get_learn_function(alg):
-    return get_alg_module(alg).learn
+def get_learn_function(alg, submodule=None):
+    return get_alg_module(alg, submodule).learn
 
 def get_learn_function_defaults(alg, env_type):
     try:
@@ -94,9 +94,9 @@ def make_env():
 # env = SubprocVecEnv([make_env(i) for i in range(nenvs)])
 env = DummyVecEnv([make_env])
 env = VecNormalize(env)
-alg='ppo2'
 env_type = 'mara'
-learn = get_learn_function('ppo2')
+# learn = get_learn_function('ppo2')
+learn = get_learn_function('ppo2', 'ppo2_prevact')
 alg_kwargs = get_learn_function_defaults('ppo2', env_type)
 # alg_kwargs.update(extra_args)
 

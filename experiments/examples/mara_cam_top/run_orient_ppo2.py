@@ -35,7 +35,7 @@ except ImportError:
 
 import os
 # import time
-
+import write_csv as csv_file
 
 def get_alg_module(alg, submodule=None):
     submodule = submodule or alg
@@ -135,7 +135,7 @@ nbatch_train = nbatch // defaults['nminibatches']
 
 # dones = [False for _ in range(nenvs)]
 
-load_path='/media/yue/801cfad1-b3e4-4e07-9420-cc0dd0e83458/ppo2/alex2/1000000_nsec_quat__2048_256_rewori0.5/checkpoints/01200'
+load_path='/media/yue/801cfad1-b3e4-4e07-9420-cc0dd0e83458/ppo2/alex2/1000000_nsec_justrewdist_prevact/checkpoints/00600'
 
 make_model = lambda : ppo2.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train,
                 nsteps=defaults['nsteps'], ent_coef=defaults['ent_coef'], vf_coef=defaults['vf_coef'],
@@ -145,17 +145,34 @@ model = make_model()
 if load_path is not None:
     print("Loading model from: ", load_path)
     model.load(load_path)
-runner = ppo2.Runner(env=env, model=model, nsteps=defaults['nsteps'], gamma=defaults['gamma'], lam=defaults['lam'])
+# runner = ppo2.Runner(env=env, model=model, nsteps=defaults['nsteps'], gamma=defaults['gamma'], lam=defaults['lam'])
 
 obs = env.reset()
 
+# csv_obs_path = "csv/ppo2_det_obs.csv"
+# csv_acs_path = "csv/ppo2_det_acs.csv"
+csv_obs_path = "csv/ppo2_sto_obs.csv"
+csv_acs_path = "csv/ppo2_sto_acs.csv"
+
+if os.path.exists(csv_obs_path):
+    os.remove(csv_obs_path)
+if os.path.exists(csv_acs_path):
+    os.remove(csv_acs_path)
+
 while True:
-    actions = model.step(obs)[0]
-    # print("mode: ", mode)
-    # actions = model._evaluate(model.policy.pd.mode(), obs)
-    obs, reward, done, _  = env.step(actions)
-    print(reward)
-    # env.render()
-    if done:
-        print("done: ", done)
-        obs = env.reset()
+    # actions = model.step(obs)[0] #stochastic
+    # obs, reward, done, _  = env.step(actions)
+    actions = model.step_deterministic(obs)[0]
+
+    # csv_file.write_obs(obs[0], csv_obs_path)
+    # csv_file.write_acs(actions[0], csv_acs_path)
+
+    # obs, reward, done, _  = env.step(actions, True) #True not to reset the env
+    obs, reward, done, collided, _  = env.step_runtime(actions)
+
+    # print(reward)
+    # # env.render()
+    # if done:
+    #     print("done: ", done)
+        # time.sleep(10)
+        # obs = env.reset()
