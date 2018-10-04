@@ -303,7 +303,7 @@ class GP(AbstractModel):
             }
             self._cache_list.append(cache_dict)
 
-    def _reset(self):
+    def reset(self):
         """reset the GP
         """
         self._cache_list          = []
@@ -490,7 +490,7 @@ class GP(AbstractModel):
         self._values = values
 
         # Reset the GP
-        self._reset()
+        self.reset()
 
         # Initialize the GP with hypers if provided
         if hypers:

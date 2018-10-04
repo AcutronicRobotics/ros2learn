@@ -263,8 +263,8 @@ class GPClassifier(GP):
         else:
             raise Exception("GP classifier only supports step or binomial likelihood, not %s" % (options['likelihood']))
 
-    def _reset(self):
-        super(GPClassifier, self)._reset()
+    def reset(self):
+        super(GPClassifier, self).reset()
 
         # Reset the latent values
         if self.counts is not None:
@@ -414,7 +414,7 @@ class GPClassifier(GP):
         self.counts  = counts
 
         # Reset the GP
-        self._reset()
+        self.reset()
 
         # Initialize the GP with hypers if provided
         if hypers:
