@@ -106,6 +106,10 @@ env_type = 'mara'
 # learn = get_learn_function('ppo2')
 defaults = get_learn_function_defaults('ppo2', env_type)
 
+print("defaults: ", defaults)
+
+network = 'mlp'
+
 alg_kwargs ={
 'num_layers': defaults['num_layers'],
 'num_hidden': defaults['num_hidden']
@@ -113,17 +117,19 @@ alg_kwargs ={
 }
 # print("alg_kwargs: ",alg_kwargs)
 
-rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
-set_global_seeds(defaults['seed'])
 
-if isinstance(defaults['lr'], float):
-    defaults['lr'] = constfn(defaults['lr'])
-else:
-    assert callable(defaults['lr'])
-if isinstance(defaults['cliprange'], float):
-    defaults['cliprange'] = constfn(defaults['cliprange'])
-else:
-    assert callable(defaults['cliprange'])
+set_global_seeds(defaults['seed'])
+rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
+
+
+# if isinstance(defaults['lr'], float):
+#     defaults['lr'] = constfn(defaults['lr'])
+# else:
+#     assert callable(defaults['lr'])
+# if isinstance(defaults['cliprange'], float):
+#     defaults['cliprange'] = constfn(defaults['cliprange'])
+# else:
+#     assert callable(defaults['cliprange'])
 
 policy = build_policy(env, defaults['network'], **alg_kwargs)
 
@@ -131,7 +137,10 @@ nenvs = env.num_envs
 ob_space = env.observation_space
 ac_space = env.action_space
 nbatch = nenvs * defaults['nsteps']
+print("nbatch: ",nbatch)
 nbatch_train = nbatch // defaults['nminibatches']
+
+print("nbatch_train: ", nbatch_train)
 
 # dones = [False for _ in range(nenvs)]
 
