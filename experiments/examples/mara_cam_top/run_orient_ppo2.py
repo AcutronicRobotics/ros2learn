@@ -101,10 +101,15 @@ tf.Session(config=config).__enter__()
 # env = SubprocVecEnv([make_env(i) for i in range(nenvs)])
 env = DummyVecEnv([make_env])
 env = VecNormalize(env)
+env_type = 'mara'
 alg='ppo2'
 env_type = 'mara'
 learn = get_learn_function('ppo2')
 defaults = get_learn_function_defaults('ppo2', env_type)
+
+print("defaults: ", defaults)
+
+network = 'mlp'
 
 alg_kwargs ={
 'num_layers': defaults['num_layers'],
@@ -113,17 +118,19 @@ alg_kwargs ={
 }
 # print("alg_kwargs: ",alg_kwargs)
 
-rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
-set_global_seeds(defaults['seed'])
 
-if isinstance(defaults['lr'], float):
-    defaults['lr'] = constfn(defaults['lr'])
-else:
-    assert callable(defaults['lr'])
-if isinstance(defaults['cliprange'], float):
-    defaults['cliprange'] = constfn(defaults['cliprange'])
-else:
-    assert callable(defaults['cliprange'])
+set_global_seeds(defaults['seed'])
+rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
+
+
+# if isinstance(defaults['lr'], float):
+#     defaults['lr'] = constfn(defaults['lr'])
+# else:
+#     assert callable(defaults['lr'])
+# if isinstance(defaults['cliprange'], float):
+#     defaults['cliprange'] = constfn(defaults['cliprange'])
+# else:
+#     assert callable(defaults['cliprange'])
 
 policy = build_policy(env, defaults['network'], **alg_kwargs)
 
@@ -131,11 +138,14 @@ nenvs = env.num_envs
 ob_space = env.observation_space
 ac_space = env.action_space
 nbatch = nenvs * defaults['nsteps']
+print("nbatch: ",nbatch)
 nbatch_train = nbatch // defaults['nminibatches']
+
+print("nbatch_train: ", nbatch_train)
 
 # dones = [False for _ in range(nenvs)]
 
-load_path='/media/yue/801cfad1-b3e4-4e07-9420-cc0dd0e83458/ppo2/alex2/1000000_nsec_justrewdist_prevact/checkpoints/00600'
+load_path='/tmp/rosrl/GazeboMARATopOrientCollisionv0Env/ppo2/1000000_nsec/checkpoints/02250'
 
 make_model = lambda : ppo2.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train,
                 nsteps=defaults['nsteps'], ent_coef=defaults['ent_coef'], vf_coef=defaults['vf_coef'],
@@ -168,7 +178,7 @@ while True:
     # csv_file.write_acs(actions[0], csv_acs_path)
 
     # obs, reward, done, _  = env.step(actions, True) #True not to reset the env
-    obs, reward, done, collided, _  = env.step_runtime(actions)
+    obs, reward, done, _  = env.step_runtime(actions)
 
     # print(reward)
     # # env.render()
