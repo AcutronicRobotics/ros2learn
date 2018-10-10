@@ -26,7 +26,7 @@ except ImportError:
     MPI = None
 
 import os
-# import time
+import time
 
 # parser
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -93,10 +93,10 @@ def make_env():
 # nenvs = 1
 # env = SubprocVecEnv([make_env(i) for i in range(nenvs)])
 env = DummyVecEnv([make_env])
-env = VecNormalize(env)
+# env = VecNormalize(env)
 env_type = 'mara'
-# learn = get_learn_function('ppo2')
-learn = get_learn_function('ppo2', 'ppo2_prevact')
+learn = get_learn_function('ppo2')
+# learn = get_learn_function('ppo2', 'ppo2_prevact')
 alg_kwargs = get_learn_function_defaults('ppo2', env_type)
 # alg_kwargs.update(extra_args)
 

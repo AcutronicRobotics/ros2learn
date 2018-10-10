@@ -34,7 +34,7 @@ except ImportError:
     MPI = None
 
 import os
-# import time
+import time
 import write_csv as csv_file
 
 def get_alg_module(alg, submodule=None):
@@ -49,8 +49,8 @@ def get_alg_module(alg, submodule=None):
     return alg_module
 
 
-def get_learn_function(alg):
-    return get_alg_module(alg).learn
+# def get_learn_function(alg):
+#     return get_alg_module(alg).learn
 
 def get_learn_function_defaults(alg, env_type):
     try:
@@ -79,7 +79,7 @@ def make_env():
 
 # parser
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1)
+parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=3)
 parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='sec')
 parser.add_argument('--reset-jnts', help='reset the enviroment',type=bool, default=True)
 args = parser.parse_args()
@@ -100,10 +100,10 @@ tf.Session(config=config).__enter__()
 # nenvs = 1
 # env = SubprocVecEnv([make_env(i) for i in range(nenvs)])
 env = DummyVecEnv([make_env])
-env = VecNormalize(env)
+# env = VecNormalize(env)
 alg='ppo2'
 env_type = 'mara'
-learn = get_learn_function('ppo2')
+# learn = get_learn_function('ppo2')
 defaults = get_learn_function_defaults('ppo2', env_type)
 
 alg_kwargs ={
@@ -135,8 +135,8 @@ nbatch_train = nbatch // defaults['nminibatches']
 
 # dones = [False for _ in range(nenvs)]
 
-load_path='/media/yue/801cfad1-b3e4-4e07-9420-cc0dd0e83458/ppo2/alex2/1000000_nsec_justrewdist_prevact/checkpoints/00600'
-
+# load_path='/media/yue/801cfad1-b3e4-4e07-9420-cc0dd0e83458/ppo2/alex2/1000000_nsec_new_logic_justrewdist/checkpoints/00450'# 450 710
+load_path='/media/yue/801cfad1-b3e4-4e07-9420-cc0dd0e83458/ppo2/alex2/1000000_nsec_new_logic_justrewdist_no_norm_6/checkpoints/01040'
 make_model = lambda : ppo2.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train,
                 nsteps=defaults['nsteps'], ent_coef=defaults['ent_coef'], vf_coef=defaults['vf_coef'],
                 max_grad_norm=defaults['max_grad_norm'])
@@ -149,27 +149,34 @@ if load_path is not None:
 
 obs = env.reset()
 
-# csv_obs_path = "csv/ppo2_det_obs.csv"
-# csv_acs_path = "csv/ppo2_det_acs.csv"
-csv_obs_path = "csv/ppo2_sto_obs.csv"
-csv_acs_path = "csv/ppo2_sto_acs.csv"
+csv_obs_path = "csv/ppo2_det_obs.csv"
+csv_acs_path = "csv/ppo2_det_acs.csv"
+csv_rew_path = "csv/ppo2_det_rew.csv"
+# csv_obs_path = "csv/ppo2_sto_obs.csv"
+# csv_acs_path = "csv/ppo2_sto_acs.csv"
+# csv_rew_path = "csv/ppo2_sto_rew.csv"
 
-if os.path.exists(csv_obs_path):
-    os.remove(csv_obs_path)
-if os.path.exists(csv_acs_path):
-    os.remove(csv_acs_path)
+if not os.path.exists("csv"):
+    os.makedirs(directory)
+else:
+    if os.path.exists(csv_obs_path):
+        os.remove(csv_obs_path)
+    if os.path.exists(csv_acs_path):
+        os.remove(csv_acs_path)
+    if os.path.exists(csv_rew_path):
+        os.remove(csv_rew_path)
 
 while True:
     # actions = model.step(obs)[0] #stochastic
     # obs, reward, done, _  = env.step(actions)
     actions = model.step_deterministic(obs)[0]
 
+    # obs, reward, done, _  = env.step(actions, True) #True not to reset the env
+    obs, reward, done, _  = env.step_runtime(actions)
+
     # csv_file.write_obs(obs[0], csv_obs_path)
     # csv_file.write_acs(actions[0], csv_acs_path)
-
-    # obs, reward, done, _  = env.step(actions, True) #True not to reset the env
-    obs, reward, done, collided, _  = env.step_runtime(actions)
-
+    # csv_file.write_rew(reward, csv_rew_path)
     # print(reward)
     # # env.render()
     # if done:

@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas
 import argparse
-
+import os
 
 #example: python3 plot_csv.py --files csv/ppo_det_acs.csv csv/ppo_det_obs.csv --headers ac1 ob1
 
@@ -21,5 +21,9 @@ for i in range(0, len(data)):
     plt.plot(data[i][headers[i]])
 
 plt.grid()
+
+if not os.path.exists("img"):
+    os.makedirs(directory)
 plt.savefig('img/a.png')
+
 plt.show()

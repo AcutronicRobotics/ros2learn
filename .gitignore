@@ -16,6 +16,12 @@ keys/
 # Virtualenv
 /env
 
+# CSV folder
+/csv
+
+#Images folder
+/img
+
 
 *.sublime-project
 *.sublime-workspace
