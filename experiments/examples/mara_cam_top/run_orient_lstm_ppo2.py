@@ -2,7 +2,6 @@ import gym
 import gym_gazebo
 import tensorflow as tf
 import argparse
-import copy
 import sys
 import numpy as np
 
@@ -10,20 +9,11 @@ from baselines import bench, logger
 
 from baselines.common.vec_env.vec_normalize import VecNormalize
 from baselines.ppo2 import ppo2
-import tensorflow as tf
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 from baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 
-from baselines.common.cmd_util import common_arg_parser, parse_unknown_args
-
-import functools
-import os.path as osp
-from collections import deque
-from baselines.common import explained_variance, set_global_seeds
+from baselines.common import set_global_seeds
 from baselines.common.policies import build_policy
-from baselines.common.runners import AbstractEnvRunner
-from baselines.common.tf_util import get_session, save_variables, load_variables
-from baselines.common.mpi_adam_optimizer import MpiAdamOptimizer
 
 from importlib import import_module
 import multiprocessing
@@ -36,7 +26,6 @@ except ImportError:
 import os
 import time
 
-
 def get_alg_module(alg, submodule=None):
     submodule = submodule or alg
     try:
@@ -47,7 +36,6 @@ def get_alg_module(alg, submodule=None):
         alg_module = import_module('.'.join(['rl_' + 'algs', alg, submodule]))
 
     return alg_module
-
 
 def get_learn_function(alg):
     return get_alg_module(alg).learn
@@ -60,15 +48,20 @@ def get_learn_function_defaults(alg, env_type):
         kwargs = {}
     return kwargs
 
+def initialize_placeholders(nlstm=128,**kwargs):
+    global num_env
+    print("num_env: ", num_env)
+    return np.zeros((num_env or 1, 2*nlstm)), np.zeros((1))
+
 def constfn(val):
     def f(_):
         return val
     return f
 
 def make_env():
-    env = gym.make('MARAOrient-v0')
+    env = gym.make('MARAOrientCollision-v0')
     env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit, reset_jnts=args.reset_jnts)
-    logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
+    logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2_lstm/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
     logger.configure(os.path.abspath(logdir))
     print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
     # env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir(), str(rank)), allow_early_resets=True)
@@ -76,10 +69,9 @@ def make_env():
     # env.render()
     return env
 
-
 # parser
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1)
+parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=3)
 parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='sec')
 parser.add_argument('--reset-jnts', help='reset the enviroment',type=bool, default=True)
 args = parser.parse_args()
@@ -87,8 +79,6 @@ args = parser.parse_args()
 ncpu = multiprocessing.cpu_count()
 if sys.platform == 'darwin': ncpu //= 2
 
-print("ncpu: ", ncpu)
-# ncpu = 1
 config = tf.ConfigProto(allow_soft_placement=True,
                         intra_op_parallelism_threads=ncpu,
                         inter_op_parallelism_threads=ncpu,
@@ -98,87 +88,87 @@ config.gpu_options.allow_growth = True #pylint: disable=E1101
 tf.Session(config=config).__enter__()
 # def make_env(rank):
 
-nenvs = 1
 # env = SubprocVecEnv([make_env(i) for i in range(nenvs)])
 env = DummyVecEnv([make_env])
-env = VecNormalize(env)
+# env = VecNormalize(env)
 alg='ppo2'
-env_type = 'mujoco'
-learn = get_learn_function('ppo2')
+env_type = 'mara_lstm'
+defaults = get_learn_function_defaults('ppo2', env_type)
 
 alg_kwargs ={
-'num_layers': 2,
-'num_hidden': 64
-
+'nlstm': defaults['nlstm'],
+'layer_norm': defaults['layer_norm']
 }
-# alg_kwargs.append('num_layers')
-# alg_kwargs.append('num_hidden')
-# alg_kwargs['num_hidden'] = 64
-# alg_kwargs['num'] = get_learn_function_defaults('ppo2', env_type)
 
-print("alg_kwargs: ",alg_kwargs)
-
-nsteps = 2048 # default
-nbatch = nenvs * nsteps
-nminibatches=4
-
-nbatch_train = nbatch // nminibatches
-vf_coef=0.5
-max_grad_norm=0.5
-ent_coef=0.0
-
-gamma=0.99
-lam=0.95
-lr=3e-4
-cliprange=0.2
-seed=0
-total_timesteps = 1e6
-
-network = 'mlp'
-# alg_kwargs['network'] = 'mlp'
+set_global_seeds(defaults['seed'])
 rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
 
+if isinstance(defaults['lr'], float):
+    defaults['lr'] = constfn(defaults['lr'])
+else:
+    assert callable(defaults['lr'])
+if isinstance(defaults['cliprange'], float):
+    defaults['cliprange'] = constfn(defaults['cliprange'])
+else:
+    assert callable(defaults['cliprange'])
 
-set_global_seeds(seed)
-if isinstance(lr, float): lr = constfn(lr)
-else: assert callable(lr)
-if isinstance(cliprange, float): cliprange = constfn(cliprange)
-else: assert callable(cliprange)
-total_timesteps = int(total_timesteps)
-
-policy = build_policy(env, network, **alg_kwargs)
+policy = build_policy(env, defaults['network'], **alg_kwargs)
 
 nenvs = env.num_envs
 ob_space = env.observation_space
 ac_space = env.action_space
-nbatch_train = nbatch // nminibatches
-
+nbatch = nenvs * defaults['nsteps']
+nbatch_train = nbatch // defaults['nminibatches']
+global num_env
+num_env = 1
 
 # dones = [False for _ in range(nenvs)]
 
-load_path='/tmp/rosrl/GazeboMARATopOrientVisionv0Env/ppo2/1000000_nsec/checkpoints/00160'
-
+load_path='/media/yue/801cfad1-b3e4-4e07-9420-cc0dd0e83458/ppo2/alex2/lstm/1000000_nsec/checkpoints/01530'
 
 make_model = lambda : ppo2.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train,
-                nsteps=nsteps, ent_coef=ent_coef, vf_coef=vf_coef,
-                max_grad_norm=max_grad_norm)
-
+                nsteps=defaults['nsteps'], ent_coef=defaults['ent_coef'], vf_coef=defaults['vf_coef'],
+                max_grad_norm=defaults['max_grad_norm'])
+print("before making model")
 model = make_model()
+print("model done")
 if load_path is not None:
     print("Loading model from: ", load_path)
     model.load(load_path)
-runner = ppo2.Runner(env=env, model=model, nsteps=nsteps, gamma=gamma, lam=lam)
-
 
 obs = env.reset()
 
+csv_obs_path = "csv/ppo2_det_obs.csv"
+csv_acs_path = "csv/ppo2_det_acs.csv"
+csv_rew_path = "csv/ppo2_det_rew.csv"
+# csv_obs_path = "csv/ppo2_sto_obs.csv"
+# csv_acs_path = "csv/ppo2_sto_acs.csv"
+# csv_rew_path = "csv/ppo2_sto_rew.csv"
+
+if not os.path.exists("csv"):
+    os.makedirs("csv")
+else:
+    if os.path.exists(csv_obs_path):
+        os.remove(csv_obs_path)
+    if os.path.exists(csv_acs_path):
+        os.remove(csv_acs_path)
+    if os.path.exists(csv_rew_path):
+        os.remove(csv_rew_path)
+
+state, dones = initialize_placeholders(**alg_kwargs)
+
 while True:
-    actions = model.step(obs)[0]
-    # print("mode: ", mode)
-    # actions = model._evaluate(model.policy.pd.mode(), obs)
-    obs, reward, done, _  = env.step(actions)
-    print(reward)
-    # env.render()
-    if done:
-        print("done: ", done)
-        obs = env.reset()
+    # actions, _, state, _ = model.step(obs,S=state, M=dones) #stochastic
+    # actions = model.step_deterministic(obs)[0]
+    actions, _, _, _ = model.step_deterministic(obs,S=state, M=dones)
+    obs, reward, done, _  = env.step_runtime(actions) #not to reset env
+
+    # csv_file.write_obs(obs[0], csv_obs_path)
+    # csv_file.write_acs(actions[0], csv_acs_path)
+    # csv_file.write_rew(reward, csv_rew_path)
+
+    # if reward > 0.99:
+    #     for i in range(10):
+    #         env.step(obs[:6])
+    #         time.sleep(0.2)
+    #     break
