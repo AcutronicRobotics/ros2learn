@@ -71,7 +71,7 @@ def make_env():
 
 # parser
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=3)
+parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1)
 parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='sec')
 parser.add_argument('--reset-jnts', help='reset the enviroment',type=bool, default=True)
 args = parser.parse_args()
@@ -124,7 +124,7 @@ num_env = 1
 
 # dones = [False for _ in range(nenvs)]
 
-load_path='/media/yue/801cfad1-b3e4-4e07-9420-cc0dd0e83458/ppo2/alex2/lstm/1000000_nsec/checkpoints/01530'
+load_path='/home/rkojcev/MARA_NN/00520'
 
 make_model = lambda : ppo2.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train,
                 nsteps=defaults['nsteps'], ent_coef=defaults['ent_coef'], vf_coef=defaults['vf_coef'],
@@ -155,12 +155,14 @@ else:
     if os.path.exists(csv_rew_path):
         os.remove(csv_rew_path)
 
+
+print("alg_kwargs: ", alg_kwargs)
 state, dones = initialize_placeholders(**alg_kwargs)
 
 while True:
     # actions, _, state, _ = model.step(obs,S=state, M=dones) #stochastic
     # actions = model.step_deterministic(obs)[0]
-    actions, _, _, _ = model.step_deterministic(obs,S=state, M=dones)
+    actions, _, state, _ = model.step_deterministic(obs,S=state, M=dones)
     obs, reward, done, _  = env.step_runtime(actions) #not to reset env
 
     # csv_file.write_obs(obs[0], csv_obs_path)

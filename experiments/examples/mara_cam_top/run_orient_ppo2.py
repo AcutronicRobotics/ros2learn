@@ -124,7 +124,7 @@ print("nbatch_train: ", nbatch_train)
 
 # dones = [False for _ in range(nenvs)]
 
-# load_path='/media/yue/801cfad1-b3e4-4e07-9420-cc0dd0e83458/ppo2/alex2/mlp/1000000_nsec_new_logic_justrewdist_no_norm_6/checkpoints/01040'
+load_path='/tmp/rosrl/GazeboMARATopOrientCollisionv0Env/ppo2/1000000_nsec/checkpoints/04200'
 make_model = lambda : ppo2.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train,
                 nsteps=defaults['nsteps'], ent_coef=defaults['ent_coef'], vf_coef=defaults['vf_coef'],
                 max_grad_norm=defaults['max_grad_norm'])
