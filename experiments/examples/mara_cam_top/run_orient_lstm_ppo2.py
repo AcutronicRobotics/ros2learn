@@ -73,7 +73,7 @@ def make_env():
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1)
 parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='sec')
-parser.add_argument('--reset-jnts', help='reset the enviroment',type=bool, default=True)
+parser.add_argument('--reset-jnts', help='reset the enviroment',type=bool, default=False)
 args = parser.parse_args()
 
 ncpu = multiprocessing.cpu_count()
@@ -112,6 +112,8 @@ if isinstance(defaults['cliprange'], float):
 else:
     assert callable(defaults['cliprange'])
 
+defaults['nsteps'] = 1
+
 policy = build_policy(env, defaults['network'], **alg_kwargs)
 
 nenvs = env.num_envs
@@ -122,9 +124,13 @@ nbatch_train = nbatch // defaults['nminibatches']
 global num_env
 num_env = 1
 
+
 # dones = [False for _ in range(nenvs)]
 
-load_path='/home/rkojcev/MARA_NN/00520'
+load_path='/tmp/rosrl/GazeboMARATopOrientCollisionv0Env/ppo2_lstm/1000000_nsec/checkpoints/01830'
+#load_path='/home/rkojcev/MARA_NN/01340'
+
+# load_path='/home/rkojcev/MARA_NN/01730'
 
 make_model = lambda : ppo2.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train,
                 nsteps=defaults['nsteps'], ent_coef=defaults['ent_coef'], vf_coef=defaults['vf_coef'],
@@ -168,8 +174,8 @@ while True:
     # csv_file.write_obs(obs[0], csv_obs_path)
     # csv_file.write_acs(actions[0], csv_acs_path)
     # csv_file.write_rew(reward, csv_rew_path)
-
-    # if reward > 0.99:
+    #
+    # if reward > 0.97:
     #     for i in range(10):
     #         env.step(obs[:6])
     #         time.sleep(0.2)

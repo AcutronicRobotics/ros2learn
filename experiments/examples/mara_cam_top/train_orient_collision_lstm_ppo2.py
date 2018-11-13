@@ -24,7 +24,7 @@ import time
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1000000)
 parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='nsec')
-parser.add_argument('--reset-jnts', help='reset the enviroment',type=bool, default=True)
+parser.add_argument('--reset-jnts', help='reset the enviroment',type=bool, default=False)
 args = parser.parse_args()
 
 ncpu = multiprocessing.cpu_count()
@@ -89,4 +89,9 @@ with open(logger.get_dir() + "/params.txt", 'a') as out:
                 + 'nsteps = ' + str(alg_kwargs['nsteps']) + '\n'
                 + 'nminibatches = ' + str(alg_kwargs['nminibatches']) )
 
+# # Do transfer learning.
+# load_path = '/tmp/rosrl/GazeboMARATopOrientCollisionv0Env/ppo2_lstm/1000000_nsec/checkpoints/02270'
+# model = learn(env=env,load_path= load_path, **alg_kwargs) #, outdir=logger.get_dir()
+
+# Do not do transfer learning
 model = learn(env=env, **alg_kwargs) #, outdir=logger.get_dir()
