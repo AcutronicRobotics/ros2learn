@@ -6,7 +6,6 @@
 .DS_Store
 .idea
 *.csv
-*.png
 
 # Setuptools distribution and build folders.
 /dist/
@@ -17,10 +16,10 @@ keys/
 /env
 
 # CSV folder
-/csv
+/experiments/examples/mara_cam_top/csv
 
 #Images folder
-/img
+/experiments/examples/mara_cam_top/img
 
 
 *.sublime-project

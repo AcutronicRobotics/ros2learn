@@ -69,7 +69,7 @@ def make_env():
     logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2_lstm/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
     format_strs = os.getenv('MARA_LOG_FORMAT', 'stdout,log,csv,tensorboard').split(',')
     logger.configure(os.path.abspath(logdir), format_strs)
-    print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
+    # print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
     env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True)
     return env
 
