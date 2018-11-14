@@ -8,7 +8,7 @@ import numpy as np
 from baselines import bench, logger
 
 from baselines.common.vec_env.vec_normalize import VecNormalize
-from baselines.ppo2 import ppo2
+from baselines.ppo2 import ppo2, model
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 from baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 
@@ -128,12 +128,10 @@ num_env = 1
 
 # dones = [False for _ in range(nenvs)]
 
-load_path='/tmp/rosrl/GazeboMARATopOrientCollisionv0Env/ppo2_lstm/1000000_nsec/checkpoints/01830'
-#load_path='/home/rkojcev/MARA_NN/01340'
+# load_path='/tmp/rosrl/GazeboMARATopOrientCollisionv0Env/ppo2_lstm/1000000_nsec/checkpoints/01830'
+load_path = '/media/yue/801cfad1-b3e4-4e07-9420-cc0dd0e83458/ppo2/alex2/lstm/new_model/1000000_nsec_2048_256_*8/checkpoints/03640'
 
-# load_path='/home/rkojcev/MARA_NN/01730'
-
-make_model = lambda : ppo2.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train,
+make_model = lambda : model.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train,
                 nsteps=defaults['nsteps'], ent_coef=defaults['ent_coef'], vf_coef=defaults['vf_coef'],
                 max_grad_norm=defaults['max_grad_norm'])
 
