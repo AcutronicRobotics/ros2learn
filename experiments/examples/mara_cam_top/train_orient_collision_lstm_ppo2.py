@@ -8,6 +8,9 @@ from baselines import bench, logger
 
 from baselines.common import set_global_seeds
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
+from baselines.common.vec_env.vec_normalize import VecNormalize
+from baselines.common.vec_env.shmem_vec_env import ShmemVecEnv
+from baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 
 from importlib import import_module
 import multiprocessing
@@ -73,9 +76,15 @@ def make_env():
     env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True)
     return env
 
-# nenvs = 1
+num_env = 1
+if num_env > 1:
+    SubprocVecEnv([make_env(i) for i in range(num_env)])
+else:
+    env = DummyVecEnv([make_env])
 # env = SubprocVecEnv([make_env(i) for i in range(nenvs)])
-env = DummyVecEnv([make_env])
+
+# env = DummyVecEnv([make_env])
+env = VecNormalize(env, ob=True, ret=True, clipob=10.)
 env_type = 'mara_lstm'
 learn = get_learn_function('ppo2')
 alg_kwargs = get_learn_function_defaults('ppo2', env_type)
@@ -90,8 +99,8 @@ with open(logger.get_dir() + "/params.txt", 'a') as out:
                 + 'nminibatches = ' + str(alg_kwargs['nminibatches']) )
 
 # # Do transfer learning.
-# load_path = '/tmp/rosrl/GazeboMARATopOrientCollisionv0Env/ppo2_lstm/1000000_nsec/checkpoints/02270'
-# model = learn(env=env,load_path= load_path, **alg_kwargs) #, outdir=logger.get_dir()
+load_path = '/tmp/rosrl/GazeboMARATopOrientCollisionv0Env/ppo2_lstm/1000000_nsec_long/checkpoints/01160'
+model = learn(env=env,load_path= load_path, **alg_kwargs) #, outdir=logger.get_dir()
 
-# Do not do transfer learning
-model = learn(env=env, **alg_kwargs) #, outdir=logger.get_dir()
+# # Do not do transfer learning
+# model = learn(env=env, **alg_kwargs) #, outdir=logger.get_dir()

@@ -65,7 +65,7 @@ def make_env():
     logger.configure(os.path.abspath(logdir))
     print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
     # env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir(), str(rank)), allow_early_resets=True)
-    env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True)
+    env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=False)
     # env.render()
     return env
 
@@ -90,7 +90,7 @@ tf.Session(config=config).__enter__()
 
 # env = SubprocVecEnv([make_env(i) for i in range(nenvs)])
 env = DummyVecEnv([make_env])
-# env = VecNormalize(env)
+env = VecNormalize(env, ob=True, ret=False)
 alg='ppo2'
 env_type = 'mara_lstm'
 defaults = get_learn_function_defaults('ppo2', env_type)
@@ -129,7 +129,7 @@ num_env = 1
 # dones = [False for _ in range(nenvs)]
 
 # load_path='/tmp/rosrl/GazeboMARATopOrientCollisionv0Env/ppo2_lstm/1000000_nsec/checkpoints/01830'
-load_path = '/media/yue/801cfad1-b3e4-4e07-9420-cc0dd0e83458/ppo2/alex2/lstm/new_model/1000000_nsec_2048_256_*8/checkpoints/03640'
+load_path = '/tmp/rosrl/GazeboMARATopOrientCollisionv0Env/ppo2_lstm/1000000_nsec/checkpoints/00310'
 
 make_model = lambda : model.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train,
                 nsteps=defaults['nsteps'], ent_coef=defaults['ent_coef'], vf_coef=defaults['vf_coef'],
@@ -164,6 +164,11 @@ state, dones = initialize_placeholders(**alg_kwargs)
 while True:
     actions, _, state, _ = model.step_deterministic(obs,S=state, M=dones)
     obs, reward, done, _  = env.step_runtime(actions)
+
+    # actions, _, state, _ = model.step(obs,S=state, M=dones)
+    # obs, _, done, _ = env.step(actions)
+
+    # obs, reward, done, _  = env.step_wait_runtime(actions)
 
     # csv_file.write_obs(obs[0], csv_obs_path)
     # csv_file.write_acs(actions[0], csv_acs_path)

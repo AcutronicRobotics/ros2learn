@@ -15,6 +15,7 @@ from baselines.ppo2 import ppo2
 import tensorflow as tf
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 from baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
+from baselines.common.vec_env.vec_normalize import VecNormalize
 
 from baselines.common.cmd_util import common_arg_parser, parse_unknown_args
 
