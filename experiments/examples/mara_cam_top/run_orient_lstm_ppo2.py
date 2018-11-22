@@ -90,7 +90,7 @@ tf.Session(config=config).__enter__()
 
 # env = SubprocVecEnv([make_env(i) for i in range(nenvs)])
 env = DummyVecEnv([make_env])
-env = VecNormalize(env, ob=True, ret=False)
+# env = VecNormalize(env, ob=True, ret=False)
 alg='ppo2'
 env_type = 'mara_lstm'
 defaults = get_learn_function_defaults('ppo2', env_type)
@@ -129,7 +129,7 @@ num_env = 1
 # dones = [False for _ in range(nenvs)]
 
 # load_path='/tmp/rosrl/GazeboMARATopOrientCollisionv0Env/ppo2_lstm/1000000_nsec/checkpoints/01830'
-load_path = '/tmp/rosrl/GazeboMARATopOrientCollisionv0Env/ppo2_lstm/1000000_nsec/checkpoints/00310'
+load_path = '/tmp/rosrl/GazeboMARATopOrientCollisionv0Env/ppo2_lstm/1000000_nsec/checkpoints/00360'
 
 make_model = lambda : model.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train,
                 nsteps=defaults['nsteps'], ent_coef=defaults['ent_coef'], vf_coef=defaults['vf_coef'],

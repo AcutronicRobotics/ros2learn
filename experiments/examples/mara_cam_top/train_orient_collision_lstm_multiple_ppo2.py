@@ -66,7 +66,7 @@ def get_learn_function_defaults(alg, env_type):
         kwargs = {}
     return kwargs
 
-def make_env(i=0):
+def make_env():
     env = gym.make('MARAOrientCollision-v0')
     env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit, reset_jnts=args.reset_jnts)
     logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2_lstm/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
@@ -78,7 +78,9 @@ def make_env(i=0):
 
 num_env = 2
 if num_env > 1:
-    SubprocVecEnv([make_env(i) for i in range(num_env)])
+    fns = [make_env for _ in range(num_env)]
+    # env = ShmemVecEnv(fns)
+    env = SubprocVecEnv(fns)
 else:
     env = DummyVecEnv([make_env])
 # env = SubprocVecEnv([make_env(i) for i in range(nenvs)])
