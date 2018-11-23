@@ -76,11 +76,8 @@ def make_env(i=0):
     env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True)
     return env
 
-num_env = 2
-if num_env > 1:
-    SubprocVecEnv([make_env(i) for i in range(num_env)])
-else:
-    env = DummyVecEnv([make_env])
+num_env = 1
+env = DummyVecEnv([make_env])
 # env = SubprocVecEnv([make_env(i) for i in range(nenvs)])
 
 # env = DummyVecEnv([make_env])
