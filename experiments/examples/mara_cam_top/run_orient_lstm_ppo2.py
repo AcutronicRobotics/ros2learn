@@ -50,7 +50,7 @@ def get_learn_function_defaults(alg, env_type):
         kwargs = {}
     return kwargs
 
-def initialize_placeholders(nlstm=128,**kwargs):
+def initialize_placeholders(nlstm=256,**kwargs):
     return np.zeros((num_env or 1, 2*nlstm)), np.zeros((1))
 
 def constfn(val):
@@ -65,7 +65,7 @@ def make_env():
     logger.configure(os.path.abspath(logdir))
     print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
     # env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir(), str(rank)), allow_early_resets=True)
-    env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=False)
+    env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True)
     # env.render()
     return env
 
@@ -90,11 +90,13 @@ tf.Session(config=config).__enter__()
 
 # env = SubprocVecEnv([make_env(i) for i in range(nenvs)])
 env = DummyVecEnv([make_env])
-# env = VecNormalize(env, ob=True, ret=False)
+env = VecNormalize(env, ob=True, ret=False)
 alg='ppo2'
 env_type = 'mara_lstm'
 defaults = get_learn_function_defaults('ppo2', env_type)
+# tricks to run it faster and if it has been trained for many enviroment instance to launch only one.
 defaults['nsteps'] = 1
+defaults['nminibatches'] = 1
 
 alg_kwargs ={
 'nlstm': defaults['nlstm'],
@@ -129,7 +131,10 @@ num_env = 1
 # dones = [False for _ in range(nenvs)]
 
 # load_path='/tmp/rosrl/GazeboMARATopOrientCollisionv0Env/ppo2_lstm/1000000_nsec/checkpoints/01830'
-load_path = '/tmp/rosrl/GazeboMARATopOrientCollisionv0Env/ppo2_lstm/1000000_nsec/checkpoints/00360'
+# load_path = '/tmp/rosrl/GazeboMARATopOrientCollisionv0Env/ppo2_lstm/1000000_nsec/checkpoints/00360'
+
+# load_path = '/media/rkojcev/Data_Networks/ppo2_lstm/21112018/openai-2018-11-22-13-25-21-339062/checkpoints/00360'
+load_path = '/tmp/rosrl/SubprocVecEnv/ppo2_lstm/1000000_nsec/checkpoints/00550'
 
 make_model = lambda : model.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train,
                 nsteps=defaults['nsteps'], ent_coef=defaults['ent_coef'], vf_coef=defaults['vf_coef'],

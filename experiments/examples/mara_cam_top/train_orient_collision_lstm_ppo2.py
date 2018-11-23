@@ -76,9 +76,9 @@ def make_env(i=0):
     env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True)
     return env
 
-num_env = 2
+num_env = 1
 if num_env > 1:
-    SubprocVecEnv([make_env(i) for i in range(num_env)])
+    env = SubprocVecEnv([make_env(i) for i in range(num_env)])
 else:
     env = DummyVecEnv([make_env])
 # env = SubprocVecEnv([make_env(i) for i in range(nenvs)])
@@ -88,6 +88,9 @@ env = VecNormalize(env, ob=True, ret=True, clipob=10.)
 env_type = 'mara_lstm'
 learn = get_learn_function('ppo2')
 alg_kwargs = get_learn_function_defaults('ppo2', env_type)
+
+if num_env is 1:
+    alg_kwargs['nminibatches'] = 1
 
 set_global_seeds(alg_kwargs['seed'])
 rank = MPI.COMM_WORLD.Get_rank() if MPI else 0

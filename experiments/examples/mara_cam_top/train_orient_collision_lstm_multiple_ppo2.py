@@ -30,6 +30,10 @@ parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='n
 parser.add_argument('--reset-jnts', help='reset the enviroment',type=bool, default=False)
 args = parser.parse_args()
 
+env_name = ''
+
+
+
 ncpu = multiprocessing.cpu_count()
 if sys.platform == 'darwin': ncpu //= 2
 # print("ncpu: ", ncpu)
@@ -69,14 +73,13 @@ def get_learn_function_defaults(alg, env_type):
 def make_env():
     env = gym.make('MARAOrientCollision-v0')
     env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit, reset_jnts=args.reset_jnts)
-    logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2_lstm/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
-    format_strs = os.getenv('MARA_LOG_FORMAT', 'stdout,log,csv,tensorboard').split(',')
-    logger.configure(os.path.abspath(logdir), format_strs)
+    env_name = str(env.__class__.__name__)
+    print("ENV NAME: ", env_name)
     # print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
     env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True)
     return env
 
-num_env = 2
+num_env = 4
 if num_env > 1:
     fns = [make_env for _ in range(num_env)]
     # env = ShmemVecEnv(fns)
@@ -86,6 +89,11 @@ else:
 # env = SubprocVecEnv([make_env(i) for i in range(nenvs)])
 
 # env = DummyVecEnv([make_env])
+
+logdir = '/tmp/rosrl/' + env_name +'/ppo2_lstm/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
+format_strs = os.getenv('MARA_LOG_FORMAT', 'stdout,log,csv,tensorboard').split(',')
+logger.configure(os.path.abspath(logdir), format_strs)
+
 env = VecNormalize(env, ob=True, ret=True, clipob=10.)
 env_type = 'mara_lstm'
 learn = get_learn_function('ppo2')
