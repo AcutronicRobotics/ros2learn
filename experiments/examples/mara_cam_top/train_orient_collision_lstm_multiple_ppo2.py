@@ -109,8 +109,8 @@ with open(logger.get_dir() + "/params.txt", 'a') as out:
                 + 'nminibatches = ' + str(alg_kwargs['nminibatches']) )
 
 # # Do transfer learning.
-#load_path = '/tmp/rosrl/GazeboMARATopOrientCollisionv0Env/ppo2_lstm/1000000_nsec_long/checkpoints/01160'
+#load_path = '/media/rkojcev/Data_Networks/ppo2_lstm/23112018/ppo2_lstm_good/1000000_nsec/checkpoints/00390'
 #model = learn(env=env,load_path= load_path, **alg_kwargs) #, outdir=logger.get_dir()
 
-# # Do not do transfer learning
+# # # Do not do transfer learning
 model = learn(env=env, **alg_kwargs) #, outdir=logger.get_dir()

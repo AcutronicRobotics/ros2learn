@@ -98,6 +98,7 @@ defaults = get_learn_function_defaults('ppo2', env_type)
 defaults['nsteps'] = 1
 defaults['nminibatches'] = 1
 
+
 alg_kwargs ={
 'nlstm': defaults['nlstm'],
 'layer_norm': defaults['layer_norm']
@@ -115,7 +116,8 @@ if isinstance(defaults['cliprange'], float):
 else:
     assert callable(defaults['cliprange'])
 
-defaults['nsteps'] = 1
+# defaults['nsteps'] = 1
+# defaults['nminibatches'] = 1
 
 policy = build_policy(env, defaults['network'], **alg_kwargs)
 
@@ -134,7 +136,7 @@ num_env = 1
 # load_path = '/tmp/rosrl/GazeboMARATopOrientCollisionv0Env/ppo2_lstm/1000000_nsec/checkpoints/00360'
 
 # load_path = '/media/rkojcev/Data_Networks/ppo2_lstm/21112018/openai-2018-11-22-13-25-21-339062/checkpoints/00360'
-load_path = '/tmp/rosrl/SubprocVecEnv/ppo2_lstm/1000000_nsec/checkpoints/00550'
+load_path = '/media/rkojcev/Data_Networks/ppo2_lstm/23112018/test/1000000_nsec/checkpoints/00260'
 
 make_model = lambda : model.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train,
                 nsteps=defaults['nsteps'], ent_coef=defaults['ent_coef'], vf_coef=defaults['vf_coef'],
