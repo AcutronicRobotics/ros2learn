@@ -32,8 +32,6 @@ args = parser.parse_args()
 
 env_name = ''
 
-
-
 ncpu = multiprocessing.cpu_count()
 if sys.platform == 'darwin': ncpu //= 2
 # print("ncpu: ", ncpu)
@@ -119,7 +117,8 @@ with open(logger.get_dir() + "/params.txt", 'a') as out:
                 + 'nlstm = ' + str(alg_kwargs['nlstm']) + '\n'
                 + 'layer_norm = ' + str(alg_kwargs['layer_norm']) + '\n'
                 + 'total_timesteps = ' + str(alg_kwargs['total_timesteps']) + '\n'
-                + 'save_interval = ' + str(alg_kwargs['save_interval']) )
+                + 'save_interval = ' + str(alg_kwargs['save_interval']) + '\n'
+                + 'num_env = ' + str(num_env) )
 
 # # Do transfer learning.
 #load_path = '/media/rkojcev/Data_Networks/ppo2_lstm/23112018/ppo2_lstm_good/1000000_nsec/checkpoints/00390'
