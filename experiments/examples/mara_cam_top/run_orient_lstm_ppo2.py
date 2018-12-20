@@ -73,7 +73,7 @@ def make_env():
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1)
 parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='sec')
-parser.add_argument('--reset-jnts', help='reset the enviroment',type=bool, default=False)
+parser.add_argument('--reset-jnts', help='reset the enviroment',type=bool, default=True)
 args = parser.parse_args()
 
 ncpu = multiprocessing.cpu_count()
@@ -91,6 +91,8 @@ tf.Session(config=config).__enter__()
 # env = SubprocVecEnv([make_env(i) for i in range(nenvs)])
 env = DummyVecEnv([make_env])
 env = VecNormalize(env, ob=True, ret=False)
+# load_path = '/media/rkojcev/Data_Networks/ppo2_lstm/20122018/ppo2_lstm/1000000_nsec/checkpoints/01710'
+load_path = '/media/rkojcev/Data_Networks/ppo2_lstm/interesting/1000000_nsec/checkpoints/00350'
 alg='ppo2'
 env_type = 'mara_lstm'
 defaults = get_learn_function_defaults('ppo2', env_type)
@@ -136,7 +138,10 @@ num_env = 1
 # load_path = '/tmp/rosrl/GazeboMARATopOrientCollisionv0Env/ppo2_lstm/1000000_nsec/checkpoints/00360'
 
 # load_path = '/media/rkojcev/Data_Networks/ppo2_lstm/21112018/openai-2018-11-22-13-25-21-339062/checkpoints/00360'
-load_path = '/media/rkojcev/Data_Networks/ppo2_lstm/23112018/test/1000000_nsec/checkpoints/00260'
+# load_path = '/home/rkojcev/MARA_NN/Yue/10/05320'
+# load_path = '/media/rkojcev/Data_Networks/ppo2_lstm/4_env_nminibatches/1000000_nsec/checkpoints/02260'
+
+# load_path = '/home/rkojcev/MARA_NN/Yue/256_normalized/00420'
 
 make_model = lambda : model.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train,
                 nsteps=defaults['nsteps'], ent_coef=defaults['ent_coef'], vf_coef=defaults['vf_coef'],
@@ -171,6 +176,18 @@ state, dones = initialize_placeholders(**alg_kwargs)
 while True:
     actions, _, state, _ = model.step_deterministic(obs,S=state, M=dones)
     obs, reward, done, _  = env.step_runtime(actions)
+
+    # print("reward: ", reward)
+    # print("ee_points: ", obs[0][5:8])
+    # print("actions: ", actions)
+    # print("joints: ", obs[0][0:6])
+    if reward > -0.0025:
+        print("I am in smaller than -0.002")
+        for i in range(100):
+            # env.step(obs[0][0:6])
+            env.step_runtime(actions)
+            time.sleep(0.2)
+        break
 
     # actions, _, state, _ = model.step(obs,S=state, M=dones)
     # obs, _, done, _ = env.step(actions)

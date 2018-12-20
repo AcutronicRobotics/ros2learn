@@ -82,7 +82,7 @@ def make_env():
 num_env = 4
 if num_env > 1:
     fns = [make_env for _ in range(num_env)]
-    # env = ShmemVecEnv(fns)
+    #env = ShmemVecEnv(fns)
     env = SubprocVecEnv(fns)
 else:
     env = DummyVecEnv([make_env])
@@ -109,8 +109,8 @@ with open(logger.get_dir() + "/params.txt", 'a') as out:
                 + 'nminibatches = ' + str(alg_kwargs['nminibatches']) )
 
 # # Do transfer learning.
-#load_path = '/media/rkojcev/Data_Networks/ppo2_lstm/23112018/ppo2_lstm_good/1000000_nsec/checkpoints/00390'
+#load_path = '/media/rkojcev/Data_Networks/ppo2_lstm/4_env_2minibatch_30112018/ppo2_lstm_interesting/1000000_nsec/checkpoints/02800'
 #model = learn(env=env,load_path= load_path, **alg_kwargs) #, outdir=logger.get_dir()
 
-# # # Do not do transfer learning
+# # # # Do not do transfer learning
 model = learn(env=env, **alg_kwargs) #, outdir=logger.get_dir()
