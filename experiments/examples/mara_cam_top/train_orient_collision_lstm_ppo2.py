@@ -96,10 +96,23 @@ set_global_seeds(alg_kwargs['seed'])
 rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
 
 with open(logger.get_dir() + "/params.txt", 'a') as out:
-    out.write(  'nlstm = ' + str(alg_kwargs['nlstm']) + '\n'
+    out.write(  'nsteps = ' + str(alg_kwargs['nsteps']) + '\n'
+                + 'nminibatches = ' + str(alg_kwargs['nminibatches']) + '\n'
+                + 'lam = ' + str(alg_kwargs['lam']) + '\n'
+                + 'gamma = ' + str(alg_kwargs['gamma']) + '\n'
+                + 'noptepochs = ' + str(alg_kwargs['noptepochs']) + '\n'
+                + 'log_interval = ' + str(alg_kwargs['log_interval']) + '\n'
+                + 'ent_coef = ' + str(alg_kwargs['ent_coef']) + '\n'
+                + 'cliprange = ' + str(alg_kwargs['cliprange']) + '\n'
+                + 'vf_coef = ' + str(alg_kwargs['vf_coef']) + '\n'
+                + 'seed = ' + str(alg_kwargs['seed']) + '\n'
+                + 'max_grad_norm = ' + str(alg_kwargs['max_grad_norm']) + '\n'
+                + 'value_network = ' + str(alg_kwargs['value_network']) + '\n'
+                + 'network = ' + str(alg_kwargs['network']) + '\n'
+                + 'nlstm = ' + str(alg_kwargs['nlstm']) + '\n'
                 + 'layer_norm = ' + str(alg_kwargs['layer_norm']) + '\n'
-                + 'nsteps = ' + str(alg_kwargs['nsteps']) + '\n'
-                + 'nminibatches = ' + str(alg_kwargs['nminibatches']) )
+                + 'total_timesteps = ' + str(alg_kwargs['total_timesteps']) + '\n'
+                + 'save_interval = ' + str(alg_kwargs['save_interval']) )
 
 # # Do transfer learning.
 #load_path = '/tmp/rosrl/GazeboMARATopOrientCollisionv0Env/ppo2_lstm/1000000_nsec_long/checkpoints/01160'
