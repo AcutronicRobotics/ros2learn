@@ -28,3 +28,6 @@
 [submodule "environments/docker/modular_articulated_arm"]
 	path = environments/docker/modular_articulated_arm
 	url = https://github.com/erlerobot/modular_articulated_arm
+[submodule "environments/gym-gazebo-ros2"]
+	path = environments/gym-gazebo-ros2
+	url = https://github.com/erlerobot/gym-gazebo-ros2.git
