@@ -2,10 +2,6 @@
 	path = algorithms/gps
 	url = https://github.com/erlerobot/gps
 	branch = gps_ur3
-[submodule "algorithms/gps"]
-	path = algorithms/gps
-	url = http://github.com/erlerobot/gps
-	branch = gps_ur3
 [submodule "algorithms/baselines"]
 	path = algorithms/baselines
 	url = https://github.com/erlerobot/baselines.git
