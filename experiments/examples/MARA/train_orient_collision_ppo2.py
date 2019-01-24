@@ -1,7 +1,7 @@
 import gym
 import gym_gazebo_2
 import tensorflow as tf
-import argparse
+# import argparse
 # import copy
 import sys
 # import numpy as np
@@ -28,12 +28,12 @@ except ImportError:
 import os
 import time
 
-# parser
-parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1000000)
-parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='nsec')
-parser.add_argument('--reset-jnts', help='reset the enviroment',type=bool, default=True)
-args = parser.parse_args()
+# # parser
+# parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+# parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1000000)
+# parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='nsec')
+# parser.add_argument('--reset-jnts', help='reset the enviroment',type=bool, default=True)
+# args = parser.parse_args()
 
 # arg_parser = common_arg_parser()
 # args, unknown_args = arg_parser.parse_known_args()

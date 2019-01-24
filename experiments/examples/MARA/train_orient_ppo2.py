@@ -1,7 +1,6 @@
 import gym
 import gym_gazebo_2
 import tensorflow as tf
-import argparse
 import copy
 import sys
 import numpy as np
@@ -29,17 +28,6 @@ except ImportError:
 import os
 import time
 
-
-# parser
-parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1)
-parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='sec')
-parser.add_argument('--reset-jnts', help='reset the enviroment',type=bool, default=True)
-args = parser.parse_args()
-
-# arg_parser = common_arg_parser()
-# args, unknown_args = arg_parser.parse_known_args()
-# extra_args = {k: parse(v) for k,v in parse_unknown_args(unknown_args).items()}
 
 
 ncpu = multiprocessing.cpu_count()
@@ -80,7 +68,7 @@ def get_learn_function_defaults(alg, env_type):
     return kwargs
 
 def make_env():
-    env = gym.make('MARAOrientCollision-v0')
+    env = gym.make('MARA-v0')
     # env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit, reset_jnts=args.reset_jnts)
     logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/'
     logger.configure(os.path.abspath(logdir))
@@ -99,11 +87,7 @@ alg='ppo2'
 env_type = 'mujoco'
 learn = get_learn_function('ppo2')
 alg_kwargs = get_learn_function_defaults('ppo2', env_type)
-# alg_kwargs.update(extra_args)
 
-# initial_observation = env.reset()
-# print("Initial observation: ", initial_observation)
-# env.render()
 seed = 0
 set_global_seeds(seed)
 network = 'mlp'
@@ -112,12 +96,6 @@ rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
 
 save_path =  '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/'
 
-# ppo2.learn(policy=policy, env=env, nsteps=2048, nminibatches=1,
-#     lam=0.95, gamma=0.99, noptepochs=15, log_interval=1,
-#     ent_coef=0.0,
-#     lr=3e-4,
-#     cliprange=0.2,
-#     total_timesteps=1e6, save_interval=10, outdir=logger.get_dir())
 model = learn(env=env,
     seed=seed,
     total_timesteps=1e6, save_interval=10, **alg_kwargs) #, outdir=logger.get_dir()

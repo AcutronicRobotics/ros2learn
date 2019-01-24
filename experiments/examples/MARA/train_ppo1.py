@@ -3,7 +3,7 @@
 import gym
 import gym_gazebo_2
 import tensorflow as tf
-import argparse
+# import argparse
 import copy
 import sys
 import numpy as np
@@ -15,9 +15,6 @@ from baselines.ppo1 import mlp_policy, pposgd_simple
 import os
 
 from baselines.common import tf_util as U
-# parser
-parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-args = parser.parse_args()
 
 env = gym.make('MARAOrientCollision-v0')
 logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/'
@@ -28,11 +25,8 @@ print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
 seed = 0
 env.seed(seed)
 set_global_seeds(seed)
-# RK: we are not using this for now but for the future left it here
-# env = bench.MonitorRobotics(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True) #, allow_early_resets=True
 initial_observation = env.reset()
 print("Initial observation: ", initial_observation)
-# env.render()
 
 U.make_session(num_cpu=1).__enter__()
 
