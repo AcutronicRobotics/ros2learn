@@ -19,7 +19,7 @@ from baselines.common import tf_util as U
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 args = parser.parse_args()
 
-env = gym.make('MARA-v0')
+env = gym.make('MARAOrientCollision-v0')
 logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/'
 # logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/'
 logger.configure(os.path.abspath(logdir))
