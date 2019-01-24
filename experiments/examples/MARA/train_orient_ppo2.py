@@ -28,8 +28,6 @@ except ImportError:
 import os
 import time
 
-
-
 ncpu = multiprocessing.cpu_count()
 if sys.platform == 'darwin': ncpu //= 2
 

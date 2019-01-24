@@ -77,7 +77,7 @@ def get_learn_function_defaults(alg, env_type):
     return kwargs
 
 def make_env():
-    env = gym.make('MARAOrientCollisionROS2-v0')
+    env = gym.make('MARAOrientCollision-v0')
     logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/'
     format_strs = os.getenv('MARA_LOG_FORMAT', 'stdout,log,csv,tensorboard').split(',')
     print(format_strs)

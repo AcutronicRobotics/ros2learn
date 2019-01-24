@@ -27,8 +27,7 @@ parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='s
 args = parser.parse_args()
 
 env = gym.make('MARA-v0')
-env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit, reset_jnts=False)
-logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
+logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/'
 
 logger.configure(os.path.abspath(logdir))
 print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
@@ -49,7 +48,6 @@ env.seed(seed)
 # seed = 0
 # set_global_seeds(seed)
 
-env.goToInit()
 time.sleep(3)
 
 # initial_observation = env.reset()
