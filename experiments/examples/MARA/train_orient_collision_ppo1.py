@@ -3,7 +3,6 @@
 import gym
 import gym_gazebo_2
 import tensorflow as tf
-import argparse
 import copy
 import sys
 import numpy as np
@@ -20,15 +19,9 @@ import os
 
 # from baselines.common.cmd_util import make_robotics_env, robotics_arg_parser
 import time
-# parser
-parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1000000)
-parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='nsec')
-args = parser.parse_args()
 
 env = gym.make('MARAOrientCollision-v0')
-env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit, reset_jnts=False)
-logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
+logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/'
 
 logger.configure(os.path.abspath(logdir))
 print("logger.get_dir(): ", logger.get_dir() and os.path.join(logger.get_dir()))
@@ -49,7 +42,6 @@ env.seed(seed)
 # seed = 0
 # set_global_seeds(seed)
 
-env.goToInit()
 time.sleep(3)
 
 hid_size = 128

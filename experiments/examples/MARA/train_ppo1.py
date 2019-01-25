@@ -16,7 +16,7 @@ import os
 
 from baselines.common import tf_util as U
 
-env = gym.make('MARAOrientCollision-v0')
+env = gym.make('MARA-v0')
 logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/'
 # logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo1/'
 logger.configure(os.path.abspath(logdir))
