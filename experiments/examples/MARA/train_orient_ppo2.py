@@ -1,5 +1,5 @@
 import gym
-import gym_gazebo_2
+import gym_gazebo2
 import tensorflow as tf
 import copy
 import sys
