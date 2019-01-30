@@ -66,7 +66,8 @@ def get_learn_function_defaults(alg, env_type):
     return kwargs
 
 def make_env():
-    env = gym.make('MARA-v0')
+    #env = gym.make('MARA-v0')
+    env = gym.make('MARAOrientCollision-v0')
     # env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit, reset_jnts=args.reset_jnts)
     logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/'
     logger.configure(os.path.abspath(logdir))
