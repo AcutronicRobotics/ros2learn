@@ -72,6 +72,7 @@ logger.configure(os.path.abspath(logdir), format_strs)
 
 env_type = 'mara_mlp'
 alg_kwargs = get_learn_function_defaults('ppo2', env_type)
+num_envs = 1
 
 with open(logger.get_dir() + "/parameters.txt", 'w') as out:
     out.write(
@@ -93,10 +94,10 @@ with open(logger.get_dir() + "/parameters.txt", 'w') as out:
         + 'network = ' + str(alg_kwargs['network']) + '\n'
         + 'total_timesteps = ' + str(alg_kwargs['total_timesteps']) + '\n'
         + 'save_interval = ' + str(alg_kwargs['save_interval']) + '\n'
-        + 'num_envs = ' + str(alg_kwargs['num_envs']) )
+        + 'num_envs = ' + str(num_envs) )
 
-if alg_kwargs['num_envs'] > 1:
-    fns = [make_env for _ in range(alg_kwargs['num_envs'])]
+if num_envs > 1:
+    fns = [make_env for _ in range(num_envs)]
     env = SubprocVecEnv(fns)
 else:
     env = DummyVecEnv([make_env])
