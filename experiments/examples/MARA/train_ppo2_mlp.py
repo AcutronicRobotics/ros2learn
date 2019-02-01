@@ -2,6 +2,7 @@ import os
 import sys
 import time
 import gym
+import gym_gazebo2
 import tensorflow as tf
 import multiprocessing
 
