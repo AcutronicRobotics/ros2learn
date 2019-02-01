@@ -66,6 +66,7 @@ def make_env():
 parser = argparse.ArgumentParser(parents=[ut_generic.getArgsParserMARA()], description='ppo2 trainer argument provider.', add_help=False)
 parser.add_argument('-env', '--environment', type=str, choices=['MARA', 'MARACollision', 'MARAOrient', 'MARACollisionOrient'], default='MARA', help='Choose the environment name to be used' )
 parser.add_argument('-vs', '--version', type=str, choices=['v0'], default='v0', help='Choose the version of the environment to be used' )
+parser.add_argument('-n', '--num_envs', type=int, default=1, choices=range(1,9), metavar="[1-8]", help='Select the number of concurrent instances to be executed.' )
 args = parser.parse_args()
 
 env_name = args.environment + '-' + args.version
@@ -78,7 +79,7 @@ logger.configure(os.path.abspath(logdir), format_strs)
 
 env_type = 'mara_mlp'
 alg_kwargs = get_learn_function_defaults('ppo2', env_type)
-num_envs = 2
+num_envs = args.num_envs
 
 with open(logger.get_dir() + "/parameters.txt", 'w') as out:
     out.write(
