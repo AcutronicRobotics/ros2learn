@@ -4,6 +4,7 @@ import time
 import gym
 import tensorflow as tf
 import multiprocessing
+import argparse
 
 from importlib import import_module
 from baselines import bench, logger
@@ -12,6 +13,7 @@ from baselines.common.vec_env.vec_normalize import VecNormalize
 from baselines.ppo2 import ppo2
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 from baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
+from baselines.common.vec_env.shmem_vec_env import ShmemVecEnv
 from gym_gazebo2.utils import ut_generic
 
 try:
@@ -61,7 +63,11 @@ def make_env():
 
     return env
 
-args = ut_generic.getArgsMARA()
+parser = argparse.ArgumentParser(parents=[ut_generic.getArgsParserMARA()], description='ppo2 trainer argument provider.', add_help=False)
+parser.add_argument('-env', '--environment', type=str, choices=['MARA', 'MARACollision', 'MARAOrient', 'MARACollisionOrient'], default='MARA', help='Choose the environment name to be used' )
+parser.add_argument('-vs', '--version', type=str, choices=['v0'], default='v0', help='Choose the version of the environment to be used' )
+args = parser.parse_args()
+
 env_name = args.environment + '-' + args.version
 
 logdir = '/tmp/ros_rl2/' + env_name + '/ppo2/'
@@ -72,7 +78,7 @@ logger.configure(os.path.abspath(logdir), format_strs)
 
 env_type = 'mara_mlp'
 alg_kwargs = get_learn_function_defaults('ppo2', env_type)
-num_envs = 1
+num_envs = 2
 
 with open(logger.get_dir() + "/parameters.txt", 'w') as out:
     out.write(
@@ -99,6 +105,7 @@ with open(logger.get_dir() + "/parameters.txt", 'w') as out:
 if num_envs > 1:
     fns = [make_env for _ in range(num_envs)]
     env = SubprocVecEnv(fns)
+    #env = ShmemVecEnv(fns)  #Improved version of SubprocVec
 else:
     env = DummyVecEnv([make_env])
 
