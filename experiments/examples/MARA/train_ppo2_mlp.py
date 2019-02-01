@@ -4,17 +4,12 @@ import time
 import gym
 import tensorflow as tf
 import multiprocessing
-import argparse
 
 from importlib import import_module
 from baselines import bench, logger
 from baselines.common import set_global_seeds
-from baselines.common.vec_env.vec_normalize import VecNormalize
 from baselines.ppo2 import ppo2
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
-from baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
-from baselines.common.vec_env.shmem_vec_env import ShmemVecEnv
-from gym_gazebo2.utils import ut_generic
 
 try:
     from mpi4py import MPI
@@ -31,7 +26,7 @@ config = tf.ConfigProto(allow_soft_placement=True,
                         inter_op_parallelism_threads=ncpu,
                         log_device_placement=False)
 
-config.gpu_options.allow_growth = True #pylint: disable=E1101
+config.gpu_options.allow_growth = True
 
 tf.Session(config=config).__enter__()
 
@@ -63,19 +58,15 @@ def make_env():
 
     return env
 
-args = ut_generic.getArgsParserMARA().parse_args()
+env_type = 'mara_mlp'
+alg_kwargs = get_learn_function_defaults('ppo2', env_type)
 
-env_name = args.environment + '-' + args.version
-
-logdir = '/tmp/ros_rl2/' + env_name + '/ppo2/'
+logdir = '/tmp/ros_rl2/' + alg_kwargs['env_name'] + '/ppo2/'
 logger.configure( os.path.abspath(logdir) )
 
 format_strs = os.getenv('MARA_LOG_FORMAT', 'stdout,log,csv,tensorboard').split(',')
 logger.configure(os.path.abspath(logdir), format_strs)
 
-env_type = 'mara_mlp'
-alg_kwargs = get_learn_function_defaults('ppo2', env_type)
-num_envs = args.num_envs
 
 with open(logger.get_dir() + "/parameters.txt", 'w') as out:
     out.write(
@@ -93,26 +84,19 @@ with open(logger.get_dir() + "/parameters.txt", 'w') as out:
         + 'vf_coef = ' + str(alg_kwargs['vf_coef']) + '\n'
         + 'max_grad_norm = ' + str(alg_kwargs['max_grad_norm']) + '\n'
         + 'seed = ' + str(alg_kwargs['seed']) + '\n'
-        + 'value_network = ' + str(alg_kwargs['value_network']) + '\n'
-        + 'network = ' + str(alg_kwargs['network']) + '\n'
+        + 'value_network = ' + alg_kwargs['value_network'] + '\n'
+        + 'network = ' + alg_kwargs['network'] + '\n'
         + 'total_timesteps = ' + str(alg_kwargs['total_timesteps']) + '\n'
         + 'save_interval = ' + str(alg_kwargs['save_interval']) + '\n'
-        + 'env_name = ' + str(alg_kwargs['env_name']) + '\n'
-        + 'num_envs = ' + str(alg_kwargs['num_envs']) )
+        + 'env_name = ' + alg_kwargs['env_name'] )
 
-if alg_kwargs['num_envs'] > 1:
-    fns = [make_env for _ in range(alg_kwargs['num_envs'])]
-    env = SubprocVecEnv(fns)
-    #env = ShmemVecEnv(fns)  #Improved version of SubprocVec
-else:
-    env = DummyVecEnv([make_env])
+env = DummyVecEnv([make_env])
 
 learn = get_learn_function('ppo2')
 set_global_seeds(alg_kwargs['seed'])
 rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
 
 alg_kwargs.pop('env_name')
-alg_kwargs.pop('num_envs')
 
 # Do transfer learning
 #load_path = ''
