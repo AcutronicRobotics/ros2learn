@@ -18,7 +18,8 @@ git clone http://github.com/erlerobot/ros_rl
 cd ros_rl
 git submodule update --init --recursive # update the submodules
 ```
-#### Useful links
+#### Useful info
+- Update all submodules: `git submodule update --recursive --remote`
 - Quick reference for submodules ([1](http://www.vogella.com/tutorials/GitSubmodules/article.html), [2](https://chrisjean.com/git-submodules-adding-using-removing-and-updating/), [3](https://git-scm.com/book/en/v2/Git-Tools-Submodules))
 
 ### Install each module
