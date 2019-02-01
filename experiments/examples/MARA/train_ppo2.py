@@ -58,7 +58,7 @@ def get_learn_function_defaults(alg, env_type):
     return kwargs
 
 def make_env():
-    env = gym.make(env_name)
+    env = gym.make(alg_kwargs['env_name'])
     env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True)
 
     return env
@@ -97,10 +97,11 @@ with open(logger.get_dir() + "/parameters.txt", 'w') as out:
         + 'network = ' + str(alg_kwargs['network']) + '\n'
         + 'total_timesteps = ' + str(alg_kwargs['total_timesteps']) + '\n'
         + 'save_interval = ' + str(alg_kwargs['save_interval']) + '\n'
-        + 'num_envs = ' + str(num_envs) )
+        + 'env_name = ' + str(alg_kwargs['env_name']) + '\n'
+        + 'num_envs = ' + str(alg_kwargs['num_envs']) )
 
-if num_envs > 1:
-    fns = [make_env for _ in range(num_envs)]
+if alg_kwargs['num_envs'] > 1:
+    fns = [make_env for _ in range(alg_kwargs['num_envs'])]
     env = SubprocVecEnv(fns)
     #env = ShmemVecEnv(fns)  #Improved version of SubprocVec
 else:
@@ -109,6 +110,9 @@ else:
 learn = get_learn_function('ppo2')
 set_global_seeds(alg_kwargs['seed'])
 rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
+
+alg_kwargs.pop('env_name')
+alg_kwargs.pop('num_envs')
 
 # Do transfer learning
 #load_path = ''
