@@ -1,3 +1,6 @@
+
+# TODO: review all and rename to run_ppo2_lstm.py
+
 import gym
 import gym_gazebo_2
 import tensorflow as tf

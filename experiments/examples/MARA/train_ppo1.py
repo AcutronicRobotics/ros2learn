@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+# TODO: review all
 
 import gym
 import gym_gazebo_2
