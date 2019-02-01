@@ -11,6 +11,7 @@ from baselines import bench, logger
 from baselines.common import set_global_seeds
 from baselines.ppo2 import ppo2
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
+from baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 
 try:
     from mpi4py import MPI
@@ -59,10 +60,10 @@ def make_env():
 
     return env
 
-env_type = 'mara_mlp'
+env_type = 'mara_lstm'
 alg_kwargs = get_learn_function_defaults('ppo2', env_type)
 
-logdir = '/tmp/ros_rl2/' + alg_kwargs['env_name'] + '/ppo2_mlp/'
+logdir = '/tmp/ros_rl2/' + alg_kwargs['env_name'] + '/ppo2_lstm/'
 logger.configure( os.path.abspath(logdir) )
 
 format_strs = os.getenv('MARA_LOG_FORMAT', 'stdout,log,csv,tensorboard').split(',')
@@ -71,8 +72,7 @@ logger.configure(os.path.abspath(logdir), format_strs)
 
 with open(logger.get_dir() + "/parameters.txt", 'w') as out:
     out.write(
-        'num_layers = ' + str(alg_kwargs['num_layers']) + '\n'
-        + 'num_hidden = ' + str(alg_kwargs['num_hidden']) + '\n'
+        'nlstm = ' + str(alg_kwargs['nlstm']) + '\n'
         + 'layer_norm = ' + str(alg_kwargs['layer_norm']) + '\n'
         + 'nsteps = ' + str(alg_kwargs['nsteps']) + '\n'
         + 'nminibatches = ' + str(alg_kwargs['nminibatches']) + '\n'
@@ -89,15 +89,21 @@ with open(logger.get_dir() + "/parameters.txt", 'w') as out:
         + 'network = ' + alg_kwargs['network'] + '\n'
         + 'total_timesteps = ' + str(alg_kwargs['total_timesteps']) + '\n'
         + 'save_interval = ' + str(alg_kwargs['save_interval']) + '\n'
-        + 'env_name = ' + alg_kwargs['env_name'] )
+        + 'env_name = ' + alg_kwargs['env_name'] + '\n'
+        + 'num_envs = ' + str(alg_kwargs['num_envs']) )
 
-env = DummyVecEnv([make_env])
+if alg_kwargs['num_envs'] > 1:
+    fns = [make_env for _ in range(alg_kwargs['num_envs'])]
+    env = SubprocVecEnv(fns)
+else:
+    env = DummyVecEnv([make_env])
 
 learn = get_learn_function('ppo2')
 set_global_seeds(alg_kwargs['seed'])
 rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
 
 alg_kwargs.pop('env_name')
+alg_kwargs.pop('num_envs')
 
 # Do transfer learning
 #load_path = ''
