@@ -59,12 +59,15 @@ def make_env():
 
     return env
 
+# Get dictionary from baselines/ppo2/defaults
 env_type = 'mara_mlp'
 alg_kwargs = get_learn_function_defaults('ppo2', env_type)
 
+# Create needed folders
 logdir = '/tmp/ros_rl2/' + alg_kwargs['env_name'] + '/ppo2_mlp/'
 logger.configure( os.path.abspath(logdir) )
 
+# Generate tensorboard file
 format_strs = os.getenv('MARA_LOG_FORMAT', 'stdout,log,csv,tensorboard').split(',')
 logger.configure(os.path.abspath(logdir), format_strs)
 

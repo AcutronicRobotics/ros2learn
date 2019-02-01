@@ -15,12 +15,6 @@ keys/
 # Virtualenv
 /env
 
-# CSV folder
-/experiments/examples/mara_cam_top/csv
-
-#Images folder
-/experiments/examples/mara_cam_top/img
-
 
 *.sublime-project
 *.sublime-workspace

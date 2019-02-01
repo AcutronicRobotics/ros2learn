@@ -5,7 +5,8 @@ def write_obs(obs=None, path="csv/obs_file.csv"):
     df = pd.DataFrame(obs).T
     with open(path, 'a+') as f:
         if os.stat(path).st_size == 0:
-            obs_headers = ['ob1', 'ob2', 'ob3', 'ob4', 'ob5','ob6','ob7','ob8','ob9','ob10','ob11', 'ob12', 'ob13','ob14', 'ob15']
+            obs_headers = ['ob1', 'ob2', 'ob3', 'ob4', 'ob5','ob6','ob7','ob8','ob9','ob10','ob11', 'ob12']
+            # obs_headers = ['ob1', 'ob2', 'ob3', 'ob4', 'ob5','ob6','ob7','ob8','ob9','ob10','ob11', 'ob12', 'ob13','ob14', 'ob15']
             # obs_headers = ['ob1', 'ob2', 'ob3', 'ob4', 'ob5','ob6','ob7','ob8','ob9','ob10','ob11', 'ob12', 'ob13','ob14', 'ob15', 'obs16']
             df.to_csv(f, header=obs_headers, index=False)
         else:
