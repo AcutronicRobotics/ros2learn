@@ -6,6 +6,7 @@ import gym_gazebo2
 import multiprocessing
 import tensorflow as tf
 import write_csv as csv_file
+import numpy as np
 
 from importlib import import_module
 from baselines import bench, logger
@@ -64,15 +65,22 @@ def make_env():
 
     return env
 
+def initialize_placeholders(nlstm=256,**kwargs):
+    return np.zeros((defaults['num_envs'] or 1, 2*nlstm)), np.zeros((1))
+
 # Get dictionary from baselines/ppo2/defaults
-defaults = get_learn_function_defaults('ppo2', 'mara_mlp')
+defaults = get_learn_function_defaults('ppo2', 'mara_lstm')
+# Tricks to run it faster and if it has been trained with many environment instances to launch only one
+defaults['nsteps'] = 1
+defaults['nminibatches'] = 1
+defaults['num_envs'] = 1
 
 # Create needed folders
-logdir = '/tmp/ros_rl2/' + defaults['env_name'] + '/ppo2_mlp_results/'
+logdir = '/tmp/ros_rl2/' + defaults['env_name'] + '/ppo2_lstm_results/'
 logger.configure( os.path.abspath(logdir) )
 
 csvdir = logdir + "csv/"
-csv_files = [csvdir + "ppo2_mlp_det_obs.csv", csvdir + "ppo2_mlp_det_acs.csv", csvdir + "ppo2_mlp_det_rew.csv" ]
+csv_files = [csvdir + "ppo2_lstm_det_obs.csv", csvdir + "ppo2_lstm_det_acs.csv", csvdir + "ppo2_lstm_det_rew.csv" ]
 
 if not os.path.exists(csvdir):
     os.makedirs(csvdir)
@@ -82,7 +90,7 @@ else:
             os.remove(f)
 
 env = DummyVecEnv([make_env])
-# env = VecNormalize(env)
+env = VecNormalize(env, ob=True, ret=False)
 
 set_global_seeds(defaults['seed'])
 rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
@@ -96,7 +104,7 @@ if isinstance(defaults['cliprange'], float):
 else:
     assert callable(defaults['cliprange'])
 
-alg_kwargs ={ 'num_layers': defaults['num_layers'], 'num_hidden': defaults['num_hidden'] }
+alg_kwargs ={ 'nlstm': defaults['nlstm'], 'layer_norm': defaults['layer_norm'] }
 
 policy = build_policy(env, defaults['network'], **alg_kwargs)
 
@@ -107,7 +115,7 @@ nbatch = nenvs * defaults['nsteps']
 nbatch_train = nbatch // defaults['nminibatches']
 
 # Hardcoded path
-load_path = '/media/yue/hard_disk/ros_rl2/MARA-v0/ppo2_mlp-2019-02-02/checkpoints/02150'
+load_path = '/media/yue/hard_disk/ros_rl2/MARACollisionOrientRandomTarget-v0/ppo2_lstm-test/checkpoints/00170'
 
 make_model = lambda : model.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs,
                                 nbatch_train=nbatch_train,
@@ -119,8 +127,9 @@ if load_path is not None:
     model.load(load_path)
 
 obs = env.reset()
+state, dones = initialize_placeholders(**alg_kwargs)
 while True:
-    actions = model.step_deterministic(obs)[0]
+    actions, _, state, _ = model.step_deterministic(obs,S=state, M=dones)
     obs, reward, done, _  = env.step_runtime(actions)
 
     csv_file.write_obs(obs[0], csv_files[0], defaults['env_name'])
