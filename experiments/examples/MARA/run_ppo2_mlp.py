@@ -106,17 +106,15 @@ ac_space = env.action_space
 nbatch = nenvs * defaults['nsteps']
 nbatch_train = nbatch // defaults['nminibatches']
 
-# Hardcoded path
-load_path = '/media/yue/hard_disk/ros_rl2/MARA-v0/ppo2_mlp-2019-02-02/checkpoints/02150'
-
 make_model = lambda : model.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs,
                                 nbatch_train=nbatch_train,
                                 nsteps=defaults['nsteps'], ent_coef=defaults['ent_coef'], vf_coef=defaults['vf_coef'],
                                 max_grad_norm=defaults['max_grad_norm'])
 
 model = make_model()
-if load_path is not None:
-    model.load(load_path)
+
+if defaults['trained_path'] is not None:
+    model.load(defaults['trained_path'])
 
 obs = env.reset()
 while True:

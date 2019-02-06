@@ -93,7 +93,8 @@ with open(logger.get_dir() + "/parameters.txt", 'w') as out:
         + 'total_timesteps = ' + str(alg_kwargs['total_timesteps']) + '\n'
         + 'save_interval = ' + str(alg_kwargs['save_interval']) + '\n'
         + 'env_name = ' + alg_kwargs['env_name'] + '\n'
-        + 'num_envs = ' + str(alg_kwargs['num_envs']) )
+        + 'num_envs = ' + str(alg_kwargs['num_envs']) + '\n'
+        + 'transfer_path = ' + str(alg_kwargs['transfer_path']) )
 
 if alg_kwargs['num_envs'] > 1:
     fns = [make_env for _ in range(alg_kwargs['num_envs'])]
@@ -105,12 +106,16 @@ learn = get_learn_function('ppo2')
 set_global_seeds(alg_kwargs['seed'])
 rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
 
+transfer_path = alg_kwargs['transfer_path']
+
+# Remove unused parameters for training
 alg_kwargs.pop('env_name')
 alg_kwargs.pop('num_envs')
+alg_kwargs.pop('transfer_path')
+alg_kwargs.pop('trained_path')
 
-# Do transfer learning
-#load_path = ''
-#model = learn(env=env,load_path= load_path, **alg_kwargs)
-
-# Do not do transfer learning
-model = learn(env=env, **alg_kwargs)
+if transfer_path is not None:
+    # Do transfer learning
+    model = learn(env=env,load_path=transfer_path, **alg_kwargs)
+else:
+    model = learn(env=env, **alg_kwargs)
