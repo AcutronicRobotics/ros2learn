@@ -120,7 +120,10 @@ obs = env.reset()
 while True:
     actions = model.step_deterministic(obs)[0]
     obs, reward, done, _  = env.step_runtime(actions)
-    print(reward) # accuracy
+
+    print("Reward: ", reward)
+    print("ee_points[x, y, z]: ", obs[0][6:9])
+
     csv_file.write_obs(obs[0], csv_files[0], defaults['env_name'])
     csv_file.write_acs(actions[0], csv_files[1])
     csv_file.write_rew(reward, csv_files[2])
