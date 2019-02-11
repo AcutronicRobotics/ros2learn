@@ -10,7 +10,7 @@ import numpy as np
 
 from importlib import import_module
 from baselines import bench, logger
-from baselines.ppo2 import model
+from baselines.ppo2 import model as ppo2
 from baselines.common import set_global_seeds
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 from baselines.common.vec_env.vec_normalize import VecNormalize
@@ -114,7 +114,7 @@ ac_space = env.action_space
 nbatch = nenvs * defaults['nsteps']
 nbatch_train = nbatch // defaults['nminibatches']
 
-make_model = lambda : model.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs,
+make_model = lambda : ppo2.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs,
                                 nbatch_train=nbatch_train,
                                 nsteps=defaults['nsteps'], ent_coef=defaults['ent_coef'], vf_coef=defaults['vf_coef'],
                                 max_grad_norm=defaults['max_grad_norm'])
@@ -129,6 +129,9 @@ state, dones = initialize_placeholders(**alg_kwargs)
 while True:
     actions, _, state, _ = model.step_deterministic(obs,S=state, M=dones)
     obs, reward, done, _  = env.step_runtime(actions)
+
+    print("Reward: ", reward)
+    print("ee_points[x, y, z]: ", obs[0][6:9])
 
     csv_file.write_obs(obs[0], csv_files[0], defaults['env_name'])
     csv_file.write_acs(actions[0], csv_files[1])
