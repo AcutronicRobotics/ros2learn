@@ -85,7 +85,7 @@ env = DummyVecEnv([make_env])
 env = VecNormalize(env)
 
 set_global_seeds(defaults['seed'])
-rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
+MPI.COMM_WORLD.Get_rank() if MPI else 0
 
 if isinstance(defaults['lr'], float):
     defaults['lr'] = constfn(defaults['lr'])
@@ -122,7 +122,8 @@ while True:
     obs, reward, done, _  = env.step_runtime(actions)
 
     print("Reward: ", reward)
-    print("ee_points[x, y, z]: ", obs[0][6:9])
+    print("ee_translation[x, y, z]: ", obs[0][6:9])
+    print("ee_orientation[w, x, y, z]: ", obs[0][9:13])
 
     csv_file.write_obs(obs[0], csv_files[0], defaults['env_name'])
     csv_file.write_acs(actions[0], csv_files[1])

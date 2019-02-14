@@ -103,7 +103,7 @@ else:
 
 learn = get_learn_function('ppo2')
 set_global_seeds(alg_kwargs['seed'])
-rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
+MPI.COMM_WORLD.Get_rank() if MPI else 0
 
 transfer_path = alg_kwargs['transfer_path']
 
@@ -115,6 +115,6 @@ alg_kwargs.pop('trained_path')
 
 if transfer_path is not None:
     # Do transfer learning
-    model = learn(env=env,load_path=transfer_path, **alg_kwargs)
+    learn(env=env,load_path=transfer_path, **alg_kwargs)
 else:
-    model = learn(env=env, **alg_kwargs)
+    learn(env=env, **alg_kwargs)

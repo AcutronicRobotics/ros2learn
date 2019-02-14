@@ -97,10 +97,10 @@ env = DummyVecEnv([make_env])
 
 learn = get_learn_function('ppo2')
 set_global_seeds(alg_kwargs['seed'])
-rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
+MPI.COMM_WORLD.Get_rank() if MPI else 0
 
 # Remove unused parameters for training
 alg_kwargs.pop('env_name')
 alg_kwargs.pop('trained_path')
 
-model = learn(env=env, **alg_kwargs)
+learn(env=env, **alg_kwargs)
