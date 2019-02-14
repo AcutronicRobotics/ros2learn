@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import datetime
 import gym
 import gym_gazebo2
 import tensorflow as tf
@@ -65,7 +66,8 @@ env_type = 'mara_lstm'
 alg_kwargs = get_learn_function_defaults('ppo2', env_type)
 
 # Create needed folders
-logdir = '/tmp/ros_rl2/' + alg_kwargs['env_name'] + '/ppo2_lstm/'
+time_id = datetime.datetime.now().timestamp()
+logdir = '/tmp/ros_rl2/' + alg_kwargs['env_name'] + '/ppo2_mlp/' + str(time_id)
 
 # Generate tensorboard file
 format_strs = os.getenv('MARA_LOG_FORMAT', 'stdout,log,csv,tensorboard').split(',')
@@ -103,7 +105,7 @@ else:
 
 learn = get_learn_function('ppo2')
 set_global_seeds(alg_kwargs['seed'])
-rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
+MPI.COMM_WORLD.Get_rank() if MPI else 0
 
 transfer_path = alg_kwargs['transfer_path']
 
@@ -115,6 +117,6 @@ alg_kwargs.pop('trained_path')
 
 if transfer_path is not None:
     # Do transfer learning
-    model = learn(env=env,load_path=transfer_path, **alg_kwargs)
+    learn(env=env,load_path=transfer_path, **alg_kwargs)
 else:
-    model = learn(env=env, **alg_kwargs)
+    learn(env=env, **alg_kwargs)
