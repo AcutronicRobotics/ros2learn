@@ -1,7 +1,7 @@
 import os
 import sys
 import time
-import datetime
+from datetime import datetime
 import gym
 import gym_gazebo2
 import tensorflow as tf
@@ -65,8 +65,8 @@ env_type = 'mara_mlp'
 alg_kwargs = get_learn_function_defaults('ppo2', env_type)
 
 # Create needed folders
-time_id = datetime.datetime.now().timestamp()
-logdir = '/tmp/ros_rl2/' + alg_kwargs['env_name'] + '/ppo2_mlp/' + str(time_id)
+timedate = datetime.now().strftime('%Y-%m-%d_%Hh%Mmin')
+logdir = '/tmp/ros_rl2/' + alg_kwargs['env_name'] + '/ppo2_mlp/' + timedate
 
 # Generate tensorboard file
 format_strs = os.getenv('MARA_LOG_FORMAT', 'stdout,log,csv,tensorboard').split(',')
