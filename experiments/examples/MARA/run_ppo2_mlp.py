@@ -5,7 +5,7 @@ import gym
 import gym_gazebo2
 import multiprocessing
 import tensorflow as tf
-# import write_csv as csv_file
+import write_csv as csv_file
 
 from importlib import import_module
 from baselines import bench, logger
@@ -71,18 +71,18 @@ defaults = get_learn_function_defaults('ppo2', 'mara_mlp')
 logdir = '/tmp/ros_rl2/' + defaults['env_name'] + '/ppo2_mlp_results/'
 logger.configure( os.path.abspath(logdir) )
 
-# csvdir = logdir + "csv/"
-# csv_files = [csvdir + "ppo2_mlp_det_obs.csv", csvdir + "ppo2_mlp_det_acs.csv", csvdir + "ppo2_mlp_det_rew.csv" ]
+csvdir = logdir + "csv/"
+csv_files = [csvdir + "ppo2_mlp_det_obs.csv", csvdir + "ppo2_mlp_det_acs.csv", csvdir + "ppo2_mlp_det_rew.csv" ]
 
-# if not os.path.exists(csvdir):
-#     os.makedirs(csvdir)
-# else:
-#     for f in csv_files:
-#         if os.path.isfile(f):
-#             os.remove(f)
+if not os.path.exists(csvdir):
+    os.makedirs(csvdir)
+else:
+    for f in csv_files:
+        if os.path.isfile(f):
+            os.remove(f)
 
 env = DummyVecEnv([make_env])
-# env = VecNormalize(env)
+env = VecNormalize(env)
 
 set_global_seeds(defaults['seed'])
 MPI.COMM_WORLD.Get_rank() if MPI else 0
@@ -119,15 +119,15 @@ if defaults['trained_path'] is not None:
 obs = env.reset()
 while True:
     actions = model.step_deterministic(obs)[0]
-    obs, reward, done, _  = env.step(actions)
+    obs, reward, done, _  = env.step_runtime(actions)
 
     print("Reward: ", reward)
     print("ee_translation[x, y, z]: ", obs[0][6:9])
     print("ee_orientation[w, x, y, z]: ", obs[0][9:13])
 
-    # csv_file.write_obs(obs[0], csv_files[0], defaults['env_name'])
-    # csv_file.write_acs(actions[0], csv_files[1])
-    # csv_file.write_rew(reward, csv_files[2])
+    csv_file.write_obs(obs[0], csv_files[0], defaults['env_name'])
+    csv_file.write_acs(actions[0], csv_files[1])
+    csv_file.write_rew(reward, csv_files[2])
 
     # if reward > 0.99:
     #     for i in range(10):

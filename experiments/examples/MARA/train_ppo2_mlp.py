@@ -93,7 +93,8 @@ with open(logger.get_dir() + "/parameters.txt", 'w') as out:
         + 'network = ' + alg_kwargs['network'] + '\n'
         + 'total_timesteps = ' + str(alg_kwargs['total_timesteps']) + '\n'
         + 'save_interval = ' + str(alg_kwargs['save_interval']) + '\n'
-        + 'env_name = ' + alg_kwargs['env_name'] )
+        + 'env_name = ' + alg_kwargs['env_name'] + '\n'
+        + 'transfer_path = ' + str(alg_kwargs['transfer_path']) )
 
 env = DummyVecEnv([make_env])
 
@@ -101,8 +102,15 @@ learn = get_learn_function('ppo2')
 set_global_seeds(alg_kwargs['seed'])
 MPI.COMM_WORLD.Get_rank() if MPI else 0
 
+transfer_path = alg_kwargs['transfer_path']
+
 # Remove unused parameters for training
 alg_kwargs.pop('env_name')
 alg_kwargs.pop('trained_path')
+alg_kwargs.pop('transfer_path')
 
-learn(env=env, **alg_kwargs)
+if transfer_path is not None:
+    # Do transfer learning
+    learn(env=env,load_path=transfer_path, **alg_kwargs)
+else:
+    learn(env=env, **alg_kwargs)
