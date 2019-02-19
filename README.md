@@ -1,7 +1,7 @@
 <a href="http://www.acutronicrobotics.com"><img src="https://github.com/erlerobot/gym-gazebo-ros2/blob/master/imgs/alr_logo.png" align="left" width="190"></a>
 
 This repository contains a number of ROS/ROS 2 enabled Artificial Intelligence (AI)
-and Reinforcement Learning (RL) [algorithms](algorithms/) that run in selected [environments](environments/). 
+and Reinforcement Learning (RL) [algorithms](algorithms/) that run in selected [environments](environments/).
 
 The repository contains the following:
 - [algorithms](algorithms/): techniques used for training and teaching robots.
@@ -30,7 +30,7 @@ Note that you can add the command line arguments provided by the environment, wh
 If you want to modify the algorith itself, or the environment being executed, you must update it directly in the corresponding algorithm settings file. For this example, we are using *ppo2* from *baselines*, so you can edit the `mara_mpl()` function inside */baselines/baselines/ppo2/defaults.py*.
 
 ### Run a trained policy
-Once you are done with the training, or if you want to test some specific checkpoint of it, you can run that using one of the running-scripts available. This time, we are going to run a saved ppo2 policy. 
+Once you are done with the training, or if you want to test some specific checkpoint of it, you can run that using one of the running-scripts available. This time, we are going to run a saved ppo2 policy.
 
 First we will edit the */experiments/examples/MARA/run_ppo2_mlp.py* file and edit the `load_path` to the checkpoint we want. Now we are ready to launch the script.
 
