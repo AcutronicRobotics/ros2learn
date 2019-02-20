@@ -5,32 +5,12 @@ from datetime import datetime
 import gym
 import gym_gazebo2
 import tensorflow as tf
-import multiprocessing
 
 from baselines import bench, logger
 from baselines.trpo_mpi import trpo_mpi, defaults
 from baselines.common import set_global_seeds
 from baselines.common.models import mlp
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
-
-try:
-    from mpi4py import MPI
-except ImportError:
-    MPI = None
-
-ncpu = multiprocessing.cpu_count()
-
-if sys.platform == 'darwin':
-    ncpu //= 2
-
-config = tf.ConfigProto(allow_soft_placement=True,
-                        intra_op_parallelism_threads=ncpu,
-                        inter_op_parallelism_threads=ncpu,
-                        log_device_placement=False)
-
-config.gpu_options.allow_growth = True
-
-tf.Session(config=config).__enter__()
 
 def make_env():
     env = gym.make(alg_kwargs['env_name'])
@@ -70,9 +50,7 @@ with open(logger.get_dir() + "/parameters.txt", 'w') as out:
         + 'transfer_path = ' + str(alg_kwargs['transfer_path']) )
 
 env = DummyVecEnv([make_env])
-
 set_global_seeds(alg_kwargs['seed'])
-MPI.COMM_WORLD.Get_rank()
 
 transfer_path = alg_kwargs['transfer_path']
 

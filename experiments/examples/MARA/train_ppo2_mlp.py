@@ -13,11 +13,6 @@ from baselines.common import set_global_seeds
 from baselines.ppo2 import ppo2
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 
-try:
-    from mpi4py import MPI
-except ImportError:
-    MPI = None
-
 ncpu = multiprocessing.cpu_count()
 
 if sys.platform == 'darwin':
@@ -100,7 +95,6 @@ env = DummyVecEnv([make_env])
 
 learn = get_learn_function('ppo2')
 set_global_seeds(alg_kwargs['seed'])
-MPI.COMM_WORLD.Get_rank() if MPI else 0
 
 transfer_path = alg_kwargs['transfer_path']
 

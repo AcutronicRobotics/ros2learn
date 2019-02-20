@@ -12,13 +12,7 @@ from baselines import bench, logger
 from baselines.ppo2 import model as ppo2
 from baselines.common import set_global_seeds
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
-from baselines.common.vec_env.vec_normalize import VecNormalize
 from baselines.common.policies import build_policy
-
-try:
-    from mpi4py import MPI
-except ImportError:
-    MPI = None
 
 ncpu = multiprocessing.cpu_count()
 
@@ -82,10 +76,8 @@ else:
             os.remove(f)
 
 env = DummyVecEnv([make_env])
-env = VecNormalize(env)
 
 set_global_seeds(defaults['seed'])
-MPI.COMM_WORLD.Get_rank() if MPI else 0
 
 if isinstance(defaults['lr'], float):
     defaults['lr'] = constfn(defaults['lr'])

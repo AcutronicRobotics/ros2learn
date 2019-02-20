@@ -5,7 +5,6 @@ import gym_gazebo2
 import tensorflow as tf
 import write_csv as csv_file
 
-from mpi4py import MPI
 from baselines import bench, logger
 from baselines.trpo_mpi import trpo_mpi, defaults
 from baselines.common import set_global_seeds, tf_util as U
@@ -13,19 +12,13 @@ from baselines.common.input import observation_placeholder
 from baselines.common.models import mlp
 from baselines.common.policies import build_policy
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
-from baselines.common.vec_env.vec_normalize import VecNormalize
-
-if MPI is not None:
-    nworkers = MPI.COMM_WORLD.Get_size()
-    rank = MPI.COMM_WORLD.Get_rank()
-else:
-    nworkers = 1
-    rank = 0
 
 U.get_session( config=tf.ConfigProto(
-                allow_soft_placement=True,
-                inter_op_parallelism_threads=1,
-                intra_op_parallelism_threads=1) )
+    allow_soft_placement = True,
+    inter_op_parallelism_threads = 1,
+    intra_op_parallelism_threads = 1) )
+
+U.initialize()
 
 # Get dictionary from baselines/trpo_mpi/defaults
 defaults = defaults.mara()
@@ -51,7 +44,6 @@ def make_env():
     return env
 
 env = DummyVecEnv([make_env])
-env = VecNormalize(env)
 
 network = mlp(num_layers=defaults['num_layers'], num_hidden=defaults['num_hidden'], layer_norm=defaults['layer_norm'])
 policy = build_policy(env, network, value_network='copy', **defaults)
