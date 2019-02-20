@@ -55,6 +55,7 @@ def constfn(val):
 
 def make_env():
     env = gym.make(defaults['env_name'])
+    env.set_episode_size(defaults['nsteps'])
     env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True)
 
     return env

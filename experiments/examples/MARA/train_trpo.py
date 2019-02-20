@@ -14,6 +14,7 @@ from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 
 def make_env():
     env = gym.make(alg_kwargs['env_name'])
+    env.set_episode_size(alg_kwargs['timesteps_per_batch'])
     env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True)
 
     return env

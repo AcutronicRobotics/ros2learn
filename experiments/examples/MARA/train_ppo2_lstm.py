@@ -52,6 +52,7 @@ def get_learn_function_defaults(alg, env_type):
 
 def make_env():
     env = gym.make(alg_kwargs['env_name'])
+    env.set_episode_size(alg_kwargs['nsteps'])
     env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True)
 
     return env
