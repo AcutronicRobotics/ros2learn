@@ -69,7 +69,7 @@ def make_env():
     return env
 
 env = DummyVecEnv([make_env])
-env_type = 'mara'
+env_type = 'mara_mlp'
 learn = get_learn_function('ppo2')
 alg_kwargs = get_learn_function_defaults('ppo2', env_type)
 
@@ -81,5 +81,9 @@ with open(logger.get_dir() + "/params.txt", 'a') as out:
                 + 'num_hidden = ' + str(alg_kwargs['num_hidden'])  + '\n'
                 + 'nsteps = ' + str(alg_kwargs['nsteps']) + '\n'
                 + 'nminibatches = ' + str(alg_kwargs['nminibatches']) )
+
+alg_kwargs.pop('env_name')
+alg_kwargs.pop('trained_path')
+alg_kwargs.pop('transfer_path')
 
 learn(env=env, **alg_kwargs)
