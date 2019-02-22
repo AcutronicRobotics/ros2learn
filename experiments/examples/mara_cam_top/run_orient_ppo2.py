@@ -9,7 +9,7 @@ import numpy as np
 from baselines import bench, logger
 
 from baselines.common.vec_env.vec_normalize import VecNormalize
-from baselines.ppo2 import ppo2
+from baselines.ppo2 import model as ppo2
 import tensorflow as tf
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 
@@ -53,7 +53,7 @@ def constfn(val):
     return f
 
 def make_env():
-    env = gym.make('MARAOrientCollision-v0')
+    env = gym.make('MARACollision-v0')
     env.init_time(slowness= args.slowness, slowness_unit=args.slowness_unit, reset_jnts=args.reset_jnts)
     logdir = '/tmp/rosrl/' + str(env.__class__.__name__) +'/ppo2/' + str(args.slowness) + '_' + str(args.slowness_unit) + '/'
     logger.configure(os.path.abspath(logdir))
@@ -66,8 +66,8 @@ def make_env():
 
 # parser
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=3)
-parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='sec')
+parser.add_argument('--slowness', help='time for executing trajectory', type=int, default=1000000000)
+parser.add_argument('--slowness-unit', help='slowness unit',type=str, default='nsec')
 parser.add_argument('--reset-jnts', help='reset the enviroment',type=bool, default=True)
 args = parser.parse_args()
 
@@ -89,15 +89,12 @@ tf.Session(config=config).__enter__()
 env = DummyVecEnv([make_env])
 # env = VecNormalize(env)
 alg='ppo2'
-env_type = 'mara'
+env_type = 'mara_mlp'
 defaults = get_learn_function_defaults('ppo2', env_type)
-
-print("defaults: ", defaults)
 
 alg_kwargs ={
 'num_layers': defaults['num_layers'],
 'num_hidden': defaults['num_hidden']
-
 }
 
 set_global_seeds(defaults['seed'])
@@ -124,15 +121,14 @@ print("nbatch_train: ", nbatch_train)
 
 # dones = [False for _ in range(nenvs)]
 
-load_path='/tmp/rosrl/GazeboMARATopOrientCollisionv0Env/ppo2/1000000_nsec/checkpoints/04200'
 make_model = lambda : ppo2.Model(policy=policy, ob_space=ob_space, ac_space=ac_space, nbatch_act=nenvs, nbatch_train=nbatch_train,
                 nsteps=defaults['nsteps'], ent_coef=defaults['ent_coef'], vf_coef=defaults['vf_coef'],
                 max_grad_norm=defaults['max_grad_norm'])
 
 model = make_model()
-if load_path is not None:
-    print("Loading model from: ", load_path)
-    model.load(load_path)
+if defaults['trained_path'] is not None:
+    print("Loading model from: ", defaults['trained_path'])
+    model.load(defaults['trained_path'])
 
 obs = env.reset()
 
@@ -158,7 +154,8 @@ while True:
     # obs, reward, done, _  = env.step(actions)
     actions = model.step_deterministic(obs)[0]
     obs, reward, done, _  = env.step_runtime(actions) #not to reset env
-
+    print("Accuracy error: ", reward)
+    print("ee_translation[x, y, z]: ", obs[0][6:9])
     # csv_file.write_obs(obs[0], csv_obs_path)
     # csv_file.write_acs(actions[0], csv_acs_path)
     # csv_file.write_rew(reward, csv_rew_path)

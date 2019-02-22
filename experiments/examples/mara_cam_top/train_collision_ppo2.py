@@ -74,7 +74,6 @@ learn = get_learn_function('ppo2')
 alg_kwargs = get_learn_function_defaults('ppo2', env_type)
 
 set_global_seeds(alg_kwargs['seed'])
-rank = MPI.COMM_WORLD.Get_rank() if MPI else 0
 
 with open(logger.get_dir() + "/params.txt", 'a') as out:
     out.write( 'num_layers = ' + str(alg_kwargs['num_layers']) + '\n'
