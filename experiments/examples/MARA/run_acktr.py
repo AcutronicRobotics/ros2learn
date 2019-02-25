@@ -6,9 +6,9 @@ import tensorflow as tf
 import write_csv as csv_file
 
 from baselines import bench, logger
-from baselines.trpo_mpi import defaults
-from baselines.common import set_global_seeds, tf_util as U
-from baselines.common.input import observation_placeholder
+from baselines.acktr import acktr
+from baselines.acktr import defaults
+from baselines.common import tf_util as U
 from baselines.common.models import mlp
 from baselines.common.policies import build_policy
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
@@ -20,15 +20,15 @@ U.get_session( config=tf.ConfigProto(
 
 U.initialize()
 
-# Get dictionary from baselines/trpo_mpi/defaults
+# Get dictionary from baselines/acktr/defaults
 defaults = defaults.mara()
 
 # Create needed folders
-logdir = '/tmp/ros_rl2/' + defaults['env_name'] + '/trpo_mpi_results/'
+logdir = '/tmp/ros_rl2/' + defaults['env_name'] + '/acktr_results/'
 logger.configure( os.path.abspath(logdir) )
 
 csvdir = logdir + "csv/"
-csv_files = [csvdir + "trpo_mpi_det_obs.csv", csvdir + "trpo_mpi_det_acs.csv", csvdir + "trpo_mpi_det_rew.csv"]
+csv_files = [csvdir + "acktr_det_obs.csv", csvdir + "acktr_det_acs.csv", csvdir + "acktr_det_rew.csv"]
 
 if not os.path.exists(csvdir):
     os.makedirs(csvdir)
@@ -39,7 +39,7 @@ else:
 
 def make_env():
     env = gym.make(defaults['env_name'])
-    env.set_episode_size(defaults['timesteps_per_batch'])
+    env.set_episode_size(defaults['nsteps'])
     env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True)
 
     return env
@@ -47,20 +47,22 @@ def make_env():
 env = DummyVecEnv([make_env])
 
 network = mlp(num_layers=defaults['num_layers'], num_hidden=defaults['num_hidden'], layer_norm=defaults['layer_norm'])
-policy = build_policy(env, network, value_network='copy', **defaults)
-set_global_seeds(defaults['seed'])
+policy = build_policy(env, network, **defaults)
 
-obs_space = observation_placeholder(env.observation_space)
-pi = policy(observ_placeholder=obs_space)
+make_model = lambda : acktr.Model(policy, env.observation_space, env.action_space, env.num_envs,
+                            defaults['total_timesteps'], defaults['nprocs'], defaults['nsteps'], defaults['ent_coef'],
+                            defaults['vf_coef'], defaults['vf_fisher_coef'], defaults['lr'], defaults['max_grad_norm'],
+                            defaults['kfac_clip'], defaults['lrschedule'], defaults['is_async'])
+model = make_model()
 
 if defaults['trained_path'] is not None:
-    pi.load_var(defaults['trained_path'])
+    model.load(defaults['trained_path'])
 
 obs = env.reset()
 while True:
-    actions = pi.step_deterministic(obs)[0]
-    obs, reward, done, info = env.step_runtime(actions)
-    print("Action: ", actions)
+    actions = model.step_deterministic(obs)[0]
+    obs, reward, done, _  = env.step_runtime(actions)
+
     print("Reward: ", reward)
     print("ee_translation[x, y, z]: ", obs[0][6:9])
     print("ee_orientation[w, x, y, z]: ", obs[0][9:13])

@@ -98,7 +98,6 @@ else:
     assert callable(defaults['cliprange'])
 
 alg_kwargs ={ 'nlstm': defaults['nlstm'], 'layer_norm': defaults['layer_norm'] }
-
 policy = build_policy(env, defaults['network'], **alg_kwargs)
 
 nenvs = env.num_envs

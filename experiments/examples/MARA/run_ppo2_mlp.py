@@ -90,7 +90,6 @@ else:
     assert callable(defaults['cliprange'])
 
 alg_kwargs ={ 'num_layers': defaults['num_layers'], 'num_hidden': defaults['num_hidden'] }
-
 policy = build_policy(env, defaults['network'], **alg_kwargs)
 
 nenvs = env.num_envs
