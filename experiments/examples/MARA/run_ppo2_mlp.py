@@ -63,12 +63,15 @@ def make_env():
 defaults = get_learn_function_defaults('ppo2', 'mara_mlp')
 
 # Create needed folders
-logdir = '/tmp/ros_rl2/' + defaults['env_name'] + '/ppo2_mlp_results/'
-logger.configure( os.path.abspath(logdir) )
+try:
+    logdir = defaults['trained_path'].split('checkpoints')[0] + 'results' + defaults['trained_path'].split('checkpoints')[1]
+except:
+    logdir = '/tmp/ros_rl2/' + defaults['env_name'] + '/ppo2_mlp_results/'
+finally:
+    logger.configure( os.path.abspath(logdir) )
+    csvdir = logdir + "/csv/"
 
-csvdir = logdir + "csv/"
-csv_files = [csvdir + "ppo2_mlp_det_obs.csv", csvdir + "ppo2_mlp_det_acs.csv", csvdir + "ppo2_mlp_det_rew.csv" ]
-
+csv_files = [csvdir + "det_obs.csv", csvdir + "det_acs.csv", csvdir + "det_rew.csv" ]
 if not os.path.exists(csvdir):
     os.makedirs(csvdir)
 else:

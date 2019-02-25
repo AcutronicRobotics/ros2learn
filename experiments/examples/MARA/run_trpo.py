@@ -24,12 +24,15 @@ U.initialize()
 defaults = defaults.mara()
 
 # Create needed folders
-logdir = '/tmp/ros_rl2/' + defaults['env_name'] + '/trpo_mpi_results/'
-logger.configure( os.path.abspath(logdir) )
+try:
+    logdir = defaults['trained_path'].split('checkpoints')[0] + 'results' + defaults['trained_path'].split('checkpoints')[1]
+except:
+    logdir = '/tmp/ros_rl2/' + defaults['env_name'] + '/trpo_mpi_results/'
+finally
+    logger.configure( os.path.abspath(logdir) )
+    csvdir = logdir + "csv/"
 
-csvdir = logdir + "csv/"
-csv_files = [csvdir + "trpo_mpi_det_obs.csv", csvdir + "trpo_mpi_det_acs.csv", csvdir + "trpo_mpi_det_rew.csv"]
-
+csv_files = [csvdir + "det_obs.csv", csvdir + "det_acs.csv", csvdir + "det_rew.csv"]
 if not os.path.exists(csvdir):
     os.makedirs(csvdir)
 else:
