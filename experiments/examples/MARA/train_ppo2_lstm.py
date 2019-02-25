@@ -9,7 +9,6 @@ import multiprocessing
 
 from importlib import import_module
 from baselines import bench, logger
-from baselines.common import set_global_seeds
 from baselines.ppo2 import ppo2
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 from baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
@@ -69,7 +68,6 @@ logdir = '/tmp/ros_rl2/' + alg_kwargs['env_name'] + '/ppo2_mlp/' + timedate
 format_strs = os.getenv('MARA_LOG_FORMAT', 'stdout,log,csv,tensorboard').split(',')
 logger.configure(os.path.abspath(logdir), format_strs)
 
-
 with open(logger.get_dir() + "/parameters.txt", 'w') as out:
     out.write(
         'nlstm = ' + str(alg_kwargs['nlstm']) + '\n'
@@ -100,8 +98,6 @@ else:
     env = DummyVecEnv([make_env])
 
 learn = get_learn_function('ppo2')
-set_global_seeds(alg_kwargs['seed'])
-
 transfer_path = alg_kwargs['transfer_path']
 
 # Remove unused parameters for training

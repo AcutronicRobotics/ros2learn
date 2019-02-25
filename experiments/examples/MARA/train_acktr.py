@@ -1,29 +1,32 @@
 import os
+import gym
 import sys
 import time
 from datetime import datetime
-import gym
 import gym_gazebo2
 import tensorflow as tf
+import baselines.common.tf_util as U
 
+# Use algorithms from baselines
 from baselines import bench, logger
-from baselines.trpo_mpi import trpo_mpi, defaults
+from baselines.acktr import acktr, defaults
+from baselines.common import set_global_seeds
 from baselines.common.models import mlp
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 
 def make_env():
     env = gym.make(alg_kwargs['env_name'])
-    env.set_episode_size(alg_kwargs['timesteps_per_batch'])
+    env.set_episode_size(alg_kwargs['nsteps'])
     env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True)
 
     return env
 
-# Get dictionary from baselines/trpo_mpi/defaults
+# Get dictionary from baselines/acktr/defaults
 alg_kwargs = defaults.mara()
 
 # Create needed folders
 timedate = datetime.now().strftime('%Y-%m-%d_%Hh%Mmin')
-logdir = '/tmp/ros_rl2/' + alg_kwargs['env_name'] + '/trpo_mpi/' + timedate
+logdir = '/tmp/ros_rl2/' + alg_kwargs['env_name'] + '/acktr/' + timedate
 
 # Generate tensorboard file
 format_strs = os.getenv('MARA_LOG_FORMAT', 'stdout,log,csv,tensorboard').split(',')
@@ -34,18 +37,24 @@ with open(logger.get_dir() + "/parameters.txt", 'w') as out:
         'num_layers = ' + str(alg_kwargs['num_layers']) + '\n'
         + 'num_hidden = ' + str(alg_kwargs['num_hidden']) + '\n'
         + 'layer_norm = ' + str(alg_kwargs['layer_norm']) + '\n'
-        + 'timesteps_per_batch = ' + str(alg_kwargs['timesteps_per_batch']) + '\n'
-        + 'max_kl = ' + str(alg_kwargs['max_kl']) + '\n'
-        + 'cg_iters = ' + str(alg_kwargs['cg_iters']) + '\n'
-        + 'cg_damping = ' + str(alg_kwargs['cg_damping']) + '\n'
-        + 'total_timesteps = ' + str(alg_kwargs['total_timesteps']) + '\n'
+        + 'nsteps = ' + str(alg_kwargs['nsteps']) + '\n'
+        + 'nprocs = ' + str(alg_kwargs['nprocs']) + '\n'
         + 'gamma = ' + str(alg_kwargs['gamma']) + '\n'
         + 'lam = ' + str(alg_kwargs['lam']) + '\n'
-        + 'seed = ' + str(alg_kwargs['seed']) + '\n'
         + 'ent_coef = ' + str(alg_kwargs['ent_coef']) + '\n'
-        + 'vf_iters = ' + str(alg_kwargs['vf_iters']) + '\n'
-        + 'vf_stepsize = ' + str(alg_kwargs['vf_stepsize']) + '\n'
-        + 'normalize_observations = ' + str(alg_kwargs['normalize_observations']) + '\n'
+        + 'vf_coef = ' + str(alg_kwargs['vf_coef']) + '\n'
+        + 'vf_fisher_coef = ' + str(alg_kwargs['vf_fisher_coef']) + '\n'
+        + 'lr = ' + str(alg_kwargs['lr']) + '\n'
+        + 'max_grad_norm = ' + str(alg_kwargs['max_grad_norm']) + '\n'
+        + 'kfac_clip = ' + str(alg_kwargs['kfac_clip']) + '\n'
+        + 'is_async = ' + str(alg_kwargs['is_async']) + '\n'
+        + 'seed = ' + str(alg_kwargs['seed']) + '\n'
+        + 'total_timesteps = ' + str(alg_kwargs['total_timesteps']) + '\n'
+        # + 'network = ' + alg_kwargs['network'] + '\n'
+        + 'value_network = ' + alg_kwargs['value_network'] + '\n'
+        + 'lrschedule = ' + alg_kwargs['lrschedule'] + '\n'
+        + 'log_interval = ' + str(alg_kwargs['log_interval']) + '\n'
+        + 'save_interval = ' + str(alg_kwargs['save_interval']) + '\n'
         + 'env_name = ' + alg_kwargs['env_name'] + '\n'
         + 'transfer_path = ' + str(alg_kwargs['transfer_path']) )
 
@@ -61,6 +70,6 @@ network = mlp(num_layers=alg_kwargs['num_layers'], num_hidden=alg_kwargs['num_hi
 
 if transfer_path is not None:
     # Do transfer learning
-    trpo_mpi.learn(env=env, network=network, load_path=transfer_path, **alg_kwargs)
+    acktr.learn(env=env, network=network, load_path=transfer_path, **alg_kwargs)
 else:
-    trpo_mpi.learn(env=env, network=network, **alg_kwargs)
+    acktr.learn(env=env, network=network, **alg_kwargs)
