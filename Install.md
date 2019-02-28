@@ -31,3 +31,9 @@ This repository contains various modules that need to be installed independently
   cd cd ~/ros2learn/algorithms/baselines
   pip3 install -e .
     ```
+
+### Dependent tools
+
+```bash
+pip3 install pandas
+```

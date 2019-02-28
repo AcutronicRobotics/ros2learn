@@ -50,5 +50,5 @@ Now you just have to execute Tensorboard and open the link it will provide (or l
 You can also set a specific port number in case you want to visualize more than one tensorboard file from different paths.
 
 ```sh
-tensorboard --logdir=/tmp/ros_rl2/MARACollision-v0/ppo2_mlp --port 8008
+tensorboard --logdir=/tmp/ros2learn/MARACollision-v0/ppo2_mlp --port 8008
 ```
