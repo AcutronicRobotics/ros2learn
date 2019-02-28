@@ -45,7 +45,8 @@ This will launch the simulation with the visual interface, real time physics (no
 ### Visualize training data on tensorboard
 
 The logdir path will change according to the used environment ID and the used algorithm in training.
-Now you just have to execute Tensorboard and open the link it will provide in your web browser. You will find many useful graphs like the reward (eprewmean) plotted there.
+Now you just have to execute Tensorboard and open the link it will provide (or localhost:port_number) in your web browser. You will find many useful graphs like the reward (eprewmean) plotted there.
+
 You can also set a specific port number in case you want to visualize more than one tensorboard file from different paths.
 
 ```sh
