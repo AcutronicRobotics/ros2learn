@@ -23,7 +23,7 @@ alg_kwargs = defaults.mara()
 
 # Create needed folders
 timedate = datetime.now().strftime('%Y-%m-%d_%Hh%Mmin')
-logdir = '/tmp/ros_rl2/' + alg_kwargs['env_name'] + '/trpo_mpi/' + timedate
+logdir = '/tmp/ros2learn/' + alg_kwargs['env_name'] + '/trpo_mpi/' + timedate
 
 # Generate tensorboard file
 format_strs = os.getenv('MARA_LOG_FORMAT', 'stdout,log,csv,tensorboard').split(',')

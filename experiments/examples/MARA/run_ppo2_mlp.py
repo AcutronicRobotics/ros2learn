@@ -72,7 +72,7 @@ defaults = get_learn_function_defaults('ppo2', 'mara_mlp')
 try:
     logdir = defaults['trained_path'].split('checkpoints')[0] + 'results' + defaults['trained_path'].split('checkpoints')[1]
 except:
-    logdir = '/tmp/ros_rl2/' + defaults['env_name'] + '/ppo2_mlp_results/'
+    logdir = '/tmp/ros2learn/' + defaults['env_name'] + '/ppo2_mlp_results/'
 finally:
     logger.configure( os.path.abspath(logdir) )
     csvdir = logdir + "/csv/"
