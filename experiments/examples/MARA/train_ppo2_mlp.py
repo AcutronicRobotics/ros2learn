@@ -51,6 +51,12 @@ def get_learn_function_defaults(alg, env_type):
 def make_env():
     env = gym.make(alg_kwargs['env_name'])
     env.set_episode_size(alg_kwargs['nsteps'])
+    env.set_reward_params({"alpha": alg_kwargs["_alpha"],
+                            "beta": alg_kwargs["_beta"],
+                            "gamma": alg_kwargs["_gamma"],
+                            "delta": alg_kwargs["_delta"],
+                            "eta": alg_kwargs["_eta"],
+                            "done": alg_kwargs["done"]})
     env = bench.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir()), allow_early_resets=True)
 
     return env
@@ -99,6 +105,12 @@ transfer_path = alg_kwargs['transfer_path']
 alg_kwargs.pop('env_name')
 alg_kwargs.pop('trained_path')
 alg_kwargs.pop('transfer_path')
+alg_kwargs.pop('done')
+alg_kwargs.pop('_eta')
+alg_kwargs.pop('_delta')
+alg_kwargs.pop('_gamma')
+alg_kwargs.pop('_beta')
+alg_kwargs.pop('_alpha')
 
 if transfer_path is not None:
     # Do transfer learning
