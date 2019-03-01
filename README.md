@@ -28,6 +28,8 @@ Note that you can add the command line arguments provided by the environment, wh
 
 If you want to test your own trained neural networks, or train with different environment form gym-gazebo2, or play with the hyperparametes, you must update the values of the dictionary directly in the corresponding algorithm itself. For this example, we are using *ppo2_mlp* from *baselines* submodule, so you can edit the `mara_mpl()` function inside [baselines/ppo2/defaults.py](https://github.com/erlerobot/baselines/blob/8396ea2dc4d19cabb7478f6c3df0119660f0ab18/baselines/ppo2/defaults.py#L28-L53).
 
+![Example Train](https://github.com/erlerobot/gym-gazebo2/blob/master/imgs/example_train.gif)
+
 ### Run a trained policy
 Once you are done with the training, or if you want to test some specific checkpoint of it, you can run that using one of the running-scripts available. This time, to follow with the example, we are going to run a saved ppo2_mlp policy.
 
@@ -42,6 +44,8 @@ python3 run_ppo2_mlp.py -g -r -v 0.3
 
 This will launch the simulation with the visual interface, real time physics (no speed up) and 0.3 rad/sec velocity in each servomotor.
 
+![Example Run](https://github.com/erlerobot/gym-gazebo2/blob/master/imgs/example_run.gif)
+
 ### Visualize training data on tensorboard
 
 The logdir path will change according to the used environment ID and the used algorithm in training.
@@ -52,3 +56,5 @@ You can also set a specific port number in case you want to visualize more than 
 ```sh
 tensorboard --logdir=/tmp/ros2learn/MARACollision-v0/ppo2_mlp --port 8008
 ```
+![Example Tensorboard](https://github.com/erlerobot/gym-gazebo2/blob/master/imgs/example_tensorboard.gif)
+
