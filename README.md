@@ -58,3 +58,30 @@ tensorboard --logdir=/tmp/ros2learn/MARACollision-v0/ppo2_mlp --port 8008
 ```
 ![Example Tensorboard](https://github.com/erlerobot/gym-gazebo2/blob/master/imgs/example_tensorboard.gif)
 
+## Do your own experiment
+
+### Hyperparameter tunning (existing environment)
+1. Set the desired target in the corresponding environment in [gym-gazebo2](https://github.com/erlerobot/ros2learn/tree/ros2/environments) submodule.
+  - self.target_position
+  - self.target_orientation
+2. Set the desired hyperparameters in the corresponding default script of the algorithm in [baselines](https://github.com/erlerobot/ros2learn/tree/ros2/algorithms) submodule.
+
+### Create your own train script to use your own environment
+
+1. Create a session
+2. Get the hyperparameters from the corresponding defaults script of the algorithm to be used
+3. Make the environment
+  - DummyVecEnv for a single instance
+  - SubprocVecEnv for multiple instances
+4. Call the corresponding learn function of the algorithm to be used
+
+Optional:
+- Save the used hyperparameters in the training
+- Save the statistics and checkpoints in Tensorboard
+  - checkpoints
+  - tensorboard
+  - log
+  - monitor
+  - progress
+
+:warning: Be aware of `env.set_episode_size(episode_size)` function, if it is not called once the environment is made, the default size of the episode will be 1024. It is advisable to set the same value as the one to be used in the learning algorithm, or at least a power of 2.
