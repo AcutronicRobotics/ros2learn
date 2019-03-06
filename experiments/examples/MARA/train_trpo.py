@@ -19,7 +19,7 @@ def make_env():
     return env
 
 # Get dictionary from baselines/trpo_mpi/defaults
-alg_kwargs = defaults.mara()
+alg_kwargs = defaults.mara_mlp()
 
 # Create needed folders
 timedate = datetime.now().strftime('%Y-%m-%d_%Hh%Mmin')
