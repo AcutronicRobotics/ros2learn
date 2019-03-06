@@ -28,7 +28,7 @@ try:
     logdir = defaults['trained_path'].split('checkpoints')[0] + 'results' + defaults['trained_path'].split('checkpoints')[1]
 except:
     logdir = '/tmp/ros2learn/' + defaults['env_name'] + '/trpo_mpi_results/'
-finally
+finally:
     logger.configure( os.path.abspath(logdir) )
     csvdir = logdir + "csv/"
 
