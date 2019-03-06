@@ -28,7 +28,7 @@ This repository contains various modules that need to be installed independently
 - **Baselines** [REQUIRED].
 
   ```bash
-  cd cd ~/ros2learn/algorithms/baselines
+  cd ~/ros2learn/algorithms/baselines
   pip3 install -e .
     ```
 
