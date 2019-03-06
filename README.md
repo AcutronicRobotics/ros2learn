@@ -62,26 +62,44 @@ tensorboard --logdir=/tmp/ros2learn/MARACollision-v0/ppo2_mlp --port 8008
 
 ### Hyperparameter tunning (existing environment)
 1. Set the desired target in the corresponding environment in [gym-gazebo2](https://github.com/erlerobot/ros2learn/tree/ros2/environments) submodule.
-  - self.target_position
-  - self.target_orientation
+    - self.target_position
+    - self.target_orientation
 2. Set the desired hyperparameters in the corresponding default script of the algorithm in [baselines](https://github.com/erlerobot/ros2learn/tree/ros2/algorithms) submodule.
 
 ### Create your own train script to use your own environment
-
 1. Create a session
-2. Get the hyperparameters from the corresponding defaults script of the algorithm to be used
+2. Get the hyperparameters from the corresponding defaults script of the algorithm to be used (you will need to add a new dictionary for your own environment)
 3. Make the environment
-  - DummyVecEnv for a single instance
-  - SubprocVecEnv for multiple instances
+    - DummyVecEnv for a single instance
+    - SubprocVecEnv for multiple instances
 4. Call the corresponding learn function of the algorithm to be used
 
 Optional:
-- Save the used hyperparameters in the training
 - Save the statistics and checkpoints in Tensorboard
   - checkpoints
   - tensorboard
   - log
   - monitor
   - progress
+- Save the used hyperparameters in the training
 
 :warning: Be aware of `env.set_episode_size(episode_size)` function, if it is not called once the environment is made, the default size of the episode will be 1024. It is advisable to set the same value as the one to be used in the learning algorithm, or at least a power of 2.
+
+### Create your own run script to use your own environment
+1. Create a session
+2. Get the hyperparameters from the corresponding defaults script of the algorithm in [baselines](https://github.com/erlerobot/ros2learn/tree/ros2/algorithms) submodule used in training time, and also the target in your own environment
+    - self.target_position
+    - self.target_orientation
+3. Make a single environment (DummyVecEnv)
+4. Normalize the environment (VecNormalize) if you have normalized in the training
+5. Make the model and load the checkpoint you want to test
+6. Get the actions from the model
+    - stochastic
+    - deterministic
+7. Execute the actions
+
+Optional:
+- Save in files some useful information such us:
+  - Accuracy
+  - Position error (axes)
+  - Orientation error (quaternion)
