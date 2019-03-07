@@ -36,4 +36,6 @@ This repository contains various modules that need to be installed independently
 
 ```bash
 pip3 install pandas
+pip3 install matplotlib
+sudo apt install python3-tk
 ```
