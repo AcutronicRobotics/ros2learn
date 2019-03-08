@@ -3,6 +3,7 @@ import sys
 import time
 import gym
 import gym_gazebo2
+import numpy as np
 import multiprocessing
 import tensorflow as tf
 import write_csv as csv_file
@@ -112,7 +113,8 @@ if defaults['trained_path'] is not None:
     model.load(defaults['trained_path'])
 
 obs = env.reset()
-while True:
+loop = True
+while loop:
     actions = model.step_deterministic(obs)[0]
     obs, reward, done, _  = env.step_runtime(actions)
 
@@ -124,8 +126,6 @@ while True:
     csv_file.write_acs(actions[0], csv_files[1])
     csv_file.write_rew(reward, csv_files[2])
 
-    # if reward > 0.99:
-    #     for i in range(10):
-    #         env.step(obs[:6])
-    #         time.sleep(0.2)
-    #     break
+    if np.allclose(obs[0][6:9], np.asarray([0., 0., 0.]), atol=0.005 ): # lock if less than 5mm error in each axis
+        env.step_runtime(obs[0][:6])
+        loop = False
