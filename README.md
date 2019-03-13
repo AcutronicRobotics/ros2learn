@@ -20,7 +20,7 @@ Please refer to [Install.md](/Install.md).
 You will find all available examples at */experiments/examples/*. Although the algorithms are complex, the way to execute them is really simple. For instance, if you want to train MARA robot using ppo2_mlp, you should execute the following command:
 
 ```sh
-cd experiments/examples/MARA
+cd ~/ros2learn/experiments/examples/MARA
 python3 train_ppo2_mlp.py
 ```
 
@@ -38,7 +38,7 @@ First, we will edit the already mentioned `mara_mpl()` dictionary, in particular
 Since we want to visualize it in real conditions, we are also going to set some flags:
 
 ```sh
-cd experiments/examples/MARA
+cd ~/ros2learn/experiments/examples/MARA
 python3 run_ppo2_mlp.py -g -r -v 0.3
 ```
 
