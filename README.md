@@ -1,6 +1,6 @@
 <a href="http://www.acutronicrobotics.com"><img src="https://github.com/erlerobot/gym-gazebo2/blob/master/imgs/alr_logo.png" align="left" width="190"></a>
 
-This repository contains a number of ROS and ROS 2.0 enabled Artificial Intelligence (AI)
+This repository contains a number of ROS and ROS 2 enabled Artificial Intelligence (AI)
 and Reinforcement Learning (RL) [algorithms](algorithms/) that run in selected [environments](environments/).
 
 The repository contains the following:

@@ -4,13 +4,9 @@ import sys
 import time
 from datetime import datetime
 import gym_gazebo2
-import tensorflow as tf
-import baselines.common.tf_util as U
 
-# Use algorithms from baselines
 from baselines import bench, logger
 from baselines.acktr import acktr, defaults
-from baselines.common import set_global_seeds
 from baselines.common.models import mlp
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
 

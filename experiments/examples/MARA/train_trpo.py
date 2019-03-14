@@ -4,7 +4,6 @@ import time
 from datetime import datetime
 import gym
 import gym_gazebo2
-import tensorflow as tf
 
 from baselines import bench, logger
 from baselines.trpo_mpi import trpo_mpi, defaults
