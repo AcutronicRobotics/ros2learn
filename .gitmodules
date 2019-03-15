@@ -1,29 +1,6 @@
-[submodule "gps"]
-	path = algorithms/gps
-	url = https://github.com/erlerobot/gps
-	branch = gps_ur3
 [submodule "algorithms/baselines"]
-	path = algorithms/baselines
-	url = https://github.com/erlerobot/baselines.git
-[submodule "environments/gym-gazebo"]
-	path = environments/gym-gazebo
-	url = https://github.com/erlerobot/gym-gazebo
-	branch = master
-[submodule "environments/docker/scara_e1"]
-	path = environments/docker/scara_e1
-	url = https://github.com/erlerobot/scara_e1
-[submodule "algorithms/mlsh"]
-	path = algorithms/mlsh
-	url = https://github.com/erlerobot/mlsh.git
-[submodule "algorithms/tensorflow-vgg"]
-	path = algorithms/tensorflow-vgg
-	url = https://github.com/erlerobot/tensorflow-vgg.git
-[submodule "environments/docker/mara"]
-	path = environments/docker/mara
-	url = https://github.com/erlerobot/mara
-[submodule "environments/docker/modular_articulated_arm"]
-	path = environments/docker/modular_articulated_arm
-	url = https://github.com/erlerobot/modular_articulated_arm
+    path = algorithms/baselines
+    url = https://github.com/AcutronicRobotics/baselines.git
 [submodule "environments/gym-gazebo2"]
-	path = environments/gym-gazebo2
-	url = https://github.com/erlerobot/gym-gazebo2.git
+    path = environments/gym-gazebo2
+    url = https://github.com/AcutronicRobotics/gym-gazebo2.git
