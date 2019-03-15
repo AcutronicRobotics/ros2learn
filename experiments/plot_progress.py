@@ -33,17 +33,10 @@ def plot_results(plot_title, all_values, labels, num_timesteps, y_lim, smooth, c
             y_mean = savgol_filter(y_mean, 11, 3)
             y_std = savgol_filter(y_std, 11, 3)
 
-        # print("i: ", i, "; y_mean_max: ", max(y_mean), "; y_mean_min: ", min(y_mean), "; overall mean: ", np.mean(y_mean), "; overall_std: ", np.std(y_mean))
-
         y_upper = y_mean + y_std
         y_lower = y_mean - y_std
 
         color = color_defaults[i]
-
-        # if labels[i] == 'ACKTR':
-        #     plt.fill_between(x, list(y_lower), list(y_upper), interpolate=True, facecolor=color, linewidth=0.0, alpha=1)
-        # else:
-        #     plt.fill_between(x, list(y_lower), list(y_upper), interpolate=True, facecolor=color, linewidth=0.0, alpha=0.4)
 
         plt.fill_between(x, list(y_lower), list(y_upper), interpolate=True, facecolor=color, linewidth=0.0, alpha=0.4)
         line = plt.plot(x, list(y_mean), color=color, rasterized=False, antialiased=True)
