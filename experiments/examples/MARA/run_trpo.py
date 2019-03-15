@@ -22,7 +22,7 @@ U.get_session( config=tf.ConfigProto(
 U.initialize()
 
 # Get dictionary from baselines/trpo_mpi/defaults
-defaults = defaults.mara()
+defaults = defaults.mara_mlp()
 
 # Create needed folders
 try:
