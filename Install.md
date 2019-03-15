@@ -1,6 +1,6 @@
 ### Get the code
 ```
-cd ~ && git clone https://github.com/erlerobot/ros2learn.git
+cd ~ && git clone https://github.com/AcutronicRobotics/ros2learn.git
 cd ros2learn
 git submodule update --init --recursive
 ```
@@ -17,7 +17,7 @@ This repository contains various modules that need to be installed independently
   cd ~/ros2learn/algorithms/baselines
   pip3 install -e .
   ```
-- **gym-gazebo2**: is a toolkit for developing and comparing reinforcement learning algorithms using ROS 2 and Gazebo. Follow the [instructions](https://github.com/erlerobot/gym-gazebo2/blob/master/INSTALL.md) to install it.
+- **gym-gazebo2**: is a toolkit for developing and comparing reinforcement learning algorithms using ROS 2 and Gazebo. Follow the [instructions](https://github.com/AcutronicRobotics/gym-gazebo2/blob/master/INSTALL.md) to install it.
 
 ### Dependent tools
 
