@@ -13,6 +13,7 @@ from baselines import bench, logger
 from baselines.ppo2 import model as ppo2
 from baselines.common import set_global_seeds
 from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
+from baselines.common.vec_env.vec_normalize import VecNormalize
 from baselines.common.policies import build_policy
 
 ncpu = multiprocessing.cpu_count()
