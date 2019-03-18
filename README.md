@@ -8,6 +8,16 @@ The repository contains the following:
 - [environments](environments/): pre-built environments of interest to train selected robots.
 - [experiments](experiments/): experiments and examples of the different utilities that this repository provides.
 
+A whitepaper about this work is available at https://arxiv.org/abs/1903.06282. Please use the following BibTex entry to cite our work:
+```
+@misc{1903.06282,
+Author = {Yue Leire Erro Nuin and Nestor Gonzalez Lopez and Elias Barba Moral and Lander Usategui San Juan and Alejandro Solano Rueda and Víctor Mayoral Vilches and Risto Kojcev},
+Title = {ROS2Learn: a reinforcement learning framework for ROS 2},
+Year = {2019},
+Eprint = {arXiv:1903.06282},
+}
+```
+
 ---
 
 ## Installation
