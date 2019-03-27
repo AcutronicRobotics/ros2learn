@@ -26,6 +26,9 @@ Please refer to [Install.md](/Install.md).
 
 ## Usage
 
+### Tune hyperparameters
+Check the optimal network hyperparameters for the environment you want to train. [Hyperparams.md](/Hyperparams.md).
+
 ### Train an agent
 You will find all available examples at */experiments/examples/*. Although the algorithms are complex, the way to execute them is really simple. For instance, if you want to train MARA robot using ppo2_mlp, you should execute the following command:
 
