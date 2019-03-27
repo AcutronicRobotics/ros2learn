@@ -138,3 +138,6 @@ while loop:
     if np.allclose(obs[0][6:9], np.asarray([0., 0., 0.]), atol=0.005 ): # lock if less than 5mm error in each axis
         env.step_runtime(obs[0][:6])
         loop = False
+
+env.dummy().gg2().close()
+os.kill(os.getpid(), 9)

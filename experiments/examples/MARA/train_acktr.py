@@ -66,6 +66,9 @@ network = mlp(num_layers=alg_kwargs['num_layers'], num_hidden=alg_kwargs['num_hi
 
 if transfer_path is not None:
     # Do transfer learning
-    acktr.learn(env=env, network=network, load_path=transfer_path, **alg_kwargs)
+    _ = acktr.learn(env=env, network=network, load_path=transfer_path, **alg_kwargs)
 else:
-    acktr.learn(env=env, network=network, **alg_kwargs)
+    _ = acktr.learn(env=env, network=network, **alg_kwargs)
+
+env.dummy().gg2().close()
+os.kill(os.getpid(), 9)
