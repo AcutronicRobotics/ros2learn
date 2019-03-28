@@ -129,11 +129,11 @@ model.load(savedir)
 
 obs = env.reset()
 assert obs is not None
-print(len(obs[0]))
 assert env.dummy().gg2().obs_dim == len(obs[0])
 
 actions = model.step_deterministic(obs)[0]
 assert len(actions[0]) == 6
+
 obs, rew, done, _  = env.step_runtime(actions)
 assert (obs, rew, done) is not None
 
