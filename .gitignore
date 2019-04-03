@@ -40,3 +40,5 @@ docker/*
 !docker/Dockerfile
 !docker/README.md
 !docker/gzclient.sh
+!docker/tmp
+docker/tmp/*
