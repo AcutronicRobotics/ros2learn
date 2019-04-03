@@ -8,7 +8,7 @@ WIP
 
 ```shell
 cd ~ && git clone https://github.com/AcutronicRobotics/ros2learn
-cd ~/gym-ros2learn/docker
+cd ~/ros2learn/docker
 docker build -t r2l .
 ```
 
