@@ -67,5 +67,9 @@ RUN \
         && git pull --recurse-submodules && git submodule update --recursive --remote \
         && cd /root/ros2learn/environments/gym-gazebo2 && pip3 install -e . \
         && cd /root/ros2learn/algorithms/baselines && pip3 install -e . \
+        #Load provisioning script
+        && echo 'source /root/ros2learn/environments/gym-gazebo2/provision/mara_setup.sh' >> ~/.bashrc \
         "
-CMD ["bash"]
+WORKDIR /root/ros2learn/
+EXPOSE 11597
+ENTRYPOINT ["bash"]
