@@ -62,7 +62,7 @@ alg_kwargs = get_learn_function_defaults('ppo2', env_type)
 
 # Create needed folders
 timedate = datetime.now().strftime('%Y-%m-%d_%Hh%Mmin')
-logdir = '/tmp/ros2learn/' + alg_kwargs['env_name'] + '/ppo2_mlp/' + timedate
+logdir = '/tmp/ros2learn/' + alg_kwargs['env_name'] + '/ppo2_lstm/' + timedate
 
 # Generate tensorboard file
 format_strs = os.getenv('MARA_LOG_FORMAT', 'stdout,log,csv,tensorboard').split(',')
