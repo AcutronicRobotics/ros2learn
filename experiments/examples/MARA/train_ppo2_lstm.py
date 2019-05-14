@@ -117,16 +117,6 @@ def main():
             + 'num_envs = ' + str(alg_kwargs['num_envs']) + '\n'
             + 'transfer_path = ' + str(alg_kwargs['transfer_path']) )
 
-    # if alg_kwargs['num_envs'] > 1:
-        # fns = [make_env for _ in range(alg_kwargs['num_envs'])]
-    #     env = SubprocVecEnv(fns)
-    # else:
-    #     env = DummyVecEnv([make_env])
-
-    # seed = alg_kwargs['seed']
-    # # env = make_mujoco_env(alg_kwargs['env_name'],  seed, reward_scale=1.0)
-    # fns = [make_env for _ in range(alg_kwargs['num_envs'])]
-
     env_id = env_type
     mpi_rank  = 0
     start_index = 0
@@ -139,14 +129,10 @@ def main():
     logger_dir=None
     initializer=None
 
-    # num_env = alg_kwargs['num_envs']
-    # if num_env > 1:
-    #     fns = [make_env for _ in range(alg_kwargs['num_envs'])]
-    #     env = SubprocVecEnv(fns)
 
     env = make_vec_env(alg_kwargs['env_name'], env_type, alg_kwargs['num_envs'] or 1, seed, reward_scale=1.0)
 
-    # if env_type == 'mujoco':
+    # if env_type == 'mara_lstm':
     #     env = VecNormalize(env, use_tf=True)
 
     learn = get_learn_function('ppo2')
