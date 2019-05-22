@@ -18,7 +18,7 @@ docker build -t r2l .
 
 ```shell
 cd ~/ros2learn/docker
-docker rm r2l || true && docker run -it --name=r2l -h ros2learn -v `pwd`/tmp:/tmp/ros2learn r2l
+docker rm r2l || true && docker run -it --runtime=nvidia --name=r2l -h ros2learn -v `pwd`/tmp:/tmp/ros2learn r2l
 
 #Inside the docker container, used to load visual models
 cp -r /root/ros2_mara_ws /tmp/ros2learn
@@ -37,7 +37,7 @@ cd ~/ros2learn/docker
 # Clean the existing $PWD/tmp directory. You might need `sudo`.
 rm -rf `pwd`/tmp/*
 # Run a new r2l container
-docker rm r2l || true && docker run -it --name=r2l -h ros2learn -v `pwd`/tmp:/tmp/ros2learn r2l
+docker rm r2l || true && docker run -it --runtime=nvidia  --name=r2l -h ros2learn -v `pwd`/tmp:/tmp/ros2learn r2l
 ```
 
 ### Development/Research mode
@@ -70,7 +70,7 @@ $ docker commit b0d8de35f133 r2l
 Next time you want to run the container you will need to launch the existing one:
 
 ```shell
-docker run -it r2l
+docker run -it --runtime=nvidia  r2l
 ```
 
 ## Run a training script
