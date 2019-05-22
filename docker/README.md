@@ -18,7 +18,7 @@ cd ~/ros2learn/docker
 docker rm r2l || true && docker run -it --name=r2l -h ros2learn -v `pwd`/tmp:/tmp/ros2learn r2l
 
 #Inside the docker container, used to load visual models
-cp -r /root/ros2_mara_ws /tmp
+cp -r /root/ros2_mara_ws /tmp/ros2learn
 ```
 
 Outside the docker container, copy `ros2_mara_ws` folder to a permanent location so that you don't need to repeat this process in the future.
