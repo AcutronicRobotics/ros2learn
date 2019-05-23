@@ -131,9 +131,9 @@ while loop:
     print("ee_translation[x, y, z]: ", obs[0][6:9])
     print("ee_orientation[w, x, y, z]: ", obs[0][9:13])
 
-    csv_file.write_obs(obs[0], csv_files[0], defaults['env_name'])
-    csv_file.write_acs(actions[0], csv_files[1])
-    csv_file.write_rew(reward, csv_files[2])
+    # csv_file.write_obs(obs[0], csv_files[0], defaults['env_name'])
+    # csv_file.write_acs(actions[0], csv_files[1])
+    # csv_file.write_rew(reward, csv_files[2])
 
     if np.allclose(obs[0][6:9], np.asarray([0., 0., 0.]), atol=0.005 ): # lock if less than 5mm error in each axis
         env.step_runtime(obs[0][:6])
