@@ -41,14 +41,14 @@ python3 train_ppo2_mlp.py
 
 Note that you can add the command line arguments provided by the environment, which in this case are provided by the gym-gazebo2 Env. Use `-h` to get all the available commands.
 
-If you want to test your own trained neural networks, or train with different environment form gym-gazebo2, or play with the hyperparametes, you must update the values of the dictionary directly in the corresponding algorithm itself. For this example, we are using *ppo2_mlp* from [baselines](https://github.com/AcutronicRobotics/ros2learn/tree/master/algorithms) submodule, so you can edit the `mara_mpl()` function inside [baselines/ppo2/defaults.py](https://github.com/AcutronicRobotics/baselines/blob/8396ea2dc4d19cabb7478f6c3df0119660f0ab18/baselines/ppo2/defaults.py#L28-L53).
+If you want to test your own trained neural networks, or train with different environment form gym-gazebo2, or play with the hyperparameters, you must update the values of the dictionary directly in the corresponding algorithm itself. For this example, we are using *ppo2_mlp* from [baselines](https://github.com/AcutronicRobotics/ros2learn/tree/master/algorithms) submodule, so you can edit the `mara_mlp()` function inside [baselines/ppo2/defaults.py](https://github.com/AcutronicRobotics/baselines/blob/8396ea2dc4d19cabb7478f6c3df0119660f0ab18/baselines/ppo2/defaults.py#L28-L53).
 
 ![Example Train](https://github.com/AcutronicRobotics/gym-gazebo2/blob/master/imgs/example_train.gif)
 
 ### Run a trained policy
 Once you are done with the training, or if you want to test some specific checkpoint of it, you can run that using one of the running-scripts available. This time, to follow with the example, we are going to run a saved ppo2_mlp policy.
 
-First, we will edit the already mentioned `mara_mpl()` dictionary, in particular the `trained_path` value, in [baselines/ppo2/defaults.py](https://github.com/AcutronicRobotics/baselines/blob/8396ea2dc4d19cabb7478f6c3df0119660f0ab18/baselines/ppo2/defaults.py#L53) to the checkpoint we want (checkpoints placed by default in /tmp/ros2learn). Now we are ready to launch the script.
+First, we will edit the already mentioned `mara_mlp()` dictionary, in particular the `trained_path` value, in [baselines/ppo2/defaults.py](https://github.com/AcutronicRobotics/baselines/blob/8396ea2dc4d19cabb7478f6c3df0119660f0ab18/baselines/ppo2/defaults.py#L53) to the checkpoint we want (checkpoints placed by default in /tmp/ros2learn). Now we are ready to launch the script.
 
 Since we want to visualize it in real conditions, we are also going to set some flags:
 
