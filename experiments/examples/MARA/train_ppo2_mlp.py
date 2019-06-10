@@ -102,6 +102,9 @@ alg_kwargs.pop('transfer_path')
 
 if transfer_path is not None:
     # Do transfer learning
-    learn(env=env,load_path=transfer_path, **alg_kwargs)
+    _ = learn(env=env,load_path=transfer_path, **alg_kwargs)
 else:
-    learn(env=env, **alg_kwargs)
+    _ = learn(env=env, **alg_kwargs)
+
+env.dummy().gg2().close()
+os.kill(os.getpid(), 9)
