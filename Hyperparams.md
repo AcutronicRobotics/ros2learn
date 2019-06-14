@@ -1,6 +1,6 @@
 ## Env. specific Hyperparameters
 
-Each environment ([gym-gazebo2 Env](https://github.com/AcutronicRobotics/gym-gazebo2/tree/master/gym_gazebo2/envs/MARA)) has it's optimal hyperparameters that allow the agent to learn faster and achieve a better policy. In the following table we present our best parameters.
+Each environment ([gym-gazebo2 Env](https://github.com/AcutronicRobotics/gym-gazebo2/tree/dashing/gym_gazebo2/envs/MARA)) has it's optimal hyperparameters that allow the agent to learn faster and achieve a better policy. In the following table we present our best parameters.
 
 Please open a new issue and share your results if you found better parameters!
 
