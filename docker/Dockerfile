@@ -6,7 +6,7 @@ LABEL maintainer="Lander Usategui <lander at erlerobotics dot com>"
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 
-ENV ROS2_DISTRO crystal
+ENV ROS2_DISTRO dashing
 #Prepare work-space
 RUN mkdir -p /root/ros2_mara_ws/src
 WORKDIR /root/ros2_mara_ws
@@ -69,12 +69,12 @@ RUN \
       && hrim generate models/actuator/gripper/gripper.xml \
       #Compile the work-space
       && bash -c " cd /root/ros2_mara_ws \
-      && source /opt/ros/crystal/setup.bash && colcon build --merge-install --parallel-workers $(nproc) --packages-ignore orocos_kinematics_dynamics individual_trajectories_bridge \
+      && source /opt/ros/dashing/setup.bash && colcon build --merge-install --parallel-workers $(nproc) --packages-ignore orocos_kinematics_dynamics individual_trajectories_bridge \
       && touch /root/ros2_mara_ws/install/share/orocos_kdl/local_setup.sh /root/ros2_mara_ws/install/share/orocos_kdl/local_setup.bash \
       && cd /root && git clone https://github.com/openai/gym && cd /root/gym && pip3 install -e . \
       #ros2learn
-      && cd /root && git clone https://github.com/AcutronicRobotics/ros2learn \
-      && cd /root/ros2learn \ 
+      && cd /root && git -b master clone https://github.com/AcutronicRobotics/ros2learn \
+      && cd /root/ros2learn \
       && git submodule update --init --recursive \
       && git pull --recurse-submodules && git submodule update --recursive --remote \
       && cd /root/ros2learn/environments/gym-gazebo2 && pip3 install -e . \
