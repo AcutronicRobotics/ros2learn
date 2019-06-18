@@ -1,4 +1,4 @@
-<a href="http://www.acutronicrobotics.com"><img src="https://github.com/AcutronicRobotics/gym-gazebo2/blob/dashing/imgs/alr_logo.png" align="left" width="190"></a>
+<a href="http://www.acutronicrobotics.com"><img src="https://github.com/AcutronicRobotics/gym-gazebo2/blob/master/imgs/alr_logo.png" align="left" width="190"></a>
 
 This repository contains a number of ROS and ROS 2 enabled Artificial Intelligence (AI)
 and Reinforcement Learning (RL) [algorithms](algorithms/) that run in selected [environments](environments/).
@@ -41,9 +41,9 @@ python3 train_ppo2_mlp.py
 
 Note that you can add the command line arguments provided by the environment, which in this case are provided by the gym-gazebo2 Env. Use `-h` to get all the available commands.
 
-If you want to test your own trained neural networks, or train with different environment form gym-gazebo2, or play with the hyperparameters, you must update the values of the dictionary directly in the corresponding algorithm itself. For this example, we are using *ppo2_mlp* from [baselines](https://github.com/AcutronicRobotics/ros2learn/tree/dashing/algorithms) submodule, so you can edit the `mara_mlp()` function inside [baselines/ppo2/defaults.py](https://github.com/AcutronicRobotics/baselines/blob/8396ea2dc4d19cabb7478f6c3df0119660f0ab18/baselines/ppo2/defaults.py#L28-L53).
+If you want to test your own trained neural networks, or train with different environment form gym-gazebo2, or play with the hyperparameters, you must update the values of the dictionary directly in the corresponding algorithm itself. For this example, we are using *ppo2_mlp* from [baselines](https://github.com/AcutronicRobotics/ros2learn/tree/master/algorithms) submodule, so you can edit the `mara_mlp()` function inside [baselines/ppo2/defaults.py](https://github.com/AcutronicRobotics/baselines/blob/8396ea2dc4d19cabb7478f6c3df0119660f0ab18/baselines/ppo2/defaults.py#L28-L53).
 
-![Example Train](https://github.com/AcutronicRobotics/gym-gazebo2/blob/dashing/imgs/example_train.gif)
+![Example Train](https://github.com/AcutronicRobotics/gym-gazebo2/blob/master/imgs/example_train.gif)
 
 ### Run a trained policy
 Once you are done with the training, or if you want to test some specific checkpoint of it, you can run that using one of the running-scripts available. This time, to follow with the example, we are going to run a saved ppo2_mlp policy.
@@ -59,7 +59,7 @@ python3 run_ppo2_mlp.py -g -r -v 0.3
 
 This will launch the simulation with the visual interface, real time physics (no speed up) and 0.3 rad/sec velocity in each servomotor.
 
-![Example Run](https://github.com/AcutronicRobotics/gym-gazebo2/blob/dashing/imgs/example_run.gif)
+![Example Run](https://github.com/AcutronicRobotics/gym-gazebo2/blob/master/imgs/example_run.gif)
 
 ### Visualize training data on tensorboard
 
@@ -71,15 +71,15 @@ You can also set a specific port number in case you want to visualize more than 
 ```sh
 tensorboard --logdir=/tmp/ros2learn/MARACollision-v0/ppo2_mlp --port 8008
 ```
-![Example Tensorboard](https://github.com/AcutronicRobotics/gym-gazebo2/blob/dashing/imgs/example_tensorboard.gif)
+![Example Tensorboard](https://github.com/AcutronicRobotics/gym-gazebo2/blob/master/imgs/example_tensorboard.gif)
 
 ## Do your own experiment
 
 ### Hyperparameter tunning (existing environment)
-1. Set the desired target in the corresponding environment in [gym-gazebo2](https://github.com/AcutronicRobotics/ros2learn/tree/dashing/environments) submodule.
+1. Set the desired target in the corresponding environment in [gym-gazebo2](https://github.com/AcutronicRobotics/ros2learn/tree/master/environments) submodule.
     - self.target_position
     - self.target_orientation
-2. Set the desired hyperparameters in the corresponding default script of the algorithm in [baselines](https://github.com/AcutronicRobotics/ros2learn/tree/dashing/algorithms) submodule.
+2. Set the desired hyperparameters in the corresponding default script of the algorithm in [baselines](https://github.com/AcutronicRobotics/ros2learn/tree/master/algorithms) submodule.
 
 ### Create your own train script to use your own environment
 1. Create a session
@@ -102,7 +102,7 @@ Optional:
 
 ### Create your own run script to use your own environment
 1. Create a session
-2. Get the hyperparameters from the corresponding defaults script of the algorithm in [baselines](https://github.com/AcutronicRobotics/ros2learn/tree/dashing/algorithms) submodule used in training time, and also the target in your own environment
+2. Get the hyperparameters from the corresponding defaults script of the algorithm in [baselines](https://github.com/AcutronicRobotics/ros2learn/tree/master/algorithms) submodule used in training time, and also the target in your own environment
     - self.target_position
     - self.target_orientation
 3. Make a single environment (DummyVecEnv)

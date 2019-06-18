@@ -72,8 +72,8 @@ RUN \
         ros-$ROS2_DISTRO-gazebo-ros-pkgs \
         libopencv-dev \
         && rm -rf /var/lib/apt/lists/* \
-      && wget https://raw.githubusercontent.com/AcutronicRobotics/MARA/dashing/mara-ros2.repos && vcs import src < mara-ros2.repos \
-      && wget https://raw.githubusercontent.com/AcutronicRobotics/gym-gazebo2/dashing/provision/additional-repos.repos && vcs import src < additional-repos.repos \
+      && wget https://raw.githubusercontent.com/AcutronicRobotics/MARA/master/mara-ros2.repos && vcs import src < mara-ros2.repos \
+      && wget https://raw.githubusercontent.com/AcutronicRobotics/gym-gazebo2/master/provision/additional-repos.repos && vcs import src < additional-repos.repos \
       #Generete HRIM packages
       && cd ~/ros2_mara_ws/src/HRIM \
       && pip3 install hrim \
@@ -85,7 +85,7 @@ RUN \
       && touch /root/ros2_mara_ws/install/share/orocos_kdl/local_setup.sh /root/ros2_mara_ws/install/share/orocos_kdl/local_setup.bash \
       && cd /root && git clone https://github.com/openai/gym && cd /root/gym && pip3 install -e . \
       #ros2learn
-      && cd /root && git clone -b dashing https://github.com/AcutronicRobotics/ros2learn \
+      && cd /root && git clone -b master https://github.com/AcutronicRobotics/ros2learn \
       && cd /root/ros2learn \
       && git submodule update --init --recursive \
       && git pull --recurse-submodules && git submodule update --recursive --remote \
