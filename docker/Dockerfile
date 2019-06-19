@@ -73,7 +73,7 @@ RUN \
       && touch /root/ros2_mara_ws/install/share/orocos_kdl/local_setup.sh /root/ros2_mara_ws/install/share/orocos_kdl/local_setup.bash \
       && cd /root && git clone https://github.com/openai/gym && cd /root/gym && pip3 install -e . \
       #ros2learn
-      && cd /root && git -b master clone https://github.com/AcutronicRobotics/ros2learn \
+      && cd /root && git clone -b master https://github.com/AcutronicRobotics/ros2learn \
       && cd /root/ros2learn \
       && git submodule update --init --recursive \
       && git pull --recurse-submodules && git submodule update --recursive --remote \
